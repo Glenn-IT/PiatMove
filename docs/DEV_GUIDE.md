@@ -138,6 +138,36 @@ PiatMoveAdmin/
 
 ---
 
+## Design Convention
+
+When building any screen, use this prompt:
+
+> "Use the piatmove-design skill as my design reference. Build [screen] matching its colors, type, and components."
+
+**Rule: Design only — main function must never change.**
+Only colors, typography, spacing, and component styling are updated. No logic, no flow changes.
+
+### PiatMove Design Tokens
+
+| Token | Value | Usage |
+|---|---|---|
+| `brand_blue` | `#2454E0` | Primary buttons, links, active states |
+| `brand_blue_dark` | `#1D43B8` | Gradient end, pressed states |
+| `brand_green` | `#12B76A` | Pickup dot, success states |
+| `text_primary` | `#0F172A` | Headings, body text |
+| `text_secondary` | `#64748B` | Subtitles, labels |
+| `white` | `#FFFFFF` | Backgrounds, icon fills |
+
+### Typography (from logo SVG)
+- **Headings / Brand name:** Plus Jakarta Sans, weight 800
+- **Body / Labels:** Public Sans, weight 600
+
+### Icon / Logo assets
+- `docs/img/logo-mark.svg` — app icon (96×96), use as launcher icon
+- `docs/img/logo-full.svg` — full lockup (300×80), use in splash / login screens
+
+---
+
 *Created: 2026-06-26*
 *Approach: Option B — Step by step*
 *Editor: VSCode*

@@ -1,0 +1,9 @@
+/* ============================================================
+   Piat Booking — Webfonts
+   NOTE: Loaded from Google Fonts CDN (substitution — see README).
+   Public Sans is the U.S. government design-system typeface and
+   fits the municipal/official tone; Plus Jakarta Sans adds a
+   friendly modern display voice. Replace with self-hosted .woff2
+   if offline shipping is required.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');

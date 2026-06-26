@@ -1,0 +1,18 @@
+<!-- @dsCard group="Colors" viewport="700x180" name="Semantic — Status" subtitle="Success, warning, danger, info — soft + solid" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<link rel="stylesheet" href="../styles.css"/>
+<style>
+  body{margin:0;padding:22px;background:var(--surface-card);font-family:var(--font-body);}
+  .row{display:flex;gap:14px;}
+  .cell{flex:1;}
+  .solid{height:54px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;display:flex;align-items:center;padding:0 14px;color:#fff;font:var(--fw-bold) 13px/1 var(--font-display);}
+  .soft{height:38px;border-radius:0 0 var(--radius-sm) var(--radius-sm);display:flex;align-items:center;padding:0 14px;font:var(--fw-semibold) 12px/1 var(--font-body);}
+  .lab{margin-top:8px;font:var(--fw-medium) 11px/1.3 var(--font-body);color:var(--text-muted);}
+</style></head><body>
+<div class="row">
+  <div class="cell"><div class="solid" style="background:var(--status-success)">Success</div><div class="soft" style="background:var(--status-success-soft);color:var(--green-700)">Approved / Done</div><div class="lab">#12B76A · green-50 bg</div></div>
+  <div class="cell"><div class="solid" style="background:var(--status-warning)">Warning</div><div class="soft" style="background:var(--status-warning-soft);color:var(--amber-700)">Pending</div><div class="lab">#F79009 · amber-50 bg</div></div>
+  <div class="cell"><div class="solid" style="background:var(--status-danger)">Danger</div><div class="soft" style="background:var(--status-danger-soft);color:var(--red-700)">Cancelled</div><div class="lab">#F04438 · red-50 bg</div></div>
+  <div class="cell"><div class="solid" style="background:var(--status-info)">Info</div><div class="soft" style="background:var(--status-info-soft);color:var(--cyan-700)">In Transit</div><div class="lab">#06AED4 · cyan-50 bg</div></div>
+</div>
+</body></html>

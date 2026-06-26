@@ -1,0 +1,16 @@
+<!-- @dsCard group="Colors" viewport="700x170" name="Gradients" subtitle="Subtle brand gradients for heroes & splash" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<link rel="stylesheet" href="../styles.css"/>
+<style>
+  body{margin:0;padding:22px;background:var(--surface-card);font-family:var(--font-body);}
+  .row{display:flex;gap:14px;}
+  .g{flex:1;height:110px;border-radius:var(--radius-md);display:flex;flex-direction:column;justify-content:flex-end;padding:14px;color:#fff;box-shadow:var(--shadow-sm);}
+  .g b{font:var(--fw-bold) 14px/1 var(--font-display);}
+  .g small{font:var(--fw-regular) 11px/1.4 var(--font-body);opacity:.85;margin-top:4px;}
+</style></head><body>
+<div class="row">
+  <div class="g" style="background:var(--gradient-brand)"><b>Brand</b><small>blue-600 → blue-500 · buttons, accents</small></div>
+  <div class="g" style="background:var(--gradient-hero)"><b>Hero</b><small>600 → 700 → 800 · dashboard headers</small></div>
+  <div class="g" style="background:var(--gradient-brand-deep)"><b>Deep</b><small>700 → 900 · splash screen</small></div>
+</div>
+</body></html>

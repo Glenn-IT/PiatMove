@@ -1,0 +1,44 @@
+/* ============================================================
+   Piat Booking — Typography tokens
+   Display: Plus Jakarta Sans · UI/Body: Public Sans
+   ============================================================ */
+:root {
+  --font-display: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-body:    "Public Sans", system-ui, -apple-system, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  /* Weights */
+  --fw-regular: 400;   /* @kind other */
+  --fw-medium:  500;   /* @kind other */
+  --fw-semibold: 600;  /* @kind other */
+  --fw-bold:    700;   /* @kind other */
+  --fw-extrabold: 800; /* @kind other */
+
+  /* Type scale (px) — mobile-first */
+  --fs-display: 34px;  /* splash / hero numerals */
+  --fs-h1: 28px;
+  --fs-h2: 22px;
+  --fs-h3: 18px;
+  --fs-title: 16px;    /* card titles, list headers */
+  --fs-body: 15px;     /* default body */
+  --fs-sm: 13px;       /* secondary text */
+  --fs-caption: 12px;  /* labels, meta */
+  --fs-overline: 11px; /* uppercase eyebrows */
+
+  /* Line heights */
+  --lh-tight: 1.15;    /* @kind other */
+  --lh-snug: 1.3;      /* @kind other */
+  --lh-normal: 1.5;    /* @kind other */
+  --lh-relaxed: 1.6;   /* @kind other */
+
+  /* Letter spacing */
+  --ls-tight: -0.02em;  /* @kind other */
+  --ls-normal: 0;       /* @kind other */
+  --ls-wide: 0.04em;    /* @kind other */
+  --ls-overline: 0.08em;/* @kind other */
+
+  /* Semantic text role shorthands */
+  --text-h1: var(--fw-extrabold) var(--fs-h1)/var(--lh-tight) var(--font-display); /* @kind other */
+  --text-h2: var(--fw-bold) var(--fs-h2)/var(--lh-snug) var(--font-display); /* @kind other */
+  --text-h3: var(--fw-bold) var(--fs-h3)/var(--lh-snug) var(--font-display); /* @kind other */
+}

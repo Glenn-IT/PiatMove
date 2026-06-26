@@ -1,0 +1,48 @@
+/* ============================================================
+   Piat Booking — Spacing, radius, shadow, layout tokens
+   4px base grid
+   ============================================================ */
+:root {
+  /* Spacing scale (4px base) */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radii */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;   /* default card / input */
+  --radius-lg: 20px;   /* large cards, sheets */
+  --radius-xl: 28px;   /* hero panels */
+  --radius-pill: 999px;
+
+  /* Shadows — soft, layered, low-contrast */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.12), 0 4px 8px rgba(15, 23, 42, 0.05);
+  --shadow-nav: 0 -2px 16px rgba(15, 23, 42, 0.08);
+  --shadow-focus: 0 0 0 4px rgba(36, 84, 224, 0.16);
+
+  /* Layout */
+  --tap-min: 44px;          /* min hit target */
+  --screen-max: 430px;      /* phone canvas width */
+  --header-h: 56px;
+  --bottomnav-h: 64px;
+  --content-pad: 20px;
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);   /* @kind other */
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);/* @kind other */
+  --dur-fast: 140ms;  /* @kind other */
+  --dur-base: 220ms;  /* @kind other */
+  --dur-slow: 360ms;  /* @kind other */
+}

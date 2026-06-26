@@ -1,0 +1,36 @@
+/* ============================================================
+   Piat Booking — base resets & primitive utility helpers
+   ============================================================ */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  color: var(--text-body);
+  background: var(--surface-app);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--text-strong);
+  margin: 0;
+  letter-spacing: var(--ls-tight);
+}
+
+p { margin: 0; }
+
+button { font-family: inherit; }
+
+::selection { background: var(--blue-200); }
+
+/* Eyebrow / overline helper */
+.ds-overline {
+  font: var(--fw-bold) var(--fs-overline)/1 var(--font-body);
+  letter-spacing: var(--ls-overline);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

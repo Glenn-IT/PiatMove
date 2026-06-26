@@ -1,0 +1,89 @@
+<!-- @dsCard group="Components" viewport="700x430" name="Core — Buttons, Inputs, Badges" subtitle="Actions, fields, pills, chips, avatars, stats" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="../../styles.css" />
+<style>
+  body { margin: 0; padding: 24px; background: var(--surface-app); }
+  .grid { display: flex; flex-direction: column; gap: 22px; max-width: 652px; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .lbl { font: var(--fw-bold) 11px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 10px; }
+  .sec { background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../assets/icons.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+const { Button, IconButton, Input, Badge, Chip, Avatar, StatCard } = window.PiatBookingDesignSystem_2c1fe9;
+function Demo() {
+  const [veh, setVeh] = React.useState("sedan");
+  return (
+    <div className="grid">
+      <div className="sec">
+        <div className="lbl">Buttons</div>
+        <div className="row" style={{marginBottom:10}}>
+          <Button variant="primary">Book Now</Button>
+          <Button variant="secondary">Confirm</Button>
+          <Button variant="outline">Cancel</Button>
+          <Button variant="ghost">Skip</Button>
+          <Button variant="danger">Decline</Button>
+        </div>
+        <div className="row">
+          <Button size="sm">Small</Button>
+          <Button size="md" leadingIcon={<Icon name="plus" size={18}/>}>Add stop</Button>
+          <Button size="lg">Large</Button>
+          <Button disabled>Disabled</Button>
+          <IconButton label="Notifications"><Icon name="bell" size={20}/></IconButton>
+          <IconButton variant="primary" label="Add"><Icon name="plus" size={20}/></IconButton>
+        </div>
+      </div>
+
+      <div className="row" style={{gap:16, alignItems:"flex-start"}}>
+        <div className="sec" style={{flex:1, minWidth:240}}>
+          <div className="lbl">Inputs</div>
+          <div style={{display:"flex", flexDirection:"column", gap:12}}>
+            <Input label="Mobile Number" placeholder="09xx xxx xxxx" leadingIcon={<Icon name="phone" size={18}/>} />
+            <Input label="Password" type="password" placeholder="••••••••" leadingIcon={<Icon name="lock" size={18}/>} trailingIcon={<Icon name="eye" size={18}/>} error helperText="Incorrect password" />
+          </div>
+        </div>
+        <div className="sec" style={{flex:1, minWidth:240}}>
+          <div className="lbl">Badges &amp; Chips</div>
+          <div className="row" style={{marginBottom:14}}>
+            <Badge tone="success" dot>Approved</Badge>
+            <Badge tone="warning">Pending</Badge>
+            <Badge tone="primary">In Transit</Badge>
+            <Badge tone="danger">Cancelled</Badge>
+            <Badge tone="neutral">Draft</Badge>
+          </div>
+          <div className="row">
+            <Chip selected={veh==="sedan"} onClick={()=>setVeh("sedan")} leadingIcon={<Icon name="car" size={16}/>}>Sedan</Chip>
+            <Chip selected={veh==="van"} onClick={()=>setVeh("van")} leadingIcon={<Icon name="truck" size={16}/>}>Van</Chip>
+            <Chip selected={veh==="amb"} onClick={()=>setVeh("amb")}>Ambulance</Chip>
+          </div>
+        </div>
+      </div>
+
+      <div className="row" style={{gap:12}}>
+        <StatCard label="Total Bookings" value="1,284" icon={<Icon name="ticket"/>} tone="primary" delta="12%" style={{flex:1}} />
+        <StatCard label="Active Trips" value="38" icon={<Icon name="navigation"/>} tone="success" delta="5%" style={{flex:1}} />
+        <StatCard label="Drivers Online" value="12" icon={<Icon name="users"/>} tone="info" style={{flex:1}} />
+        <div className="sec" style={{display:"flex", gap:10, alignItems:"center"}}>
+          <Avatar name="Maria Santos" status="online" />
+          <Avatar name="Jose Cruz" size={40} status="busy" />
+          <Avatar name="AB" size={36} />
+        </div>
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<Demo/>);
+</script>
+</body>
+</html>

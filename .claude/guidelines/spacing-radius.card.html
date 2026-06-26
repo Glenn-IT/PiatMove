@@ -1,0 +1,17 @@
+<!-- @dsCard group="Spacing" viewport="700x180" name="Radius" subtitle="Corner radii — xs to pill" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<link rel="stylesheet" href="../styles.css"/>
+<style>
+  body{margin:0;padding:22px;background:var(--surface-card);font-family:var(--font-body);display:flex;gap:18px;align-items:flex-end;}
+  .col{display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .box{width:76px;height:64px;background:var(--blue-50);border:1.5px solid var(--blue-300);}
+  .v{font:var(--fw-semibold) 11px/1 var(--font-body);color:var(--text-strong);}
+  .t{font:var(--fw-regular) 10px/1 var(--font-body);color:var(--text-muted);}
+</style></head><body>
+  <div class="col"><div class="box" style="border-radius:var(--radius-xs)"></div><div class="v">6px</div><div class="t">radius-xs</div></div>
+  <div class="col"><div class="box" style="border-radius:var(--radius-sm)"></div><div class="v">10px</div><div class="t">radius-sm</div></div>
+  <div class="col"><div class="box" style="border-radius:var(--radius-md)"></div><div class="v">14px</div><div class="t">radius-md · default</div></div>
+  <div class="col"><div class="box" style="border-radius:var(--radius-lg)"></div><div class="v">20px</div><div class="t">radius-lg · cards</div></div>
+  <div class="col"><div class="box" style="border-radius:var(--radius-xl)"></div><div class="v">28px</div><div class="t">radius-xl</div></div>
+  <div class="col"><div class="box" style="border-radius:var(--radius-pill);width:64px"></div><div class="v">pill</div><div class="t">radius-pill</div></div>
+</body></html>
