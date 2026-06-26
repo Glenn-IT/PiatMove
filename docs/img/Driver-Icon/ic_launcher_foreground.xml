@@ -1,0 +1,24 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- steering wheel only (no background); background layer provides the blue.
+         Original 96 art scaled to 0.6 and centered into the 108 adaptive canvas. -->
+    <group android:scaleX="0.6" android:scaleY="0.6" android:translateX="25" android:translateY="25">
+        <path
+            android:pathData="M48,48 m-26,0 a26,26 0 1,0 52,0 a26,26 0 1,0 -52,0"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="5"
+            android:fillColor="#00000000"/>
+        <path
+            android:pathData="M48,48 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 Z"
+            android:fillColor="#FFFFFFFF"/>
+        <path android:pathData="M48,56 L48,70" android:strokeColor="#FFFFFFFF" android:strokeWidth="5" android:strokeLineCap="round"/>
+        <path android:pathData="M41,52 L26,63" android:strokeColor="#FFFFFFFF" android:strokeWidth="5" android:strokeLineCap="round"/>
+        <path android:pathData="M55,52 L70,63" android:strokeColor="#FFFFFFFF" android:strokeWidth="5" android:strokeLineCap="round"/>
+        <path
+            android:pathData="M48,48 m-3.4,0 a3.4,3.4 0 1,0 6.8,0 a3.4,3.4 0 1,0 -6.8,0 Z"
+            android:fillColor="#FF12B76A"/>
+    </group>
+</vector>

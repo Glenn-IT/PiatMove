@@ -16,10 +16,13 @@ int color statusPending 0x0
 int color statusRejected 0x0
 int color statusStarted 0x0
 int color white 0x0
+int drawable ic_app_logo 0x0
 int drawable ic_back 0x0
 int drawable ic_book_ride 0x0
 int drawable ic_dashboard 0x0
 int drawable ic_history 0x0
+int drawable ic_launcher_background 0x0
+int drawable ic_launcher_foreground 0x0
 int id action_logout 0x0
 int id bottomNav 0x0
 int id btnCancelRide 0x0
@@ -84,6 +87,8 @@ int layout fragment_ride_history 0x0
 int layout item_booking_history 0x0
 int menu menu_home 0x0
 int menu menu_passenger 0x0
+int mipmap ic_launcher 0x0
+int mipmap ic_launcher_round 0x0
 int string already_have_account 0x0
 int string app_logo_emoji 0x0
 int string app_name 0x0

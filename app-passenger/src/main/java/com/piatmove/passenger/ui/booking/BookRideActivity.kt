@@ -1,49 +1,27 @@
 package com.piatmove.passenger.ui.booking
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.location.Geocoder
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.piatmove.core.data.models.BookingRequest
 import com.piatmove.core.utils.Resource
 import com.piatmove.passenger.R
 import com.piatmove.passenger.databinding.ActivityBookRideBinding
 import com.piatmove.passenger.ui.home.PassengerViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.Locale
 
-class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
+class BookRideActivity : AppCompatActivity() {
 
     private enum class MapMode { NONE, PICKUP, DROPOFF }
 
     private lateinit var binding: ActivityBookRideBinding
     private lateinit var viewModel: PassengerViewModel
-    private var googleMap: GoogleMap? = null
-    private var mapMode      = MapMode.NONE
-    private var pickupMarker:  Marker? = null
-    private var dropoffMarker: Marker? = null
+    private var mapMode = MapMode.NONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,9 +33,6 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
 
         viewModel = ViewModelProvider(this)[PassengerViewModel::class.java]
 
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-        mapFragment?.getMapAsync(this)
-
         binding.btnModePickup.setOnClickListener {
             setMapMode(if (mapMode == MapMode.PICKUP) MapMode.NONE else MapMode.PICKUP)
         }
@@ -65,7 +40,9 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
             setMapMode(if (mapMode == MapMode.DROPOFF) MapMode.NONE else MapMode.DROPOFF)
         }
 
-        binding.btnUseCurrentLocation.setOnClickListener { fillCurrentLocation() }
+        binding.btnUseCurrentLocation.setOnClickListener {
+            Toast.makeText(this, "Location pin requires Maps API key.", Toast.LENGTH_SHORT).show()
+        }
         binding.btnRequestRide.setOnClickListener { submitBooking() }
         binding.btnUseSampleData.setOnClickListener { fillSampleData() }
 
@@ -74,22 +51,6 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onSupportNavigateUp(): Boolean { onBackPressedDispatcher.onBackPressed(); return true }
-
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
-            googleMap?.isMyLocationEnabled = true
-        }
-        googleMap?.setOnMapClickListener { latLng ->
-            when (mapMode) {
-                MapMode.PICKUP  -> setPickupFromMap(latLng)
-                MapMode.DROPOFF -> setDropoffFromMap(latLng)
-                MapMode.NONE    ->
-                    Toast.makeText(this, getString(R.string.map_tap_hint_none), Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
     private fun setMapMode(mode: MapMode) {
         mapMode = mode
@@ -125,72 +86,8 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun setPickupFromMap(latLng: LatLng) {
-        pickupMarker?.remove()
-        pickupMarker = googleMap?.addMarker(
-            MarkerOptions().position(latLng).title("Pickup")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-        )
-        binding.etPickupLat.setText(String.format("%.6f", latLng.latitude))
-        binding.etPickupLng.setText(String.format("%.6f", latLng.longitude))
-        binding.tilPickupLat.error = null
-        binding.tilPickupLng.error = null
-        reverseGeocode(latLng) { addr ->
-            binding.etPickupAddress.setText(addr)
-            binding.tilPickupAddress.error = null
-        }
-        googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-    }
-
-    private fun setDropoffFromMap(latLng: LatLng) {
-        dropoffMarker?.remove()
-        dropoffMarker = googleMap?.addMarker(
-            MarkerOptions().position(latLng).title("Dropoff")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-        )
-        binding.etDropoffLat.setText(String.format("%.6f", latLng.latitude))
-        binding.etDropoffLng.setText(String.format("%.6f", latLng.longitude))
-        binding.tilDropoffLat.error  = null
-        binding.tilDropoffLng.error  = null
-        reverseGeocode(latLng) { addr ->
-            binding.etDropoffAddress.setText(addr)
-            binding.tilDropoffAddress.error = null
-        }
-        googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-    }
-
-    private fun reverseGeocode(latLng: LatLng, onResult: (String) -> Unit) {
-        val geocoder = Geocoder(this, Locale.getDefault())
-        val fallback = "${String.format("%.5f", latLng.latitude)}, ${String.format("%.5f", latLng.longitude)}"
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1) { addresses ->
-                val addr = addresses.firstOrNull()?.getAddressLine(0) ?: fallback
-                runOnUiThread { onResult(addr) }
-            }
-        } else {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val addr = try {
-                    @Suppress("DEPRECATION")
-                    geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                        ?.firstOrNull()?.getAddressLine(0) ?: fallback
-                } catch (_: Exception) { fallback }
-                withContext(Dispatchers.Main) { onResult(addr) }
-            }
-        }
-    }
-
     private fun fillCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Location permission not granted.", Toast.LENGTH_SHORT).show()
-            return
-        }
-        LocationServices.getFusedLocationProviderClient(this).lastLocation
-            .addOnSuccessListener { loc ->
-                loc?.let { setPickupFromMap(LatLng(it.latitude, it.longitude)) }
-                    ?: Toast.makeText(this, "Location unavailable. Try again.", Toast.LENGTH_SHORT).show()
-            }
+        Toast.makeText(this, "Location pin requires Maps API key.", Toast.LENGTH_SHORT).show()
     }
 
     private fun fillSampleData() {

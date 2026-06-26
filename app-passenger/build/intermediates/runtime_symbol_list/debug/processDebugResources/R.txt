@@ -2993,6 +2993,7 @@ int drawable design_password_eye 0x7f070097
 int drawable design_snackbar_background 0x7f070098
 int drawable googleg_disabled_color_18 0x7f070099
 int drawable googleg_standard_color_18 0x7f07009a
+int drawable ic_app_logo 0x7f0700fe
 int drawable ic_arrow_back_black_24 0x7f07009b
 int drawable ic_back 0x7f07009c
 int drawable ic_book_ride 0x7f07009d
@@ -3007,6 +3008,8 @@ int drawable ic_clock_black_24dp 0x7f0700a5
 int drawable ic_dashboard 0x7f0700a6
 int drawable ic_history 0x7f0700a7
 int drawable ic_keyboard_black_24dp 0x7f0700a8
+int drawable ic_launcher_background 0x7f0700ff
+int drawable ic_launcher_foreground 0x7f070100
 int drawable ic_m3_chip_check 0x7f0700a9
 int drawable ic_m3_chip_checked_circle 0x7f0700aa
 int drawable ic_m3_chip_close 0x7f0700ab
@@ -3817,6 +3820,8 @@ int layout select_dialog_singlechoice_material 0x7f0b0070
 int layout support_simple_spinner_dropdown_item 0x7f0b0071
 int menu menu_home 0x7f0d0000
 int menu menu_passenger 0x7f0d0001
+int mipmap ic_launcher 0x7f130000
+int mipmap ic_launcher_round 0x7f130001
 int plurals mtrl_badge_content_description 0x7f0e0000
 int raw firebase_common_keep 0x7f0f0000
 int string abc_action_bar_home_description 0x7f100000

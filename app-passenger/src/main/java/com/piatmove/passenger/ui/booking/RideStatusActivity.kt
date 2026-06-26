@@ -137,7 +137,7 @@ class RideStatusActivity : AppCompatActivity() {
         binding.cardDriverInfo.visibility = if (showDriver) View.VISIBLE else View.GONE
         if (showDriver) {
             binding.tvDriverName.text  = booking.driver_name ?: ""
-            binding.tvDriverEmail.text = booking.driver_email ?: ""
+            binding.tvDriverEmail.text = booking.driver_phone ?: ""
         }
 
         if (BookingStatus.isTerminal(booking.status)) {

@@ -17,10 +17,13 @@ color statusPending
 color statusRejected
 color statusStarted
 color white
+drawable ic_app_logo
 drawable ic_back
 drawable ic_book_ride
 drawable ic_dashboard
 drawable ic_history
+drawable ic_launcher_background
+drawable ic_launcher_foreground
 id action_logout
 id bottomNav
 id btnCancelRide
@@ -85,6 +88,8 @@ layout fragment_ride_history
 layout item_booking_history
 menu menu_home
 menu menu_passenger
+mipmap ic_launcher
+mipmap ic_launcher_round
 string already_have_account
 string app_logo_emoji
 string app_name

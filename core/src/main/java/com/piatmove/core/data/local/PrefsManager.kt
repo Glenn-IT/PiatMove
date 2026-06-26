@@ -75,7 +75,7 @@ object PrefsManager {
     fun getServerUrl(context: Context): String =
         context.getSharedPreferences(DEV_PREFS_NAME, Context.MODE_PRIVATE)
             .getString(KEY_SERVER_URL, null)
-            ?: Constants.BASE_URL_EMULATOR
+            ?: Constants.BASE_URL_DEVICE
 
     fun saveServerUrl(context: Context, url: String) {
         context.getSharedPreferences(DEV_PREFS_NAME, Context.MODE_PRIVATE)

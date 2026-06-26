@@ -26,6 +26,10 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -41,6 +45,11 @@ dependencies {
     implementation(libs.androidx.material)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.viewpager2)
+
+    // Lifecycle — ViewModel + LiveData + viewModelScope
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Maps & Location
     implementation(libs.play.services.maps)
