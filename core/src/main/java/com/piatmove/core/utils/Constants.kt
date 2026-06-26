@@ -3,7 +3,7 @@ package com.piatmove.core.utils
 object Constants {
     // Use emulator URL by default; swap to DEVICE_URL when testing on a physical device
     const val BASE_URL_EMULATOR = "http://10.0.2.2/piatmove-api/"
-    const val BASE_URL_DEVICE   = "http://192.168.1.100/piatmove-api/" // replace with your machine's local IP
+    const val BASE_URL_DEVICE   = "http://10.135.203.14/piatmove-api/"
 }
 
 object UserRole {

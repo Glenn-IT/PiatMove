@@ -88,27 +88,27 @@
 ## PHASE 3 — PHP Admin Panel (`htdocs/PiatMoveAdmin/`)
 
 ### Setup
-- [ ] Create `PiatMoveAdmin/` folder in `htdocs/`
-- [ ] `includes/db.php` — PDO connection
-- [ ] `includes/auth.php` — session guard
-- [ ] `includes/header.php` — nav sidebar
-- [ ] `includes/footer.php`
-- [ ] `assets/css/admin.css`
-- [ ] `assets/js/admin.js`
+- [x] Create `PiatMoveAdmin/` folder in `htdocs/`
+- [x] `includes/db.php` — PDO connection
+- [x] `includes/auth.php` — session guard
+- [x] `includes/header.php` — nav sidebar
+- [x] `includes/footer.php`
+- [x] `assets/css/admin.css`
+- [x] `assets/js/admin.js`
 
 ### Pages
-- [ ] `index.php` — admin login
-- [ ] `dashboard.php` — stats overview
-- [ ] `users.php` — manage passengers
-- [ ] `drivers.php` — approve/reject drivers
-- [ ] `bookings.php` — all bookings with filters
+- [x] `index.php` — admin login
+- [x] `dashboard.php` — stats overview
+- [x] `users.php` — manage passengers
+- [x] `drivers.php` — approve/reject drivers
+- [x] `bookings.php` — all bookings with filters
 
 ### Admin Panel Testing
-- [ ] Login / logout works
-- [ ] Dashboard stats load
-- [ ] Approve a driver
-- [ ] Deactivate a user
-- [ ] Filter bookings by status
+- [x] Login / logout works
+- [x] Dashboard stats load
+- [x] Approve a driver
+- [x] Deactivate a user
+- [x] Filter bookings by status
 
 ---
 
@@ -151,13 +151,13 @@
 - [x] `ui/booking/RideStatusActivity.kt` + layout
 - [x] `ui/history/RideHistoryFragment.kt` + layout
 - [x] `res/values/` (themes, colors, strings, menus, drawables)
-- [ ] `:app-passenger` compiles clean (`assembleDebug`)
+- [x] `:app-passenger` compiles clean (`assembleDebug`)
 
 ### Passenger App Testing
-- [ ] Register → Login flow
-- [ ] Book a ride
-- [ ] View ride status
-- [ ] View ride history
+- [x] Register → Login flow
+- [x] Book a ride
+- [x] View ride status
+- [x] View ride history
 - [ ] FCM notification received (booking accepted)
 
 ---
@@ -165,23 +165,23 @@
 ## PHASE 6 — Android `:app-driver` Module
 
 ### Setup
-- [ ] `DriverApplication.kt`
-- [ ] `AndroidManifest.xml`
+- [x] `DriverApplication.kt`
+- [x] `AndroidManifest.xml`
 - [ ] `google-services.json` (registered as `com.piatmove.driver`)
 
 ### Screens
-- [ ] `ui/auth/LoginActivity.kt` + layout
-- [ ] `ui/auth/RegisterActivity.kt` + layout
-- [ ] `ui/auth/AuthViewModel.kt`
-- [ ] `ui/home/DriverHomeActivity.kt` + layout
-- [ ] `ui/home/DriverViewModel.kt`
-- [ ] `ui/dashboard/DriverDashboardFragment.kt` + layout
-- [ ] `ui/requests/DriverRequestsFragment.kt` + layout
-- [ ] `ui/requests/RideRequestActivity.kt` + layout
-- [ ] `ui/requests/RideRequestsAdapter.kt`
-- [ ] `ui/status/DriverStatusFragment.kt` + layout
-- [ ] `ui/ride/ActiveRideActivity.kt` + layout
-- [ ] `ui/theme/` (Theme, Color, Type)
+- [x] `ui/auth/LoginActivity.kt` + layout
+- [x] `ui/auth/RegisterActivity.kt` + layout
+- [x] `ui/auth/AuthViewModel.kt`
+- [x] `ui/home/DriverHomeActivity.kt` + layout
+- [x] `ui/home/DriverViewModel.kt`
+- [x] `ui/dashboard/DriverDashboardFragment.kt` + layout
+- [x] `ui/requests/DriverRequestsFragment.kt` + layout
+- [x] `ui/requests/RideRequestActivity.kt` + layout
+- [x] `ui/requests/RideRequestsAdapter.kt`
+- [x] `ui/status/DriverStatusFragment.kt` + layout
+- [x] `ui/ride/ActiveRideActivity.kt` + layout
+- [x] `res/values/` (themes, colors, strings, drawables)
 
 ### Driver App Testing
 - [ ] Register → Login flow

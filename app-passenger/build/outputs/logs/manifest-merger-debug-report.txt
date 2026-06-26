@@ -1,9 +1,10 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:2:1-53:12
-INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:2:1-53:12
-INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:2:1-53:12
-INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:2:1-53:12
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:2:1-56:12
+INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:2:1-56:12
+INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:2:1-56:12
+INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:2:1-56:12
+MERGED from [androidx.databinding:viewbinding:9.1.1] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\0e5248f9b16166c45c21784088f2c3ca\workspace\transformed\viewbinding-9.1.1\AndroidManifest.xml:2:1-7:12
 MERGED from [:core] C:\Users\GLENN\AndroidStudioProjects\PiatMove\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\61c49ee2a2bc9b5ce705f32caf251692\workspace\transformed\material-1.12.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.7.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\8d04da338bcc453d7fa490754715449e\workspace\transformed\appcompat-resources-1.7.0\AndroidManifest.xml:2:1-7:12
@@ -35,6 +36,7 @@ MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.11.0] C:\Users\GLENN\.grad
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\156b46752fcadf254af1ca03f664b674\workspace\transformed\lifecycle-viewmodel\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\506b8d1cddbea43d5198152b60e52432\workspace\transformed\lifecycle-livedata-core-2.11.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-process:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\08931e16a18d0f546a6e18ee6129804d\workspace\transformed\lifecycle-process-2.11.0\AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\e98dcfbe2ecbb58fdb5310c69b059be0\workspace\transformed\lifecycle-runtime-ktx\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\9994b2cdc2a2e820d6cd43b5ea6ca031\workspace\transformed\lifecycle-livedata-core-ktx-2.11.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\097d61301adfea302b85a2d700493f3e\workspace\transformed\lifecycle-livedata-2.11.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata-ktx:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\b0a57050bb7978127eb1ae480c07b6e5\workspace\transformed\lifecycle-livedata-ktx-2.11.0\AndroidManifest.xml:2:1-7:12
@@ -64,8 +66,8 @@ MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\GLENN\.g
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\36e35f275a66ab7001a9642f3bfea741\workspace\transformed\startup-runtime-1.1.1\AndroidManifest.xml:17:1-33:12
 MERGED from [androidx.tracing:tracing:1.2.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\f919857353a65e843d6eafb99cd0b8b0\workspace\transformed\tracing-1.2.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\08af0f3b83b5993c54de2b99b7537134\workspace\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
-MERGED from [com.google.firebase:firebase-components:18.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\2672af017ceeb9ff6e2287fd30a46013\workspace\transformed\firebase-components-18.0.0\AndroidManifest.xml:15:1-20:12
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\d8a38ae6fb164b41a5389253b87fa314\workspace\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.firebase:firebase-components:18.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\2672af017ceeb9ff6e2287fd30a46013\workspace\transformed\firebase-components-18.0.0\AndroidManifest.xml:15:1-20:12
 MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\779cbb3e6293be747f4e0bd3710950a4\workspace\transformed\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\18a5c8fc2da4e276c418d70a9edda43e\workspace\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\5df8c417f53c20fedf4c5e88da10a93a\workspace\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
@@ -109,8 +111,8 @@ MERGED from [com.google.firebase:firebase-messaging:24.1.0] C:\Users\GLENN\.grad
 	android:name
 		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:7:22-74
 application
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:9:5-52:19
-INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:9:5-52:19
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:9:5-55:19
+INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:9:5-55:19
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\61c49ee2a2bc9b5ce705f32caf251692\workspace\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\61c49ee2a2bc9b5ce705f32caf251692\workspace\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\399e22a24493474bc08772dbd308577d\workspace\transformed\constraintlayout-2.0.1\AndroidManifest.xml:9:5-20
@@ -164,71 +166,79 @@ MERGED from [com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.19.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\d829ef58d8a1569b47eb33af8f5e922a\workspace\transformed\core-1.19.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:13:9-35
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:15:9-35
 	android:label
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:12:9-41
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:14:9-41
+	android:roundIcon
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:13:9-54
+	android:icon
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:12:9-43
 	android:allowBackup
 		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:11:9-35
 	android:theme
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:14:9-55
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:16:9-55
+	android:usesCleartextTraffic
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:17:9-44
 	android:name
 		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:10:9-45
 activity#com.piatmove.passenger.ui.auth.LoginActivity
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:17:9-24:20
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:20:9-27:20
 	android:exported
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:19:13-36
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:22:13-36
 	android:name
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:18:13-50
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:21:13-50
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:20:13-23:29
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:23:13-26:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:21:17-69
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:24:17-69
 	android:name
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:21:25-66
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:24:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:22:17-77
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:25:17-77
 	android:name
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:22:27-74
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:25:27-74
 activity#com.piatmove.passenger.ui.auth.RegisterActivity
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:26:9-28:40
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:29:9-31:40
 	android:exported
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:28:13-37
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:31:13-37
 	android:name
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:27:13-53
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:30:13-53
 activity#com.piatmove.passenger.ui.home.PassengerHomeActivity
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:31:9-33:40
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:34:9-36:40
 	android:exported
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:33:13-37
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:36:13-37
 	android:name
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:32:13-58
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:35:13-58
 activity#com.piatmove.passenger.ui.booking.BookRideActivity
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:35:9-37:40
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:38:9-40:40
 	android:exported
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:37:13-37
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:40:13-37
 	android:name
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:36:13-56
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:39:13-56
 activity#com.piatmove.passenger.ui.booking.RideStatusActivity
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:39:9-41:40
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:42:9-44:40
 	android:exported
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:41:13-37
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:44:13-37
 	android:name
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:40:13-58
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:43:13-58
 service#com.piatmove.core.services.PiatMoveFirebaseMessagingService
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:44:9-50:19
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:47:9-53:19
 	android:exported
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:46:13-37
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:49:13-37
 	android:name
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:45:13-87
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:48:13-87
 intent-filter#action:name:com.google.firebase.MESSAGING_EVENT
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:47:13-49:29
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:50:13-52:29
 action#com.google.firebase.MESSAGING_EVENT
-ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:48:17-78
+ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:51:17-78
 	android:name
-		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:48:25-75
+		ADDED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml:51:25-75
 uses-sdk
 INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml
 INJECTED from C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\AndroidManifest.xml
+MERGED from [androidx.databinding:viewbinding:9.1.1] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\0e5248f9b16166c45c21784088f2c3ca\workspace\transformed\viewbinding-9.1.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.databinding:viewbinding:9.1.1] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\0e5248f9b16166c45c21784088f2c3ca\workspace\transformed\viewbinding-9.1.1\AndroidManifest.xml:5:5-44
 MERGED from [:core] C:\Users\GLENN\AndroidStudioProjects\PiatMove\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:5:5-44
 MERGED from [:core] C:\Users\GLENN\AndroidStudioProjects\PiatMove\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\61c49ee2a2bc9b5ce705f32caf251692\workspace\transformed\material-1.12.0\AndroidManifest.xml:20:5-44
@@ -291,6 +301,8 @@ MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.11.0] C:\Users\GLENN\.
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\506b8d1cddbea43d5198152b60e52432\workspace\transformed\lifecycle-livedata-core-2.11.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-process:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\08931e16a18d0f546a6e18ee6129804d\workspace\transformed\lifecycle-process-2.11.0\AndroidManifest.xml:21:5-44
 MERGED from [androidx.lifecycle:lifecycle-process:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\08931e16a18d0f546a6e18ee6129804d\workspace\transformed\lifecycle-process-2.11.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\e98dcfbe2ecbb58fdb5310c69b059be0\workspace\transformed\lifecycle-runtime-ktx\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\e98dcfbe2ecbb58fdb5310c69b059be0\workspace\transformed\lifecycle-runtime-ktx\AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\9994b2cdc2a2e820d6cd43b5ea6ca031\workspace\transformed\lifecycle-livedata-core-ktx-2.11.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\9994b2cdc2a2e820d6cd43b5ea6ca031\workspace\transformed\lifecycle-livedata-core-ktx-2.11.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.11.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\097d61301adfea302b85a2d700493f3e\workspace\transformed\lifecycle-livedata-2.11.0\AndroidManifest.xml:20:5-44
@@ -349,10 +361,10 @@ MERGED from [androidx.tracing:tracing:1.2.0] C:\Users\GLENN\.gradle\caches\9.3.1
 MERGED from [androidx.tracing:tracing:1.2.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\f919857353a65e843d6eafb99cd0b8b0\workspace\transformed\tracing-1.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\08af0f3b83b5993c54de2b99b7537134\workspace\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\08af0f3b83b5993c54de2b99b7537134\workspace\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.firebase:firebase-components:18.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\2672af017ceeb9ff6e2287fd30a46013\workspace\transformed\firebase-components-18.0.0\AndroidManifest.xml:18:5-44
-MERGED from [com.google.firebase:firebase-components:18.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\2672af017ceeb9ff6e2287fd30a46013\workspace\transformed\firebase-components-18.0.0\AndroidManifest.xml:18:5-44
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\d8a38ae6fb164b41a5389253b87fa314\workspace\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\d8a38ae6fb164b41a5389253b87fa314\workspace\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-components:18.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\2672af017ceeb9ff6e2287fd30a46013\workspace\transformed\firebase-components-18.0.0\AndroidManifest.xml:18:5-44
+MERGED from [com.google.firebase:firebase-components:18.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\2672af017ceeb9ff6e2287fd30a46013\workspace\transformed\firebase-components-18.0.0\AndroidManifest.xml:18:5-44
 MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\779cbb3e6293be747f4e0bd3710950a4\workspace\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\779cbb3e6293be747f4e0bd3710950a4\workspace\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\GLENN\.gradle\caches\9.3.1\transforms\18a5c8fc2da4e276c418d70a9edda43e\workspace\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
