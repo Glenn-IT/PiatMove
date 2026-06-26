@@ -16,11 +16,13 @@ data class LoginRequest(
     val password: String
 )
 
-// PHP returns: { "token": "...", "user_id": 123, "role": "passenger" }
+// PHP returns: { "token": "...", "user_id": 123, "role": "passenger", "name": "...", "phone": "..." }
 data class LoginResponse(
     val token: String,
     val user_id: Int,
-    val role: String
+    val role: String,
+    val name: String  = "",
+    val phone: String = ""
 )
 
 // PHP returns same shape on register

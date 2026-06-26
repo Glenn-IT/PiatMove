@@ -184,21 +184,21 @@
 - [x] `res/values/` (themes, colors, strings, drawables)
 
 ### Driver App Testing
-- [ ] Register → Login flow
-- [ ] Go online / offline
-- [ ] Receive ride request (FCM)
-- [ ] Accept → Start → Complete ride
+- [x] Register → Login flow
+- [x] Go online / offline
+- [x] Receive ride request (FCM)
+- [x] Accept → Start → Complete ride
 
 ---
 
 ## PHASE 7 — Clean Up
 
-- [ ] Both APKs run without crashes
-- [ ] Admin panel fully functional
-- [ ] API all endpoints tested
-- [ ] Remove original blank `app/` module
-- [ ] Update `settings.gradle.kts` to exclude `:app`
-- [ ] Final Gradle sync — zero errors
+- [x] Both APKs run without crashes
+- [x] Admin panel fully functional
+- [x] API all endpoints tested
+- [x] Remove original blank `app/` module
+- [x] Update `settings.gradle.kts` to exclude `:app`
+- [x] Final Gradle sync — zero errors
 
 ---
 

@@ -23,7 +23,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "PiatMove"
-include(":app")
 include(":core")
 include(":app-passenger")
 include(":app-driver")

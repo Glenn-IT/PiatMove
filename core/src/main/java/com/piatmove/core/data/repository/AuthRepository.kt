@@ -36,7 +36,9 @@ class AuthRepository(
                     context,
                     token  = response.data.token,
                     userId = response.data.user_id,
-                    role   = response.data.role
+                    role   = response.data.role,
+                    name   = response.data.name,
+                    phone  = response.data.phone
                 )
                 syncFcmTokenIfAvailable()
                 Resource.Success(response.data)
