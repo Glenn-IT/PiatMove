@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">PiatMove Passenger</string>
+    <string name="app_subtitle">Ride Booking — Municipality of Piat</string>
+    <string name="app_logo_emoji">🚗</string>
+    <!-- Auth -->
+    <string name="login">Login</string>
+    <string name="register">Create Account</string>
+    <string name="create_account">Create Account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="full_name">Full Name</string>
+    <string name="phone">Phone Number</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="dont_have_account">Don\'t have an account? Register</string>
+    <string name="already_have_account">Already have an account? Login</string>
+    <string name="register_subtitle">Create your passenger account</string>
+    <string name="section_personal_info">PERSONAL INFO</string>
+    <!-- Home -->
+    <string name="passenger_home">PiatMove</string>
+    <string name="book_ride">Book a Ride</string>
+    <string name="logout">Logout</string>
+    <!-- BottomNav tabs -->
+    <string name="tab_dashboard">Dashboard</string>
+    <string name="tab_book_ride">Book Ride</string>
+    <string name="tab_history">History</string>
+    <!-- Booking -->
+    <string name="pickup_address">Pickup Address</string>
+    <string name="dropoff_address">Dropoff Address</string>
+    <string name="pickup_lat">Pickup Lat</string>
+    <string name="pickup_lng">Pickup Lng</string>
+    <string name="dropoff_lat">Dropoff Lat</string>
+    <string name="dropoff_lng">Dropoff Lng</string>
+    <string name="request_ride">Request Ride</string>
+    <string name="use_current_location">Use Current Location as Pickup</string>
+    <string name="set_pickup">Set Pickup</string>
+    <string name="set_dropoff">Set Dropoff</string>
+    <string name="map_tap_hint_none">Tap \'Set Pickup\' or \'Set Dropoff\', then tap on the map</string>
+    <string name="map_tap_hint_pickup">Tap the map to place your pickup marker</string>
+    <string name="map_tap_hint_dropoff">Tap the map to place your dropoff marker</string>
+    <string name="section_pickup">📍 PICKUP</string>
+    <string name="section_dropoff">🏁 DROPOFF</string>
+    <string name="estimated_fare_label">🧾 Estimated Fare</string>
+    <string name="estimated_fare_placeholder">Set by driver</string>
+    <!-- Map placeholder -->
+    <string name="map_placeholder_icon">🗺️</string>
+    <string name="map_placeholder_title">Map Preview Unavailable</string>
+    <string name="map_placeholder_body">Google Maps API key is not yet activated.\nUse sample data below to test the booking flow.</string>
+    <string name="map_api_notice">⚠️ Google Maps API not yet activated — use sample data to test.</string>
+    <!-- Sample data -->
+    <string name="sample_data_title">📋 Test Without Map</string>
+    <string name="sample_data_body">Load sample Piat locations to test the booking flow without Google Maps.</string>
+    <string name="sample_data_btn">Load Sample Data</string>
+    <!-- Ride status -->
+    <string name="ride_status">Ride Status</string>
+    <!-- History -->
+    <string name="ride_history">Ride History</string>
+    <string name="history_empty_title">No rides yet</string>
+    <string name="history_empty_body">Your completed rides will appear here.</string>
+    <string name="arrow_down">↓</string>
+</resources>

@@ -1,0 +1,7 @@
+com.piatmove.passenger.app-passenger-pngs-0 C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\build\generated\res\pngs\debug
+com.piatmove.passenger.app-passenger-updated_navigation_xml-1 C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\build\generated\updated_navigation_xml\debug
+com.piatmove.passenger.app-passenger-packageDebugResources-2 C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.piatmove.passenger.app-passenger-packageDebugResources-3 C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.piatmove.passenger.app-passenger-debug-4 C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\build\intermediates\merged_res\debug\mergeDebugResources
+com.piatmove.passenger.app-passenger-debug-5 C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\debug\res
+com.piatmove.passenger.app-passenger-main-6 C:\Users\GLENN\AndroidStudioProjects\PiatMove\app-passenger\src\main\res

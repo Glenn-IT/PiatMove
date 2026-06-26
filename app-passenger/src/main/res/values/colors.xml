@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PiatMove Brand -->
+    <color name="colorPrimary">#2454E0</color>
+    <color name="colorPrimaryDark">#1D43B8</color>
+    <color name="colorAccent">#12B76A</color>
+    <!-- Surfaces -->
+    <color name="colorBackground">#F0F4FF</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorPrimaryContainer">#E8EFFF</color>
+    <color name="colorHeroSubtitle">#A8C0FF</color>
+    <color name="colorDivider">#E2E8F4</color>
+    <!-- Booking status -->
+    <color name="statusPending">#F59E0B</color>
+    <color name="statusAccepted">#2454E0</color>
+    <color name="statusStarted">#7C3AED</color>
+    <color name="statusCompleted">#12B76A</color>
+    <color name="statusRejected">#EF4444</color>
+    <color name="statusCancelled">#9CA3AF</color>
+    <!-- Base -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#0F172A</color>
+    <color name="grey">#9CA3AF</color>
+    <color name="grey_text">#64748B</color>
+</resources>
