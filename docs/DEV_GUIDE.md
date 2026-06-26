@@ -60,7 +60,7 @@ Thin PHP router, no framework. Endpoints map exactly to what the Android `ApiSer
 
 **Every response follows the same JSON shape** (matches `ApiResponse.kt`):
 ```json
-{ "success": true, "data": ..., "message": "..." }
+{ "success": true, "data": "...", "message": "..." }
 ```
 
 Auth uses **JWT Bearer tokens** for Android apps.
