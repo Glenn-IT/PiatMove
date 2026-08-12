@@ -19,10 +19,17 @@
     <string name="passenger_home">PiatMove</string>
     <string name="book_ride">Book a Ride</string>
     <string name="logout">Logout</string>
-    <!-- BottomNav tabs -->
-    <string name="tab_dashboard">Dashboard</string>
+    <!-- BottomNav & Drawer tabs -->
+    <string name="tab_dashboard">Home</string>
     <string name="tab_book_ride">Book Ride</string>
     <string name="tab_history">History</string>
+    <string name="tab_profile">Profile</string>
+    <string name="nav_help">Help &amp; Support</string>
+    <string name="nav_profile">My Profile</string>
+    <string name="account_status">Account Status</string>
+    <string name="account_active">Active Passenger</string>
+    <string name="help_title">PiatMove Support</string>
+    <string name="help_subtitle">Need assistance with your ride?</string>
     <!-- Booking -->
     <string name="pickup_address">Pickup Address</string>
     <string name="dropoff_address">Dropoff Address</string>
