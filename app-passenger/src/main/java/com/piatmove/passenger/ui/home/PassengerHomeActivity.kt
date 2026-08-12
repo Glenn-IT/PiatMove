@@ -8,20 +8,16 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.button.MaterialButton
 import com.piatmove.core.data.local.PrefsManager
 import com.piatmove.passenger.R
 import com.piatmove.passenger.databinding.ActivityPassengerHomeBinding
 import com.piatmove.passenger.ui.auth.AuthViewModel
 import com.piatmove.passenger.ui.auth.LoginActivity
 import com.piatmove.passenger.ui.booking.BookRideActivity
-import com.piatmove.passenger.ui.history.RideHistoryFragment
-import com.piatmove.passenger.ui.profile.ProfileFragment
 
 class PassengerHomeActivity : AppCompatActivity() {
 
@@ -74,16 +70,10 @@ class PassengerHomeActivity : AppCompatActivity() {
                     startActivity(Intent(this, BookRideActivity::class.java))
                     true
                 }
-                R.id.drawer_history -> {
-                    binding.bottomNav.selectedItemId = R.id.nav_history
-                    true
-                }
-                R.id.drawer_profile -> {
-                    binding.bottomNav.selectedItemId = R.id.nav_profile
-                    true
-                }
+                R.id.drawer_history,
+                R.id.drawer_profile,
                 R.id.drawer_help -> {
-                    showHelpDialog()
+                    // Function locked (#) — do nothing
                     true
                 }
                 R.id.drawer_logout -> {
@@ -108,48 +98,14 @@ class PassengerHomeActivity : AppCompatActivity() {
                     startActivity(Intent(this, BookRideActivity::class.java))
                     false
                 }
-                R.id.nav_history -> {
-                    binding.fabBookRide.visibility       = View.GONE
-                    binding.fragmentContainer.visibility = View.VISIBLE
-                    supportActionBar?.title = "Ride History"
-                    showHistoryFragment()
-                    true
-                }
+                R.id.nav_history,
                 R.id.nav_profile -> {
-                    binding.fabBookRide.visibility       = View.GONE
-                    binding.fragmentContainer.visibility = View.VISIBLE
-                    supportActionBar?.title = "My Profile"
-                    showProfileFragment()
-                    true
+                    // Function locked (#) — do nothing
+                    false
                 }
                 else -> false
             }
         }
-    }
-
-    private fun showHistoryFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, RideHistoryFragment(), "history")
-            .commit()
-    }
-
-    private fun showProfileFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, ProfileFragment(), "profile")
-            .commit()
-    }
-
-    private fun showHelpDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_help, null)
-        val dialog = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .create()
-
-        dialogView.findViewById<MaterialButton>(R.id.btnCloseHelp).setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
     private fun performLogout() {
