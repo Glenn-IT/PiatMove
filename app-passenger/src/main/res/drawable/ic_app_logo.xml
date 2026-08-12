@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Circular clip so the gradient background becomes a circle -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="linear"
+                android:startColor="#2454E0"
+                android:endColor="#1D43B8"
+                android:angle="135" />
+        </shape>
+    </item>
+    <!-- Route/pin foreground icon centered inside -->
+    <item
+        android:drawable="@drawable/ic_launcher_foreground"
+        android:top="0dp"
+        android:bottom="0dp"
+        android:left="0dp"
+        android:right="0dp" />
+</layer-list>
