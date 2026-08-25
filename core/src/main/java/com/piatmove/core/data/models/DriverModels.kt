@@ -9,6 +9,28 @@ data class UpdateDriverStatusRequest(
     val is_online: Boolean
 )
 
+data class DriverStatusResponse(
+    val is_online: Boolean,
+    val approval_status: String = "pending"
+)
+
+data class DriverProfile(
+    val id: Int,
+    val name: String,
+    val email: String,
+    val phone: String,
+    val role: String,
+    val account_status: String = "active",
+    val license_no: String? = null,
+    val vehicle_no: String? = null,
+    val vehicle_type: String? = null,
+    val barangay: String? = null,
+    val approval_status: String = "pending",
+    val is_online: Boolean = false,
+    val current_lat: Double? = null,
+    val current_lng: Double? = null
+)
+
 // Returned by GET /admin/drivers/pending
 data class PendingDriver(
     val id: Int,

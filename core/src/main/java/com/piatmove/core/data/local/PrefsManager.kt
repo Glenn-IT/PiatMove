@@ -17,6 +17,7 @@ object PrefsManager {
     private const val KEY_ROLE       = "user_role"
     private const val KEY_NAME       = "user_name"
     private const val KEY_PHONE      = "user_phone"
+    private const val KEY_APPROVAL   = "approval_status"
     private const val KEY_FCM        = "fcm_token"
     private const val KEY_SERVER_URL = "server_url"
 
@@ -39,14 +40,19 @@ object PrefsManager {
 
     // ── Login / Logout ────────────────────────────────────────────────────────
 
-    fun saveLoginData(context: Context, token: String, userId: Int, role: String, name: String = "", phone: String = "") {
+    fun saveLoginData(context: Context, token: String, userId: Int, role: String, name: String = "", phone: String = "", approvalStatus: String = "approved") {
         getPrefs(context).edit {
-            putString(KEY_TOKEN,   token)
-            putInt(KEY_USER_ID,    userId)
-            putString(KEY_ROLE,    role)
-            putString(KEY_NAME,    name)
-            putString(KEY_PHONE,   phone)
+            putString(KEY_TOKEN,    token)
+            putInt(KEY_USER_ID,     userId)
+            putString(KEY_ROLE,     role)
+            putString(KEY_NAME,     name)
+            putString(KEY_PHONE,    phone)
+            putString(KEY_APPROVAL, approvalStatus)
         }
+    }
+
+    fun saveDriverApprovalStatus(context: Context, status: String) {
+        getPrefs(context).edit { putString(KEY_APPROVAL, status) }
     }
 
     fun clearAll(context: Context) {
@@ -55,12 +61,13 @@ object PrefsManager {
 
     // ── Getters ───────────────────────────────────────────────────────────────
 
-    fun getJwtToken(context: Context): String?  = getPrefs(context).getString(KEY_TOKEN, null)
-    fun getUserId(context: Context): Int        = getPrefs(context).getInt(KEY_USER_ID, -1)
-    fun getUserRole(context: Context): String?  = getPrefs(context).getString(KEY_ROLE, null)
-    fun getUserName(context: Context): String?  = getPrefs(context).getString(KEY_NAME, null)
-    fun getUserPhone(context: Context): String? = getPrefs(context).getString(KEY_PHONE, null)
-    fun isLoggedIn(context: Context): Boolean   = getJwtToken(context) != null
+    fun getJwtToken(context: Context): String?             = getPrefs(context).getString(KEY_TOKEN, null)
+    fun getUserId(context: Context): Int                   = getPrefs(context).getInt(KEY_USER_ID, -1)
+    fun getUserRole(context: Context): String?             = getPrefs(context).getString(KEY_ROLE, null)
+    fun getUserName(context: Context): String?             = getPrefs(context).getString(KEY_NAME, null)
+    fun getUserPhone(context: Context): String?            = getPrefs(context).getString(KEY_PHONE, null)
+    fun getDriverApprovalStatus(context: Context): String  = getPrefs(context).getString(KEY_APPROVAL, "pending") ?: "pending"
+    fun isLoggedIn(context: Context): Boolean              = getJwtToken(context) != null
 
     // ── FCM Token ─────────────────────────────────────────────────────────────
 

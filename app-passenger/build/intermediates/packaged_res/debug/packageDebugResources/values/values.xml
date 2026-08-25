@@ -18,6 +18,8 @@
     <color name="statusRejected">#EF4444</color>
     <color name="statusStarted">#7C3AED</color>
     <color name="white">#FFFFFF</color>
+    <string name="account_active">Active Passenger</string>
+    <string name="account_status">Account Status</string>
     <string name="already_have_account">Already have an account? Login</string>
     <string name="app_logo_emoji">🚗</string>
     <string name="app_name">PiatMove Passenger</string>
@@ -34,6 +36,8 @@
     <string name="estimated_fare_placeholder">Set by driver</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="full_name">Full Name</string>
+    <string name="help_subtitle">Need assistance with your ride?</string>
+    <string name="help_title">PiatMove Support</string>
     <string name="history_empty_body">Your completed rides will appear here.</string>
     <string name="history_empty_title">No rides yet</string>
     <string name="login">Login</string>
@@ -45,6 +49,8 @@
     <string name="map_tap_hint_dropoff">Tap the map to place your dropoff marker</string>
     <string name="map_tap_hint_none">Tap \'Set Pickup\' or \'Set Dropoff\', then tap on the map</string>
     <string name="map_tap_hint_pickup">Tap the map to place your pickup marker</string>
+    <string name="nav_help">Help &amp; Support</string>
+    <string name="nav_profile">My Profile</string>
     <string name="passenger_home">PiatMove</string>
     <string name="password">Password</string>
     <string name="phone">Phone Number</string>
@@ -65,8 +71,9 @@
     <string name="set_dropoff">Set Dropoff</string>
     <string name="set_pickup">Set Pickup</string>
     <string name="tab_book_ride">Book Ride</string>
-    <string name="tab_dashboard">Dashboard</string>
+    <string name="tab_dashboard">Home</string>
     <string name="tab_history">History</string>
+    <string name="tab_profile">Profile</string>
     <string name="use_current_location">Use Current Location as Pickup</string>
     <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
         <item name="cornerSize">12dp</item>

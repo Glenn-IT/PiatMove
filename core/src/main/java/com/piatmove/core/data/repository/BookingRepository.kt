@@ -122,10 +122,31 @@ class BookingRepository(
         }
     }
 
-    suspend fun updateDriverStatus(isOnline: Boolean): Resource<Unit> {
+    suspend fun getDriverStatus(): Resource<com.piatmove.core.data.models.DriverStatusResponse> {
+        return try {
+            val response = api.getDriverStatus()
+            if (response.success && response.data != null) Resource.Success(response.data)
+            else Resource.Error(response.message)
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun getDriverProfile(): Resource<com.piatmove.core.data.models.DriverProfile> {
+        return try {
+            val response = api.getDriverProfile()
+            if (response.success && response.data != null) Resource.Success(response.data)
+            else Resource.Error(response.message)
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun updateDriverStatus(isOnline: Boolean): Resource<com.piatmove.core.data.models.DriverStatusResponse> {
         return try {
             val response = api.updateDriverStatus(UpdateDriverStatusRequest(isOnline))
-            if (response.success) Resource.Success(Unit) else Resource.Error(response.message)
+            if (response.success && response.data != null) Resource.Success(response.data)
+            else Resource.Error(response.message)
         } catch (e: Exception) {
             Resource.Error(parseApiError(e))
         }

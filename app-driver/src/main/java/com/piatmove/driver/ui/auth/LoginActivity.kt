@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.piatmove.core.data.local.PrefsManager
 import com.piatmove.core.utils.Resource
 import com.piatmove.core.utils.UserRole
+import com.piatmove.driver.R
 import com.piatmove.driver.databinding.ActivityLoginBinding
 import com.piatmove.driver.ui.home.DriverHomeActivity
 
@@ -31,9 +32,18 @@ class LoginActivity : AppCompatActivity() {
         binding.tvRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
+        binding.tvForgotPassword.setOnClickListener { showForgotPasswordDialog() }
         binding.tvServerConfig.setOnClickListener { showServerConfigDialog() }
 
         observeViewModel()
+    }
+
+    private fun showForgotPasswordDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.forgot_password))
+            .setMessage("Please contact the Piat LGU transport admin to reset your driver password.")
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     private fun attemptLogin() {

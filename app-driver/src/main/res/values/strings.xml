@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PiatMove Driver</string>
+    <string name="app_subtitle">Driver Partner — Municipality of Piat</string>
 
     <!-- Auth -->
     <string name="login_title">Driver Login</string>
@@ -14,9 +15,12 @@
     <string name="license_hint">Driver\'s license number</string>
     <string name="vehicle_no_hint">Plate number (e.g. ABC 1234)</string>
     <string name="vehicle_type_hint">Vehicle type</string>
+    <string name="barangay_hint">Barangay (Piat)</string>
     <string name="btn_login">Log In</string>
     <string name="btn_register">Register</string>
+    <string name="forgot_password">Forgot Password?</string>
     <string name="no_account">Don\'t have an account? </string>
+    <string name="dont_have_account">Don\'t have an account? Register</string>
     <string name="have_account">Already have an account? </string>
     <string name="link_register">Register</string>
     <string name="link_login">Log In</string>

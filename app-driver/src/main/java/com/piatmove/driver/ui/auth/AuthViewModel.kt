@@ -14,6 +14,8 @@ import com.piatmove.core.data.repository.AuthRepository
 import com.piatmove.core.utils.Resource
 import kotlinx.coroutines.launch
 
+import java.io.File
+
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repo = AuthRepository(ApiClient.instance, application)
@@ -33,21 +35,27 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun register(
         name: String, email: String, password: String, phone: String,
-        licenseNo: String, vehicleNo: String, vehicleType: String
+        licenseNo: String, vehicleNo: String, vehicleType: String, barangay: String,
+        plateProofFile: File? = null,
+        licenseProofFile: File? = null,
+        driverPhotoFile: File? = null,
+        tricyclePhotoFile: File? = null
     ) {
         _registerState.value = Resource.Loading
         viewModelScope.launch {
-            _registerState.value = repo.register(
-                RegisterRequest(
-                    name         = name,
-                    email        = email,
-                    password     = password,
-                    phone        = phone,
-                    role         = "driver",
-                    license_no   = licenseNo,
-                    vehicle_no   = vehicleNo,
-                    vehicle_type = vehicleType
-                )
+            _registerState.value = repo.registerDriver(
+                name              = name,
+                email             = email,
+                password          = password,
+                phone             = phone,
+                licenseNo         = licenseNo,
+                vehicleNo         = vehicleNo,
+                vehicleType       = vehicleType,
+                barangay          = barangay,
+                plateProofFile    = plateProofFile,
+                licenseProofFile  = licenseProofFile,
+                driverPhotoFile   = driverPhotoFile,
+                tricyclePhotoFile = tricyclePhotoFile
             )
         }
     }

@@ -1,9 +1,5 @@
 [
     {
-        "merged": "com.piatmove.passenger.app-passenger-debug-41:/layout_activity_book_ride.xml.flat",
-        "source": "com.piatmove.passenger.app-passenger-main-43:/layout/activity_book_ride.xml"
-    },
-    {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\layout_activity_login.xml.flat",
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\layout\\activity_login.xml"
     },
@@ -12,16 +8,16 @@
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\layout\\fragment_ride_history.xml"
     },
     {
-        "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_book_ride.xml.flat",
-        "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_book_ride.xml"
-    },
-    {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\mipmap-anydpi-v26\\ic_launcher.xml"
     },
     {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\layout_activity_passenger_home.xml.flat",
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\layout\\activity_passenger_home.xml"
+    },
+    {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/layout_nav_header.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/layout/nav_header.xml"
     },
     {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_back.xml.flat",
@@ -36,12 +32,12 @@
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\layout\\activity_book_ride.xml"
     },
     {
-        "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_dashboard.xml.flat",
-        "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_dashboard.xml"
-    },
-    {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\layout_activity_ride_status.xml.flat",
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\layout\\activity_ride_status.xml"
+    },
+    {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/menu_menu_passenger.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/menu/menu_passenger.xml"
     },
     {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\menu_menu_passenger.xml.flat",
@@ -56,16 +52,56 @@
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\mipmap-anydpi\\ic_launcher.xml"
     },
     {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/layout_activity_passenger_home.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/layout/activity_passenger_home.xml"
+    },
+    {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\menu_menu_home.xml.flat",
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\menu\\menu_home.xml"
     },
     {
-        "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_history.xml.flat",
-        "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_history.xml"
-    },
-    {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_launcher_background.xml.flat",
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_book_ride.xml.flat",
+        "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_book_ride.xml"
+    },
+    {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/drawable_ic_help.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/drawable/ic_help.xml"
+    },
+    {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/drawable_ic_logout.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/drawable/ic_logout.xml"
+    },
+    {
+        "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_dashboard.xml.flat",
+        "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_dashboard.xml"
+    },
+    {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/menu_menu_drawer.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/menu/menu_drawer.xml"
+    },
+    {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/drawable_ic_profile.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/drawable/ic_profile.xml"
+    },
+    {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/layout_fragment_profile.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/drawable_ic_menu.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/drawable/ic_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_history.xml.flat",
+        "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_history.xml"
     },
     {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
@@ -76,11 +112,11 @@
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\mipmap-anydpi\\ic_launcher_round.xml"
     },
     {
-        "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_launcher_foreground.xml.flat",
-        "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_launcher_foreground.xml"
-    },
-    {
         "merged": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-debug-41:\\drawable_ic_app_logo.xml.flat",
         "source": "C:\\Users\\GLENN\\.gradle\\daemon\\9.3.1\\com.piatmove.passenger.app-passenger-main-43:\\drawable\\ic_app_logo.xml"
+    },
+    {
+        "merged": "com.piatmove.passenger.app-passenger-debug-41:/layout_dialog_help.xml.flat",
+        "source": "com.piatmove.passenger.app-passenger-main-43:/layout/dialog_help.xml"
     }
 ]

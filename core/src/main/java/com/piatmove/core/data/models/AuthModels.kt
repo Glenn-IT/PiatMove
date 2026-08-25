@@ -8,7 +8,8 @@ data class RegisterRequest(
     val role: String,                   // "passenger" or "driver"
     val license_no: String?   = null,   // required if role == "driver"
     val vehicle_no: String?   = null,   // required if role == "driver"
-    val vehicle_type: String? = null    // required if role == "driver"
+    val vehicle_type: String? = null,   // required if role == "driver"
+    val barangay: String?     = null    // required if role == "driver"
 )
 
 data class LoginRequest(
@@ -16,18 +17,20 @@ data class LoginRequest(
     val password: String
 )
 
-// PHP returns: { "token": "...", "user_id": 123, "role": "passenger", "name": "...", "phone": "..." }
+// PHP returns: { "token": "...", "user_id": 123, "role": "passenger", "name": "...", "phone": "...", "approval_status": "..." }
 data class LoginResponse(
     val token: String,
     val user_id: Int,
     val role: String,
     val name: String  = "",
-    val phone: String = ""
+    val phone: String = "",
+    val approval_status: String = "approved"
 )
 
 // PHP returns same shape on register
 data class RegisterResponse(
     val token: String,
     val user_id: Int,
-    val role: String
+    val role: String,
+    val approval_status: String = "approved"
 )

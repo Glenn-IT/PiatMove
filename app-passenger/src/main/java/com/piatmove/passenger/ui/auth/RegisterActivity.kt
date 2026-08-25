@@ -38,7 +38,7 @@ class RegisterActivity : AppCompatActivity() {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.tilEmail.error = "Invalid email address"; return
         }
-        if (password.length < 6) { binding.tilPassword.error = "Min 6 characters"; return }
+        if (password.length < 8) { binding.tilPassword.error = "Minimum 8 characters"; return }
         if (phone.isEmpty()) { binding.tilPhone.error = "Phone is required"; return }
 
         listOf(binding.tilName, binding.tilEmail, binding.tilPassword, binding.tilPhone)

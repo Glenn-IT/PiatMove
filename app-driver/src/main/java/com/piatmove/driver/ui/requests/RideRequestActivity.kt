@@ -16,6 +16,7 @@ class RideRequestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRideRequestBinding
     private lateinit var viewModel: DriverViewModel
     private var bookingId: Int = -1
+    private var isRejecting: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +32,16 @@ class RideRequestActivity : AppCompatActivity() {
         loadBookingDetails()
 
         binding.btnAccept.setOnClickListener {
-            if (bookingId != -1) viewModel.acceptRide(bookingId)
+            if (bookingId != -1) {
+                isRejecting = false
+                viewModel.acceptRide(bookingId)
+            }
         }
         binding.btnReject.setOnClickListener {
-            if (bookingId != -1) viewModel.rejectRide(bookingId)
+            if (bookingId != -1) {
+                isRejecting = true
+                viewModel.rejectRide(bookingId)
+            }
         }
 
         observeViewModel()
@@ -66,11 +73,15 @@ class RideRequestActivity : AppCompatActivity() {
                     binding.progressBar.visibility  = View.GONE
                     binding.btnAccept.isEnabled     = true
                     binding.btnReject.isEnabled     = true
-                    Toast.makeText(this, "Done!", Toast.LENGTH_SHORT).show()
-                    startActivity(
-                        Intent(this, ActiveRideActivity::class.java)
-                            .putExtra(ActiveRideActivity.EXTRA_BOOKING_ID, bookingId)
-                    )
+                    if (isRejecting) {
+                        Toast.makeText(this, "Ride rejected", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Ride accepted!", Toast.LENGTH_SHORT).show()
+                        startActivity(
+                            Intent(this, ActiveRideActivity::class.java)
+                                .putExtra(ActiveRideActivity.EXTRA_BOOKING_ID, bookingId)
+                        )
+                    }
                     finish()
                 }
                 is Resource.Error -> {

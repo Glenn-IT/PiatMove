@@ -43,6 +43,43 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Approval Warning Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPendingApproval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="#FEF3C7"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="#F59E0B"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView
+                    android:id="@+id/tvPendingTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⏳ Account Pending Approval"
+                    android:textColor="#B45309"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvPendingSub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Your driver account is currently under review by the LGU Admin. You will be able to go online once approved."
+                    android:textColor="#92400E"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="2dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Online status card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"

@@ -16,7 +16,9 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
 
     private val repo = BookingRepository(ApiClient.instance)
 
+    val approvalStatus = MutableLiveData(com.piatmove.core.data.local.PrefsManager.getDriverApprovalStatus(application))
     val isOnline = MutableLiveData(false)
+    val statusError = MutableLiveData<String?>()
 
     private val _requests = MutableLiveData<Resource<List<Booking>>>()
     val requests: LiveData<Resource<List<Booking>>> = _requests
@@ -26,6 +28,24 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
 
     private val _actionState = MutableLiveData<Resource<Unit>>()
     val actionState: LiveData<Resource<Unit>> = _actionState
+
+    fun checkDriverStatus() {
+        viewModelScope.launch {
+            when (val result = repo.getDriverStatus()) {
+                is Resource.Success -> {
+                    val status = result.data?.approval_status ?: "pending"
+                    val online = result.data?.is_online ?: false
+                    approvalStatus.value = status
+                    isOnline.value = online
+                    com.piatmove.core.data.local.PrefsManager.saveDriverApprovalStatus(getApplication(), status)
+                }
+                is Resource.Error -> {
+                    approvalStatus.value = com.piatmove.core.data.local.PrefsManager.getDriverApprovalStatus(getApplication())
+                }
+                Resource.Loading -> {}
+            }
+        }
+    }
 
     fun loadRequests() {
         _requests.value = Resource.Loading
@@ -52,9 +72,27 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun toggleOnline(online: Boolean) {
+        val currentApproval = approvalStatus.value ?: com.piatmove.core.data.local.PrefsManager.getDriverApprovalStatus(getApplication())
+        if (online && currentApproval != "approved") {
+            isOnline.value = false
+            statusError.value = "Cannot go online: your account is pending admin approval."
+            return
+        }
+
         viewModelScope.launch {
-            repo.updateDriverStatus(online)
-            isOnline.value = online
+            when (val result = repo.updateDriverStatus(online)) {
+                is Resource.Success -> {
+                    isOnline.value = result.data?.is_online ?: online
+                    val newApproval = result.data?.approval_status ?: currentApproval
+                    approvalStatus.value = newApproval
+                    com.piatmove.core.data.local.PrefsManager.saveDriverApprovalStatus(getApplication(), newApproval)
+                }
+                is Resource.Error -> {
+                    isOnline.value = false
+                    statusError.value = result.message
+                }
+                Resource.Loading -> {}
+            }
         }
     }
 

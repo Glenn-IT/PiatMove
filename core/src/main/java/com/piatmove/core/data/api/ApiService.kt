@@ -12,10 +12,14 @@ import com.piatmove.core.data.models.RegisterResponse
 import com.piatmove.core.data.models.UpdateDriverStatusRequest
 import com.piatmove.core.data.models.UpdateLocationRequest
 import com.piatmove.core.data.models.User
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
@@ -25,6 +29,24 @@ interface ApiService {
 
     @POST("auth/register")
     suspend fun register(@Body body: RegisterRequest): ApiResponse<RegisterResponse>
+
+    @Multipart
+    @POST("auth/register")
+    suspend fun registerDriver(
+        @Part("name") name: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part("password") password: RequestBody,
+        @Part("phone") phone: RequestBody,
+        @Part("role") role: RequestBody,
+        @Part("license_no") licenseNo: RequestBody,
+        @Part("vehicle_no") vehicleNo: RequestBody,
+        @Part("vehicle_type") vehicleType: RequestBody,
+        @Part("barangay") barangay: RequestBody,
+        @Part plateProof: MultipartBody.Part? = null,
+        @Part licenseProof: MultipartBody.Part? = null,
+        @Part driverPhoto: MultipartBody.Part? = null,
+        @Part tricyclePhoto: MultipartBody.Part? = null
+    ): ApiResponse<RegisterResponse>
 
     @POST("auth/login")
     suspend fun login(@Body body: LoginRequest): ApiResponse<LoginResponse>
@@ -68,8 +90,14 @@ interface ApiService {
     @PUT("driver/location")
     suspend fun updateLocation(@Body body: UpdateLocationRequest): ApiResponse<Unit>
 
+    @GET("driver/status")
+    suspend fun getDriverStatus(): ApiResponse<com.piatmove.core.data.models.DriverStatusResponse>
+
+    @GET("driver/profile")
+    suspend fun getDriverProfile(): ApiResponse<com.piatmove.core.data.models.DriverProfile>
+
     @PUT("driver/status")
-    suspend fun updateDriverStatus(@Body body: UpdateDriverStatusRequest): ApiResponse<Unit>
+    suspend fun updateDriverStatus(@Body body: UpdateDriverStatusRequest): ApiResponse<com.piatmove.core.data.models.DriverStatusResponse>
 
     // ── User ──────────────────────────────────────────────────────────────────
 
