@@ -98,9 +98,24 @@ object PrefsManager {
         if (photoPath.isNullOrBlank()) return null
         if (photoPath.startsWith("http://") || photoPath.startsWith("https://")) return photoPath
         val serverBase = getServerUrl(context).trimEnd('/')
-        // If server is pointing to /api/, replace with base or admin path for uploads
+        val cleanPath  = photoPath.trimStart('/')
         val domainRoot = if (serverBase.endsWith("/api")) serverBase.removeSuffix("/api") else serverBase
-        return "$domainRoot/admin/${photoPath.trimStart('/')}"
+
+        return if (cleanPath.startsWith("api/") || cleanPath.startsWith("admin/")) {
+            "$domainRoot/$cleanPath"
+        } else {
+            // Direct API upload path
+            "$serverBase/$cleanPath"
+        }
+    }
+
+    fun getFallbackPhotoUrl(context: Context, photoPath: String?): String? {
+        if (photoPath.isNullOrBlank()) return null
+        if (photoPath.startsWith("http://") || photoPath.startsWith("https://")) return null
+        val serverBase = getServerUrl(context).trimEnd('/')
+        val cleanPath  = photoPath.trimStart('/')
+        val domainRoot = if (serverBase.endsWith("/api")) serverBase.removeSuffix("/api") else serverBase
+        return "$domainRoot/admin/$cleanPath"
     }
 
     // ── FCM Token ─────────────────────────────────────────────────────────────

@@ -141,22 +141,41 @@ class PassengerHomeActivity : AppCompatActivity() {
         tvNavName.text = name
         tvNavRole.text = "✓ Active Passenger"
 
-        val fullPhotoUrl = PrefsManager.getFullPhotoUrl(this, photoPath)
+        val fullPhotoUrl     = PrefsManager.getFullPhotoUrl(this, photoPath)
+        val fallbackPhotoUrl = PrefsManager.getFallbackPhotoUrl(this, photoPath)
+
         if (!fullPhotoUrl.isNullOrBlank()) {
             lifecycleScope.launch(Dispatchers.IO) {
-                try {
-                    val stream = java.net.URL(fullPhotoUrl).openStream()
-                    val bitmap = BitmapFactory.decodeStream(stream)
-                    withContext(Dispatchers.Main) {
-                        if (bitmap != null) {
-                            imgNavAvatar.setImageBitmap(bitmap)
-                            imgNavAvatar.imageTintList = null
-                        }
+                val bitmap = downloadHeaderBitmap(fullPhotoUrl) ?: fallbackPhotoUrl?.let { downloadHeaderBitmap(it) }
+                withContext(Dispatchers.Main) {
+                    if (bitmap != null) {
+                        imgNavAvatar.setImageBitmap(bitmap)
+                        imgNavAvatar.imageTintList = null
+                    } else {
+                        imgNavAvatar.setImageResource(R.drawable.ic_profile)
                     }
-                } catch (_: Exception) {}
+                }
             }
         } else {
             imgNavAvatar.setImageResource(R.drawable.ic_profile)
+        }
+    }
+
+    private fun downloadHeaderBitmap(urlString: String): android.graphics.Bitmap? {
+        return try {
+            val url = java.net.URL(urlString)
+            val conn = url.openConnection() as java.net.HttpURLConnection
+            conn.connectTimeout = 8000
+            conn.readTimeout = 8000
+            conn.instanceFollowRedirects = true
+            conn.connect()
+            if (conn.responseCode == java.net.HttpURLConnection.HTTP_OK) {
+                BitmapFactory.decodeStream(conn.inputStream)
+            } else {
+                null
+            }
+        } catch (_: Exception) {
+            null
         }
     }
 

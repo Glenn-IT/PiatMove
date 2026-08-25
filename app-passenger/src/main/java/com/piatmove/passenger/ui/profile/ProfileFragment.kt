@@ -1,6 +1,7 @@
 package com.piatmove.passenger.ui.profile
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -20,6 +21,8 @@ import com.piatmove.passenger.ui.auth.AuthViewModel
 import com.piatmove.passenger.ui.auth.LoginActivity
 import java.io.File
 import java.io.FileOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -174,7 +177,15 @@ class ProfileFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    state.data?.photo_path?.let { loadAvatarImage(it) }
+                    state.data?.photo_path?.let {
+                        PrefsManager.saveUserProfile(
+                            requireContext(),
+                            name      = PrefsManager.getUserName(requireContext()) ?: "",
+                            phone     = PrefsManager.getUserPhone(requireContext()) ?: "",
+                            photoPath = it
+                        )
+                        loadAvatarImage(it)
+                    }
                     Toast.makeText(requireContext(), "Profile photo updated!", Toast.LENGTH_SHORT).show()
                 }
                 is Resource.Error -> {
@@ -186,23 +197,40 @@ class ProfileFragment : Fragment() {
     }
 
     private fun loadAvatarImage(photoPath: String?) {
-        val fullUrl = PrefsManager.getFullPhotoUrl(requireContext(), photoPath)
+        val fullUrl     = PrefsManager.getFullPhotoUrl(requireContext(), photoPath)
+        val fallbackUrl = PrefsManager.getFallbackPhotoUrl(requireContext(), photoPath)
+
         if (fullUrl.isNullOrBlank()) {
             binding.ivProfileAvatar.setImageResource(R.drawable.ic_profile)
             return
         }
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val stream = java.net.URL(fullUrl).openStream()
-                val bitmap = BitmapFactory.decodeStream(stream)
-                withContext(Dispatchers.Main) {
-                    if (bitmap != null) {
-                        binding.ivProfileAvatar.setImageBitmap(bitmap)
-                        binding.ivProfileAvatar.imageTintList = null
-                    }
+            val bitmap = downloadBitmap(fullUrl) ?: fallbackUrl?.let { downloadBitmap(it) }
+            withContext(Dispatchers.Main) {
+                if (bitmap != null && _binding != null) {
+                    binding.ivProfileAvatar.setImageBitmap(bitmap)
+                    binding.ivProfileAvatar.imageTintList = null
                 }
-            } catch (_: Exception) {}
+            }
+        }
+    }
+
+    private fun downloadBitmap(urlString: String): Bitmap? {
+        return try {
+            val url = URL(urlString)
+            val conn = url.openConnection() as HttpURLConnection
+            conn.connectTimeout = 8000
+            conn.readTimeout = 8000
+            conn.instanceFollowRedirects = true
+            conn.connect()
+            if (conn.responseCode == HttpURLConnection.HTTP_OK) {
+                BitmapFactory.decodeStream(conn.inputStream)
+            } else {
+                null
+            }
+        } catch (_: Exception) {
+            null
         }
     }
 
