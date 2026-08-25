@@ -10,8 +10,12 @@ import com.piatmove.core.data.models.LoginRequest
 import com.piatmove.core.data.models.LoginResponse
 import com.piatmove.core.data.models.RegisterRequest
 import com.piatmove.core.data.models.RegisterResponse
+import com.piatmove.core.data.models.UpdateProfilePhotoResponse
+import com.piatmove.core.data.models.UpdateProfileRequest
+import com.piatmove.core.data.models.UserProfile
 import com.piatmove.core.data.repository.AuthRepository
 import com.piatmove.core.utils.Resource
+import java.io.File
 import kotlinx.coroutines.launch
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -43,6 +47,36 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     role     = "passenger"
                 )
             )
+        }
+    }
+
+    private val _profileState = MutableLiveData<Resource<UserProfile>>()
+    val profileState: LiveData<Resource<UserProfile>> = _profileState
+
+    fun fetchProfile() {
+        _profileState.value = Resource.Loading
+        viewModelScope.launch {
+            _profileState.value = repo.getUserProfile()
+        }
+    }
+
+    private val _updateProfileState = MutableLiveData<Resource<UpdateProfileRequest>>()
+    val updateProfileState: LiveData<Resource<UpdateProfileRequest>> = _updateProfileState
+
+    fun updateProfile(name: String, phone: String) {
+        _updateProfileState.value = Resource.Loading
+        viewModelScope.launch {
+            _updateProfileState.value = repo.updateProfile(name, phone)
+        }
+    }
+
+    private val _updatePhotoState = MutableLiveData<Resource<UpdateProfilePhotoResponse>>()
+    val updatePhotoState: LiveData<Resource<UpdateProfilePhotoResponse>> = _updatePhotoState
+
+    fun uploadPhoto(file: File) {
+        _updatePhotoState.value = Resource.Loading
+        viewModelScope.launch {
+            _updatePhotoState.value = repo.uploadProfilePhoto(file)
         }
     }
 

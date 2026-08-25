@@ -22,6 +22,18 @@
     <item android:title="Account &amp; Support">
         <menu>
             <item
+                android:id="@+id/drawer_manual"
+                android:icon="@drawable/ic_manual"
+                android:title="System Manual" />
+            <item
+                android:id="@+id/drawer_developers"
+                android:icon="@drawable/ic_developers"
+                android:title="Developers" />
+            <item
+                android:id="@+id/drawer_about"
+                android:icon="@drawable/ic_about"
+                android:title="About Us" />
+            <item
                 android:id="@+id/drawer_help"
                 android:icon="@drawable/ic_help"
                 android:title="@string/nav_help" />

@@ -101,6 +101,16 @@ interface ApiService {
 
     // ── User ──────────────────────────────────────────────────────────────────
 
+    @GET("user/profile")
+    suspend fun getUserProfile(): ApiResponse<com.piatmove.core.data.models.UserProfile>
+
+    @PUT("user/profile")
+    suspend fun updateProfile(@Body body: com.piatmove.core.data.models.UpdateProfileRequest): ApiResponse<com.piatmove.core.data.models.UpdateProfileRequest>
+
+    @Multipart
+    @POST("user/profile-photo")
+    suspend fun uploadProfilePhoto(@Part photo: MultipartBody.Part): ApiResponse<com.piatmove.core.data.models.UpdateProfilePhotoResponse>
+
     @PUT("user/fcm-token")
     suspend fun updateFcmToken(@Body body: FcmTokenRequest): ApiResponse<Unit>
 

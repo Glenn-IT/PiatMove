@@ -1,27 +1,24 @@
 package com.piatmove.passenger.ui.booking
 
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.piatmove.core.data.models.BookingRequest
 import com.piatmove.core.utils.Resource
 import com.piatmove.passenger.R
 import com.piatmove.passenger.databinding.ActivityBookRideBinding
+import com.piatmove.passenger.ui.home.PassengerHomeActivity
 import com.piatmove.passenger.ui.home.PassengerViewModel
 
 class BookRideActivity : AppCompatActivity() {
 
-    private enum class MapMode { NONE, PICKUP, DROPOFF }
-
     private lateinit var binding: ActivityBookRideBinding
     private lateinit var viewModel: PassengerViewModel
-    private var mapMode = MapMode.NONE
+    private var passengerCount: Int = 1
+    private val FARE_PER_PASSENGER: Double = 20.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,65 +30,77 @@ class BookRideActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[PassengerViewModel::class.java]
 
-        binding.btnModePickup.setOnClickListener {
-            setMapMode(if (mapMode == MapMode.PICKUP) MapMode.NONE else MapMode.PICKUP)
-        }
-        binding.btnModeDropoff.setOnClickListener {
-            setMapMode(if (mapMode == MapMode.DROPOFF) MapMode.NONE else MapMode.DROPOFF)
-        }
+        setupPassengerCounter()
+        setupBottomNav()
 
-        binding.btnUseCurrentLocation.setOnClickListener {
-            Toast.makeText(this, "Location pin requires Maps API key.", Toast.LENGTH_SHORT).show()
-        }
-        binding.btnRequestRide.setOnClickListener { submitBooking() }
         binding.btnUseSampleData.setOnClickListener { fillSampleData() }
+        binding.btnRequestRide.setOnClickListener { submitBooking() }
 
-        setMapMode(MapMode.NONE)
         observeViewModel()
+        updateFareUI()
     }
 
-    override fun onSupportNavigateUp(): Boolean { onBackPressedDispatcher.onBackPressed(); return true }
-
-    private fun setMapMode(mode: MapMode) {
-        mapMode = mode
-        val primaryColor = ContextCompat.getColor(this, R.color.colorPrimary)
-        val activeBg     = ColorStateList.valueOf(primaryColor)
-        val inactiveBg   = ColorStateList.valueOf(Color.TRANSPARENT)
-
-        when (mode) {
-            MapMode.PICKUP -> {
-                binding.btnModePickup.backgroundTintList  = activeBg
-                binding.btnModePickup.setTextColor(Color.WHITE)
-                binding.btnModeDropoff.backgroundTintList = inactiveBg
-                binding.btnModeDropoff.setTextColor(primaryColor)
-                binding.tvMapHint.text = getString(R.string.map_tap_hint_pickup)
-                binding.tvMapHint.setTextColor(primaryColor)
+    private fun setupPassengerCounter() {
+        binding.btnMinusPassenger.setOnClickListener {
+            if (passengerCount > 1) {
+                passengerCount--
+                updateFareUI()
+            } else {
+                Toast.makeText(this, "Minimum is 1 passenger.", Toast.LENGTH_SHORT).show()
             }
-            MapMode.DROPOFF -> {
-                binding.btnModeDropoff.backgroundTintList = activeBg
-                binding.btnModeDropoff.setTextColor(Color.WHITE)
-                binding.btnModePickup.backgroundTintList  = inactiveBg
-                binding.btnModePickup.setTextColor(primaryColor)
-                binding.tvMapHint.text = getString(R.string.map_tap_hint_dropoff)
-                binding.tvMapHint.setTextColor(ContextCompat.getColor(this, R.color.statusCompleted))
-            }
-            MapMode.NONE -> {
-                binding.btnModePickup.backgroundTintList  = inactiveBg
-                binding.btnModePickup.setTextColor(primaryColor)
-                binding.btnModeDropoff.backgroundTintList = inactiveBg
-                binding.btnModeDropoff.setTextColor(primaryColor)
-                binding.tvMapHint.text = getString(R.string.map_tap_hint_none)
-                binding.tvMapHint.setTextColor(ContextCompat.getColor(this, R.color.grey))
+        }
+
+        binding.btnPlusPassenger.setOnClickListener {
+            if (passengerCount < 5) {
+                passengerCount++
+                updateFareUI()
+            } else {
+                Toast.makeText(this, "Maximum capacity is 5 passengers per tricycle.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun fillCurrentLocation() {
-        Toast.makeText(this, "Location pin requires Maps API key.", Toast.LENGTH_SHORT).show()
+    private fun updateFareUI() {
+        binding.tvPassengerCount.text = passengerCount.toString()
+        val totalFare = passengerCount * FARE_PER_PASSENGER
+        binding.tvEstimatedFare.text = "₱${String.format("%.2f", totalFare)}"
+        binding.tvFareBreakdown.text = "₱20.00 × $passengerCount passenger${if (passengerCount > 1) "s" else ""}"
+    }
+
+    private fun setupBottomNav() {
+        binding.bottomNav.selectedItemId = R.id.nav_book_ride
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, PassengerHomeActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    })
+                    finish()
+                    true
+                }
+                R.id.nav_book_ride -> true
+                R.id.nav_history -> {
+                    startActivity(Intent(this, PassengerHomeActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        putExtra("TARGET_TAB", R.id.nav_history)
+                    })
+                    finish()
+                    true
+                }
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, PassengerHomeActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        putExtra("TARGET_TAB", R.id.nav_profile)
+                    })
+                    finish()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun fillSampleData() {
-        // Piat, Cagayan approximate coordinates
         binding.etPickupAddress.setText("Piat Public Market, Piat, Cagayan")
         binding.etPickupLat.setText("17.7887")
         binding.etPickupLng.setText("121.4673")
@@ -108,15 +117,33 @@ class BookRideActivity : AppCompatActivity() {
         val dropoffLat  = binding.etDropoffLat.text.toString().toDoubleOrNull()
         val dropoffLng  = binding.etDropoffLng.text.toString().toDoubleOrNull()
 
-        if (pickupAddr.isEmpty())  { binding.tilPickupAddress.error  = "Required"; return }
-        if (pickupLat == null)     { binding.tilPickupLat.error      = "Invalid";  return }
-        if (pickupLng == null)     { binding.tilPickupLng.error      = "Invalid";  return }
-        if (dropoffAddr.isEmpty()) { binding.tilDropoffAddress.error = "Required"; return }
-        if (dropoffLat == null)    { binding.tilDropoffLat.error     = "Invalid";  return }
-        if (dropoffLng == null)    { binding.tilDropoffLng.error     = "Invalid";  return }
+        if (pickupAddr.isEmpty())  { binding.tilPickupAddress.error  = "Pickup address is required"; return }
+        if (pickupLat == null)     { binding.tilPickupLat.error      = "Valid latitude required"; return }
+        if (pickupLng == null)     { binding.tilPickupLng.error      = "Valid longitude required"; return }
+        if (dropoffAddr.isEmpty()) { binding.tilDropoffAddress.error = "Dropoff address is required"; return }
+        if (dropoffLat == null)    { binding.tilDropoffLat.error     = "Valid latitude required"; return }
+        if (dropoffLng == null)    { binding.tilDropoffLng.error     = "Valid longitude required"; return }
+
+        binding.tilPickupAddress.error  = null
+        binding.tilPickupLat.error      = null
+        binding.tilPickupLng.error      = null
+        binding.tilDropoffAddress.error = null
+        binding.tilDropoffLat.error     = null
+        binding.tilDropoffLng.error     = null
+
+        val totalFare = passengerCount * FARE_PER_PASSENGER
 
         viewModel.createBooking(
-            BookingRequest(pickupAddr, pickupLat, pickupLng, dropoffAddr, dropoffLat, dropoffLng)
+            BookingRequest(
+                pickup_address  = pickupAddr,
+                pickup_lat      = pickupLat,
+                pickup_lng      = pickupLng,
+                dropoff_address = dropoffAddr,
+                dropoff_lat     = dropoffLat,
+                dropoff_lng     = dropoffLng,
+                passenger_count = passengerCount,
+                fare            = totalFare
+            )
         )
     }
 
@@ -144,5 +171,10 @@ class BookRideActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }

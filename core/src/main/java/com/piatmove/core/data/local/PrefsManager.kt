@@ -16,7 +16,9 @@ object PrefsManager {
     private const val KEY_USER_ID    = "user_id"
     private const val KEY_ROLE       = "user_role"
     private const val KEY_NAME       = "user_name"
+    private const val KEY_EMAIL      = "user_email"
     private const val KEY_PHONE      = "user_phone"
+    private const val KEY_PHOTO_PATH = "user_photo_path"
     private const val KEY_APPROVAL   = "approval_status"
     private const val KEY_FCM        = "fcm_token"
     private const val KEY_SERVER_URL = "server_url"
@@ -40,14 +42,35 @@ object PrefsManager {
 
     // ── Login / Logout ────────────────────────────────────────────────────────
 
-    fun saveLoginData(context: Context, token: String, userId: Int, role: String, name: String = "", phone: String = "", approvalStatus: String = "approved") {
+    fun saveLoginData(
+        context: Context,
+        token: String,
+        userId: Int,
+        role: String,
+        name: String = "",
+        phone: String = "",
+        email: String = "",
+        photoPath: String? = null,
+        approvalStatus: String = "approved"
+    ) {
         getPrefs(context).edit {
-            putString(KEY_TOKEN,    token)
-            putInt(KEY_USER_ID,     userId)
-            putString(KEY_ROLE,     role)
-            putString(KEY_NAME,     name)
-            putString(KEY_PHONE,    phone)
-            putString(KEY_APPROVAL, approvalStatus)
+            putString(KEY_TOKEN,      token)
+            putInt(KEY_USER_ID,       userId)
+            putString(KEY_ROLE,       role)
+            putString(KEY_NAME,       name)
+            putString(KEY_PHONE,      phone)
+            putString(KEY_EMAIL,      email)
+            putString(KEY_PHOTO_PATH, photoPath)
+            putString(KEY_APPROVAL,   approvalStatus)
+        }
+    }
+
+    fun saveUserProfile(context: Context, name: String, phone: String, email: String? = null, photoPath: String? = null) {
+        getPrefs(context).edit {
+            putString(KEY_NAME, name)
+            putString(KEY_PHONE, phone)
+            if (email != null) putString(KEY_EMAIL, email)
+            if (photoPath != null) putString(KEY_PHOTO_PATH, photoPath)
         }
     }
 
@@ -65,9 +88,20 @@ object PrefsManager {
     fun getUserId(context: Context): Int                   = getPrefs(context).getInt(KEY_USER_ID, -1)
     fun getUserRole(context: Context): String?             = getPrefs(context).getString(KEY_ROLE, null)
     fun getUserName(context: Context): String?             = getPrefs(context).getString(KEY_NAME, null)
+    fun getUserEmail(context: Context): String?            = getPrefs(context).getString(KEY_EMAIL, null)
     fun getUserPhone(context: Context): String?            = getPrefs(context).getString(KEY_PHONE, null)
+    fun getUserPhotoPath(context: Context): String?        = getPrefs(context).getString(KEY_PHOTO_PATH, null)
     fun getDriverApprovalStatus(context: Context): String  = getPrefs(context).getString(KEY_APPROVAL, "pending") ?: "pending"
     fun isLoggedIn(context: Context): Boolean              = getJwtToken(context) != null
+
+    fun getFullPhotoUrl(context: Context, photoPath: String?): String? {
+        if (photoPath.isNullOrBlank()) return null
+        if (photoPath.startsWith("http://") || photoPath.startsWith("https://")) return photoPath
+        val serverBase = getServerUrl(context).trimEnd('/')
+        // If server is pointing to /api/, replace with base or admin path for uploads
+        val domainRoot = if (serverBase.endsWith("/api")) serverBase.removeSuffix("/api") else serverBase
+        return "$domainRoot/admin/${photoPath.trimStart('/')}"
+    }
 
     // ── FCM Token ─────────────────────────────────────────────────────────────
 

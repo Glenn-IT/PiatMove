@@ -8,6 +8,9 @@ import com.piatmove.core.data.models.LoginRequest
 import com.piatmove.core.data.models.LoginResponse
 import com.piatmove.core.data.models.RegisterRequest
 import com.piatmove.core.data.models.RegisterResponse
+import com.piatmove.core.data.models.UpdateProfilePhotoResponse
+import com.piatmove.core.data.models.UpdateProfileRequest
+import com.piatmove.core.data.models.UserProfile
 import com.piatmove.core.utils.Resource
 
 import java.io.File
@@ -93,9 +96,71 @@ class AuthRepository(
                     role           = response.data.role,
                     name           = response.data.name,
                     phone          = response.data.phone,
+                    email          = response.data.email ?: request.email,
+                    photoPath      = response.data.photo_path,
                     approvalStatus = response.data.approval_status
                 )
                 syncFcmTokenIfAvailable()
+                Resource.Success(response.data)
+            } else {
+                Resource.Error(response.message)
+            }
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun getUserProfile(): Resource<UserProfile> {
+        return try {
+            val response = api.getUserProfile()
+            if (response.success && response.data != null) {
+                PrefsManager.saveUserProfile(
+                    context,
+                    name      = response.data.name,
+                    phone     = response.data.phone,
+                    email     = response.data.email,
+                    photoPath = response.data.photo_path
+                )
+                Resource.Success(response.data)
+            } else {
+                Resource.Error(response.message)
+            }
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun updateProfile(name: String, phone: String): Resource<UpdateProfileRequest> {
+        return try {
+            val response = api.updateProfile(UpdateProfileRequest(name, phone))
+            if (response.success && response.data != null) {
+                PrefsManager.saveUserProfile(context, name = name, phone = phone)
+                Resource.Success(response.data)
+            } else {
+                Resource.Error(response.message)
+            }
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun uploadProfilePhoto(photoFile: File): Resource<UpdateProfilePhotoResponse> {
+        return try {
+            val mediaType = when (photoFile.extension.lowercase()) {
+                "png"  -> "image/png".toMediaTypeOrNull()
+                "webp" -> "image/webp".toMediaTypeOrNull()
+                else   -> "image/jpeg".toMediaTypeOrNull()
+            }
+            val requestFile = photoFile.asRequestBody(mediaType)
+            val part = MultipartBody.Part.createFormData("photo", photoFile.name, requestFile)
+            val response = api.uploadProfilePhoto(part)
+            if (response.success && response.data != null) {
+                PrefsManager.saveUserProfile(
+                    context,
+                    name      = PrefsManager.getUserName(context) ?: "",
+                    phone     = PrefsManager.getUserPhone(context) ?: "",
+                    photoPath = response.data.photo_path
+                )
                 Resource.Success(response.data)
             } else {
                 Resource.Error(response.message)

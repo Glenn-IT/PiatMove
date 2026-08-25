@@ -1,11 +1,13 @@
 package com.piatmove.passenger.ui.home
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -15,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.piatmove.core.data.local.PrefsManager
 import com.piatmove.core.data.models.Booking
 import com.piatmove.core.utils.Resource
@@ -26,6 +29,9 @@ import com.piatmove.passenger.ui.booking.BookRideActivity
 import com.piatmove.passenger.ui.booking.RideStatusActivity
 import com.piatmove.passenger.ui.history.RideHistoryFragment
 import com.piatmove.passenger.ui.profile.ProfileFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PassengerHomeActivity : AppCompatActivity() {
 
@@ -50,10 +56,23 @@ class PassengerHomeActivity : AppCompatActivity() {
         setupHomeShortcuts()
         observeActiveBooking()
 
-        val name = PrefsManager.getUserName(this) ?: "Passenger"
-        binding.tvGreeting.text = "Hello, $name! 👋"
+        val targetTab = intent.getIntExtra("TARGET_TAB", -1)
+        if (targetTab != -1) {
+            binding.bottomNav.selectedItemId = targetTab
+        } else if (savedInstanceState == null) {
+            showHome()
+        }
 
         requestNotificationPermission()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val targetTab = intent.getIntExtra("TARGET_TAB", -1)
+        if (targetTab != -1) {
+            binding.bottomNav.selectedItemId = targetTab
+        }
     }
 
     private fun setupDrawer() {
@@ -64,12 +83,7 @@ class PassengerHomeActivity : AppCompatActivity() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        val headerView = binding.navigationView.getHeaderView(0)
-        val tvNavName  = headerView.findViewById<TextView>(R.id.tvNavName)
-        val tvNavRole  = headerView.findViewById<TextView>(R.id.tvNavRole)
-
-        tvNavName.text = PrefsManager.getUserName(this) ?: "Passenger Account"
-        tvNavRole.text = "✓ Active Passenger"
+        updateDrawerHeader()
 
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             binding.drawerLayout.closeDrawer(GravityCompat.START)
@@ -90,6 +104,18 @@ class PassengerHomeActivity : AppCompatActivity() {
                     binding.bottomNav.selectedItemId = R.id.nav_profile
                     true
                 }
+                R.id.drawer_manual -> {
+                    showSystemManualDialog()
+                    true
+                }
+                R.id.drawer_developers -> {
+                    showDevelopersDialog()
+                    true
+                }
+                R.id.drawer_about -> {
+                    showAboutUsDialog()
+                    true
+                }
                 R.id.drawer_help -> {
                     showHelpDialog()
                     true
@@ -100,6 +126,37 @@ class PassengerHomeActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun updateDrawerHeader() {
+        val headerView    = binding.navigationView.getHeaderView(0)
+        val imgNavAvatar  = headerView.findViewById<ImageView>(R.id.imgNavAvatar)
+        val tvNavName     = headerView.findViewById<TextView>(R.id.tvNavName)
+        val tvNavRole     = headerView.findViewById<TextView>(R.id.tvNavRole)
+
+        val name      = PrefsManager.getUserName(this) ?: "Passenger Account"
+        val photoPath = PrefsManager.getUserPhotoPath(this)
+
+        tvNavName.text = name
+        tvNavRole.text = "✓ Active Passenger"
+
+        val fullPhotoUrl = PrefsManager.getFullPhotoUrl(this, photoPath)
+        if (!fullPhotoUrl.isNullOrBlank()) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    val stream = java.net.URL(fullPhotoUrl).openStream()
+                    val bitmap = BitmapFactory.decodeStream(stream)
+                    withContext(Dispatchers.Main) {
+                        if (bitmap != null) {
+                            imgNavAvatar.setImageBitmap(bitmap)
+                            imgNavAvatar.imageTintList = null
+                        }
+                    }
+                } catch (_: Exception) {}
+            }
+        } else {
+            imgNavAvatar.setImageResource(R.drawable.ic_profile)
         }
     }
 
@@ -128,7 +185,6 @@ class PassengerHomeActivity : AppCompatActivity() {
     }
 
     private fun setupHomeShortcuts() {
-        // Primary Book Ride Buttons
         binding.btnShortcutBook.setOnClickListener {
             startActivity(Intent(this, BookRideActivity::class.java))
         }
@@ -136,7 +192,6 @@ class PassengerHomeActivity : AppCompatActivity() {
             startActivity(Intent(this, BookRideActivity::class.java))
         }
 
-        // Ride Status Shortcut
         binding.btnShortcutStatus.setOnClickListener {
             val booking = currentActiveBooking
             if (booking != null) {
@@ -148,12 +203,10 @@ class PassengerHomeActivity : AppCompatActivity() {
             }
         }
 
-        // History Shortcut
         binding.btnShortcutHistory.setOnClickListener {
             binding.bottomNav.selectedItemId = R.id.nav_history
         }
 
-        // Profile Shortcut
         binding.btnShortcutProfile.setOnClickListener {
             binding.bottomNav.selectedItemId = R.id.nav_profile
         }
@@ -190,6 +243,8 @@ class PassengerHomeActivity : AppCompatActivity() {
         binding.fragmentContainer.visibility = View.GONE
         binding.homeScrollView.visibility    = View.VISIBLE
         supportActionBar?.title             = "PiatMove"
+        val name = PrefsManager.getUserName(this) ?: "Passenger"
+        binding.tvGreeting.text = "Hello, $name! 👋"
         passengerViewModel.fetchActiveBooking()
     }
 
@@ -200,6 +255,39 @@ class PassengerHomeActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
             .commit()
+    }
+
+    private fun showSystemManualDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_system_manual, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialogView.findViewById<View>(R.id.btnCloseManual)?.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private fun showDevelopersDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_developers, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialogView.findViewById<View>(R.id.btnCloseDevs)?.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private fun showAboutUsDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_about_us, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialogView.findViewById<View>(R.id.btnCloseAbout)?.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     private fun showHelpDialog() {
@@ -233,7 +321,10 @@ class PassengerHomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        passengerViewModel.fetchActiveBooking()
+        updateDrawerHeader()
+        if (binding.homeScrollView.visibility == View.VISIBLE) {
+            passengerViewModel.fetchActiveBooking()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
