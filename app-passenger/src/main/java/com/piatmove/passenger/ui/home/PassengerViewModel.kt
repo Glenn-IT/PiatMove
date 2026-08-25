@@ -54,4 +54,25 @@ class PassengerViewModel(application: Application) : AndroidViewModel(applicatio
             _history.value = repo.getPassengerHistory()
         }
     }
+
+    private val _activeBooking = MutableLiveData<Resource<Booking?>>()
+    val activeBooking: LiveData<Resource<Booking?>> = _activeBooking
+
+    fun fetchActiveBooking() {
+        _activeBooking.value = Resource.Loading
+        viewModelScope.launch {
+            when (val result = repo.getBookings()) {
+                is Resource.Success -> {
+                    val active = result.data?.firstOrNull {
+                        it.status == com.piatmove.core.utils.BookingStatus.PENDING ||
+                        it.status == com.piatmove.core.utils.BookingStatus.ACCEPTED ||
+                        it.status == com.piatmove.core.utils.BookingStatus.STARTED
+                    }
+                    _activeBooking.value = Resource.Success(active)
+                }
+                is Resource.Error -> _activeBooking.value = Resource.Error(result.message)
+                Resource.Loading -> {}
+            }
+        }
+    }
 }

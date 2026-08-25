@@ -34,7 +34,6 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
         binding.tvForgotPassword.setOnClickListener { showForgotPasswordDialog() }
-        binding.tvServerConfig.setOnClickListener { showServerConfigDialog() }
 
         observeViewModel()
     }

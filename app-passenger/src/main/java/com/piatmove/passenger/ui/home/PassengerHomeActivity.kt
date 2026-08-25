@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -15,11 +16,14 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.piatmove.core.data.local.PrefsManager
+import com.piatmove.core.data.models.Booking
+import com.piatmove.core.utils.Resource
 import com.piatmove.passenger.R
 import com.piatmove.passenger.databinding.ActivityPassengerHomeBinding
 import com.piatmove.passenger.ui.auth.AuthViewModel
 import com.piatmove.passenger.ui.auth.LoginActivity
 import com.piatmove.passenger.ui.booking.BookRideActivity
+import com.piatmove.passenger.ui.booking.RideStatusActivity
 import com.piatmove.passenger.ui.history.RideHistoryFragment
 import com.piatmove.passenger.ui.profile.ProfileFragment
 
@@ -27,6 +31,8 @@ class PassengerHomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPassengerHomeBinding
     private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var passengerViewModel: PassengerViewModel
+    private var currentActiveBooking: Booking? = null
     private val NOTIFICATION_REQUEST = 1002
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,15 +40,18 @@ class PassengerHomeActivity : AppCompatActivity() {
         binding = ActivityPassengerHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        passengerViewModel = ViewModelProvider(this)[PassengerViewModel::class.java]
+
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = "Hello, ${PrefsManager.getUserName(this) ?: "Passenger"}"
+        supportActionBar?.title = "PiatMove"
 
         setupDrawer()
         setupBottomNav()
+        setupHomeShortcuts()
+        observeActiveBooking()
 
-        binding.fabBookRide.setOnClickListener {
-            startActivity(Intent(this, BookRideActivity::class.java))
-        }
+        val name = PrefsManager.getUserName(this) ?: "Passenger"
+        binding.tvGreeting.text = "Hello, $name! 👋"
 
         requestNotificationPermission()
     }
@@ -55,7 +64,6 @@ class PassengerHomeActivity : AppCompatActivity() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        // Populate Header Info
         val headerView = binding.navigationView.getHeaderView(0)
         val tvNavName  = headerView.findViewById<TextView>(R.id.tvNavName)
         val tvNavRole  = headerView.findViewById<TextView>(R.id.tvNavRole)
@@ -119,15 +127,75 @@ class PassengerHomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupHomeShortcuts() {
+        // Primary Book Ride Buttons
+        binding.btnShortcutBook.setOnClickListener {
+            startActivity(Intent(this, BookRideActivity::class.java))
+        }
+        binding.btnHomeBookNow.setOnClickListener {
+            startActivity(Intent(this, BookRideActivity::class.java))
+        }
+
+        // Ride Status Shortcut
+        binding.btnShortcutStatus.setOnClickListener {
+            val booking = currentActiveBooking
+            if (booking != null) {
+                startActivity(Intent(this, RideStatusActivity::class.java).apply {
+                    putExtra(RideStatusActivity.EXTRA_BOOKING_ID, booking.id)
+                })
+            } else {
+                Toast.makeText(this, "No active ride in progress. Tap 'Book Ride' to request a tricycle!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // History Shortcut
+        binding.btnShortcutHistory.setOnClickListener {
+            binding.bottomNav.selectedItemId = R.id.nav_history
+        }
+
+        // Profile Shortcut
+        binding.btnShortcutProfile.setOnClickListener {
+            binding.bottomNav.selectedItemId = R.id.nav_profile
+        }
+    }
+
+    private fun observeActiveBooking() {
+        passengerViewModel.activeBooking.observe(this) { state ->
+            when (state) {
+                is Resource.Success -> {
+                    currentActiveBooking = state.data
+                    val booking = state.data
+                    if (booking != null) {
+                        binding.cardActiveRide.visibility = View.VISIBLE
+                        binding.tvActiveRideStatus.text = booking.status.uppercase()
+                        binding.tvActiveRideRoute.text = "${booking.pickup_address} ➔ ${booking.dropoff_address}"
+                        binding.btnViewActiveRide.setOnClickListener {
+                            startActivity(Intent(this, RideStatusActivity::class.java).apply {
+                                putExtra(RideStatusActivity.EXTRA_BOOKING_ID, booking.id)
+                            })
+                        }
+                    } else {
+                        binding.cardActiveRide.visibility = View.GONE
+                    }
+                }
+                is Resource.Error -> {
+                    binding.cardActiveRide.visibility = View.GONE
+                }
+                Resource.Loading -> {}
+            }
+        }
+    }
+
     private fun showHome() {
         binding.fragmentContainer.visibility = View.GONE
-        binding.fabBookRide.visibility       = View.VISIBLE
-        supportActionBar?.title = "Hello, ${PrefsManager.getUserName(this) ?: "Passenger"}"
+        binding.homeScrollView.visibility    = View.VISIBLE
+        supportActionBar?.title             = "PiatMove"
+        passengerViewModel.fetchActiveBooking()
     }
 
     private fun showFragment(fragment: Fragment, title: String) {
+        binding.homeScrollView.visibility    = View.GONE
         binding.fragmentContainer.visibility = View.VISIBLE
-        binding.fabBookRide.visibility       = View.GONE
         supportActionBar?.title             = title
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
@@ -161,6 +229,11 @@ class PassengerHomeActivity : AppCompatActivity() {
                 )
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        passengerViewModel.fetchActiveBooking()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
