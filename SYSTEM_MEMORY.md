@@ -96,6 +96,7 @@ When changing Kotlin code, layouts, or features in the Android app:
 - **JWT Secret:** Loaded automatically from `.env.secret`
 - **CORS:** Enabled (`Access-Control-Allow-Origin: *`)
 - **Authorization Header:** Passed via Apache RewriteRule in `.htaccess`
+- **SMTP Mailer:** Configured in `public_html/api/config/mail.php` & `helpers/mail.php` (Gmail SMTP with App Password)
 
 ### Production Admin Config (`public_html/admin/config.php`)
 - **Host:** `localhost`
@@ -107,5 +108,6 @@ When changing Kotlin code, layouts, or features in the Android app:
 When assisting with future tasks in this repository:
 1. Recognize that **the system is actively deployed in production on Hostinger at `https://piatmoveadmin.online`**.
 2. When creating or editing backend API routes or Admin features, always specify which exact file needs to be updated on Hostinger (`public_html/api/...` or `public_html/admin/...`).
-3. Keep database changes backward-compatible using `ALTER TABLE` migrations rather than destructive full resets.
+3. Keep database changes backward-compatible using `ALTER TABLE` / `CREATE TABLE IF NOT EXISTS` migrations rather than destructive full resets.
 4. Ensure default Android `BASE_URL` in `Constants.kt` remains set to `https://piatmoveadmin.online/api/`.
+
