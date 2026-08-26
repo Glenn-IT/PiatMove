@@ -166,11 +166,21 @@ class RegisterActivity : AppCompatActivity() {
                 is Resource.Success -> {
                     binding.progressBar.visibility  = View.GONE
                     binding.btnRegister.isEnabled   = true
-                    Toast.makeText(this, "Registered! Your account is pending admin approval.", Toast.LENGTH_LONG).show()
-                    startActivity(Intent(this, DriverHomeActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    })
+                    val email = binding.etEmail.text.toString().trim()
+                    androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("Registration Submitted")
+                        .setMessage("Your driver account registration has been submitted and is pending admin approval. Please log in with your credentials to check status.")
+                        .setCancelable(false)
+                        .setPositiveButton("Go to Login") { _, _ ->
+                            startActivity(Intent(this, LoginActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                putExtra("prefill_email", email)
+                            })
+                            finish()
+                        }
+                        .show()
                 }
+
                 is Resource.Error -> {
                     binding.progressBar.visibility  = View.GONE
                     binding.btnRegister.isEnabled   = true

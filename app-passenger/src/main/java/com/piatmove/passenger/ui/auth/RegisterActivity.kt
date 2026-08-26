@@ -57,12 +57,21 @@ class RegisterActivity : AppCompatActivity() {
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.GONE
                     binding.btnRegister.isEnabled  = true
-                    Toast.makeText(this, "Registration successful! Please log in.", Toast.LENGTH_LONG).show()
-                    startActivity(Intent(this, LoginActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    })
-                    finish()
+                    val email = binding.etEmail.text.toString().trim()
+                    androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("Registration Successful")
+                        .setMessage("Your account has been created successfully. Please log in with your email and password.")
+                        .setCancelable(false)
+                        .setPositiveButton("Go to Login") { _, _ ->
+                            startActivity(Intent(this, LoginActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                putExtra("prefill_email", email)
+                            })
+                            finish()
+                        }
+                        .show()
                 }
+
                 is Resource.Error -> {
                     binding.progressBar.visibility = View.GONE
                     binding.btnRegister.isEnabled  = true

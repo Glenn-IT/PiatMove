@@ -35,10 +35,27 @@ class LoginActivity : AppCompatActivity() {
         binding.tvForgotPassword.setOnClickListener { showForgotPasswordDialog() }
         binding.tvServerConfig.setOnClickListener { showServerConfigDialog() }
 
+        handleIncomingEmail(intent)
         observeViewModel()
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIncomingEmail(intent)
+    }
+
+    private fun handleIncomingEmail(intent: Intent?) {
+        val prefillEmail = intent?.getStringExtra("prefill_email")
+        if (!prefillEmail.isNullOrBlank()) {
+            binding.etEmail.setText(prefillEmail)
+            binding.etPassword.setText("")
+            binding.etPassword.requestFocus()
+        }
+    }
+
     private var resetEmailCurrent: String = ""
+
     private var progressDialog: AlertDialog? = null
 
     private fun showLoadingDialog(message: String) {

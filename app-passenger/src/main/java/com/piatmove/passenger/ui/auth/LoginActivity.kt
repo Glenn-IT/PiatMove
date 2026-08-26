@@ -35,10 +35,27 @@ class LoginActivity : AppCompatActivity() {
         }
         binding.tvForgotPassword.setOnClickListener { showForgotPasswordDialog() }
 
+        handleIncomingEmail(intent)
         observeViewModel()
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIncomingEmail(intent)
+    }
+
+    private fun handleIncomingEmail(intent: Intent?) {
+        val prefillEmail = intent?.getStringExtra("prefill_email")
+        if (!prefillEmail.isNullOrBlank()) {
+            binding.etEmail.setText(prefillEmail)
+            binding.etPassword.setText("")
+            binding.etPassword.requestFocus()
+        }
+    }
+
     private fun attemptLogin() {
+
         val email    = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString()
 
