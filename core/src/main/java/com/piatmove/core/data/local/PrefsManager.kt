@@ -128,13 +128,27 @@ object PrefsManager {
 
     // ── Server URL (plain prefs — not sensitive) ──────────────────────────────
 
-    fun getServerUrl(context: Context): String =
-        context.getSharedPreferences(DEV_PREFS_NAME, Context.MODE_PRIVATE)
+    fun getServerUrl(context: Context): String {
+        val saved = context.getSharedPreferences(DEV_PREFS_NAME, Context.MODE_PRIVATE)
             .getString(KEY_SERVER_URL, null)
-            ?: Constants.BASE_URL_DEVICE
+
+        if (saved.isNullOrBlank()) {
+            return Constants.BASE_URL_PRODUCTION
+        }
+        return if (!saved.endsWith("/")) "$saved/" else saved
+    }
 
     fun saveServerUrl(context: Context, url: String) {
+        val cleanUrl = if (url.isNotBlank() && !url.endsWith("/")) "$url/" else url
         context.getSharedPreferences(DEV_PREFS_NAME, Context.MODE_PRIVATE)
-            .edit { putString(KEY_SERVER_URL, url) }
+            .edit { putString(KEY_SERVER_URL, cleanUrl) }
+        com.piatmove.core.data.api.ApiClient.reset()
+    }
+
+    fun clearServerUrl(context: Context) {
+        context.getSharedPreferences(DEV_PREFS_NAME, Context.MODE_PRIVATE)
+            .edit { remove(KEY_SERVER_URL) }
+        com.piatmove.core.data.api.ApiClient.reset()
     }
 }
+

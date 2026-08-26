@@ -5,8 +5,12 @@ import com.piatmove.core.data.models.FcmTokenRequest
 import com.piatmove.core.utils.Resource
 
 class UserRepository(
-    private val api: ApiService
+    private val apiOverride: ApiService? = null
 ) : BaseRepository() {
+
+    private val api: ApiService
+        get() = apiOverride ?: com.piatmove.core.data.api.ApiClient.instance
+
 
     suspend fun updateFcmToken(token: String): Resource<Unit> {
         return try {

@@ -20,9 +20,13 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class AuthRepository(
-    private val api: ApiService,
+    private val apiOverride: ApiService? = null,
     private val context: Context
 ) : BaseRepository() {
+
+    private val api: ApiService
+        get() = apiOverride ?: com.piatmove.core.data.api.ApiClient.instance
+
 
     suspend fun register(request: RegisterRequest): Resource<RegisterResponse> {
         return try {

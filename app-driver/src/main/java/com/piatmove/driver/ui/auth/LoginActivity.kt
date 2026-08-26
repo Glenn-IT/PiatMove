@@ -10,8 +10,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.piatmove.core.data.local.PrefsManager
+import com.piatmove.core.utils.Constants
 import com.piatmove.core.utils.Resource
 import com.piatmove.core.utils.UserRole
+
 import com.piatmove.driver.R
 import com.piatmove.driver.databinding.ActivityLoginBinding
 import com.piatmove.driver.ui.home.DriverHomeActivity
@@ -277,7 +279,7 @@ class LoginActivity : AppCompatActivity() {
         }
         AlertDialog.Builder(this)
             .setTitle("Server URL")
-            .setMessage("Enter the base URL of your XAMPP server.")
+            .setMessage("Current URL: $currentUrl\n\nDefault Production:\n${Constants.BASE_URL_PRODUCTION}")
             .setView(input)
             .setPositiveButton("Save") { _, _ ->
                 var url = input.text.toString().trim()
@@ -287,12 +289,13 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Saved: $url", Toast.LENGTH_LONG).show()
                 }
             }
-            .setNeutralButton("Reset Default") { _, _ ->
-                PrefsManager.saveServerUrl(this, com.piatmove.core.utils.Constants.BASE_URL_DEVICE)
-                Toast.makeText(this, "Reset to default", Toast.LENGTH_SHORT).show()
+            .setNeutralButton("Reset Production") { _, _ ->
+                PrefsManager.clearServerUrl(this)
+                Toast.makeText(this, "Reset to ${Constants.BASE_URL_PRODUCTION}", Toast.LENGTH_LONG).show()
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 }
+
 

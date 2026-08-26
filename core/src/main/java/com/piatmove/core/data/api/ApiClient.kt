@@ -66,6 +66,11 @@ object ApiClient {
             return _instance!!
         }
 
+    fun reset() {
+        _currentBaseUrl = ""
+        _instance = null
+    }
+
     fun getCurrentBaseUrl(): String {
         return if (::appContext.isInitialized) {
             _currentBaseUrl.ifEmpty { PrefsManager.getServerUrl(appContext) }
@@ -74,4 +79,5 @@ object ApiClient {
         }
     }
 }
+
 

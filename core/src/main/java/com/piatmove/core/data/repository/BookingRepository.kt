@@ -8,8 +8,12 @@ import com.piatmove.core.data.models.UpdateLocationRequest
 import com.piatmove.core.utils.Resource
 
 class BookingRepository(
-    private val api: ApiService
+    private val apiOverride: ApiService? = null
 ) : BaseRepository() {
+
+    private val api: ApiService
+        get() = apiOverride ?: com.piatmove.core.data.api.ApiClient.instance
+
 
     // ── Passenger ─────────────────────────────────────────────────────────────
 
