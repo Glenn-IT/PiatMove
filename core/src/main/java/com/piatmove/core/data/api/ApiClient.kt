@@ -38,10 +38,15 @@ object ApiClient {
 
     private val okHttpClient by lazy {
         OkHttpClient.Builder()
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
             .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()
     }
+
 
     private var _currentBaseUrl: String = ""
     private var _instance: ApiService? = null
