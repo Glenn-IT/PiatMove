@@ -23,8 +23,13 @@ abstract class BaseRepository {
                     else -> "Server error (${throwable.code()})."
                 }
             }
-            is IOException -> "No internet connection. Please check your network."
+            is java.net.UnknownHostException -> "Unable to reach server. Please check your internet connection or DNS settings."
+            is java.net.SocketTimeoutException -> "Server connection timed out. Please check your internet speed."
+            is java.net.ConnectException -> "Could not connect to server (${throwable.localizedMessage ?: "Connection refused"})."
+            is javax.net.ssl.SSLException -> "Secure connection error (SSL). Please ensure your device date & time are correct."
+            is IOException -> throwable.localizedMessage?.takeIf { it.isNotBlank() } ?: "Network error. Please check your connection."
             else -> throwable.message ?: "An unexpected error occurred."
+
         }
     }
 }
