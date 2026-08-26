@@ -34,10 +34,12 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
         binding.tvForgotPassword.setOnClickListener { showForgotPasswordDialog() }
+        binding.tvServerConfig.setOnClickListener { showServerConfigDialog() }
 
         handleIncomingEmail(intent)
         observeViewModel()
     }
+
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)

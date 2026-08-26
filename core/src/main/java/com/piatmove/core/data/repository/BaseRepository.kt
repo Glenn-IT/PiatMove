@@ -23,12 +23,28 @@ abstract class BaseRepository {
                     else -> "Server error (${throwable.code()})."
                 }
             }
-            is java.net.UnknownHostException -> "Unable to reach server. Please check your internet connection or DNS settings."
-            is java.net.SocketTimeoutException -> "Server connection timed out. Please check your internet speed."
-            is java.net.ConnectException -> "Could not connect to server (${throwable.localizedMessage ?: "Connection refused"})."
-            is javax.net.ssl.SSLException -> "Secure connection error (SSL). Please ensure your device date & time are correct."
-            is IOException -> throwable.localizedMessage?.takeIf { it.isNotBlank() } ?: "Network error. Please check your connection."
+            is java.net.UnknownHostException -> {
+                val url = com.piatmove.core.data.api.ApiClient.getCurrentBaseUrl()
+                "Unable to reach server ($url). Please check your internet connection or DNS."
+            }
+            is java.net.SocketTimeoutException -> {
+                val url = com.piatmove.core.data.api.ApiClient.getCurrentBaseUrl()
+                "Server connection timed out ($url). Please check your internet speed or server URL."
+            }
+            is java.net.ConnectException -> {
+                val url = com.piatmove.core.data.api.ApiClient.getCurrentBaseUrl()
+                "Could not connect to server ($url): ${throwable.localizedMessage ?: "Connection refused"}."
+            }
+            is javax.net.ssl.SSLException -> {
+                val url = com.piatmove.core.data.api.ApiClient.getCurrentBaseUrl()
+                "SSL security error ($url): ${throwable.localizedMessage ?: "Certificate invalid"}. Ensure your device Date & Time are accurate."
+            }
+            is IOException -> {
+                val url = com.piatmove.core.data.api.ApiClient.getCurrentBaseUrl()
+                throwable.localizedMessage?.takeIf { it.isNotBlank() } ?: "Network error ($url). Please check your connection."
+            }
             else -> throwable.message ?: "An unexpected error occurred."
+
 
         }
     }

@@ -65,4 +65,13 @@ object ApiClient {
             }
             return _instance!!
         }
+
+    fun getCurrentBaseUrl(): String {
+        return if (::appContext.isInitialized) {
+            _currentBaseUrl.ifEmpty { PrefsManager.getServerUrl(appContext) }
+        } else {
+            Constants.BASE_URL_PRODUCTION
+        }
+    }
 }
+

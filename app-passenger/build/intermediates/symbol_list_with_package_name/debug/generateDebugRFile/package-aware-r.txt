@@ -126,6 +126,7 @@ id tvPickup
 id tvPolling
 id tvProfileId
 id tvRegister
+id tvServerConfig
 id tvStatus
 layout activity_book_ride
 layout activity_login
