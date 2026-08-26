@@ -38,11 +38,130 @@ class LoginActivity : AppCompatActivity() {
         observeViewModel()
     }
 
+    private var resetEmailCurrent: String = ""
+    private var progressDialog: AlertDialog? = null
+
+    private fun showLoadingDialog(message: String) {
+        progressDialog?.dismiss()
+        val builder = AlertDialog.Builder(this)
+        val layout = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.HORIZONTAL
+            setPadding(60, 50, 60, 50)
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            val progress = android.widget.ProgressBar(this@LoginActivity).apply {
+                isIndeterminate = true
+            }
+            val text = android.widget.TextView(this@LoginActivity).apply {
+                setText(message)
+                textSize = 15f
+                setPadding(40, 0, 0, 0)
+                setTextColor(resources.getColor(android.R.color.black, theme))
+            }
+            addView(progress)
+            addView(text)
+        }
+        builder.setView(layout)
+        builder.setCancelable(false)
+        progressDialog = builder.create()
+        progressDialog?.show()
+    }
+
+    private fun hideLoadingDialog() {
+        progressDialog?.dismiss()
+        progressDialog = null
+    }
+
     private fun showForgotPasswordDialog() {
+        val input = EditText(this).apply {
+            hint = "Enter your registered driver email"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            val currentEmail = binding.etEmail.text.toString().trim()
+            if (currentEmail.isNotEmpty()) setText(currentEmail)
+            setPadding(48, 36, 48, 36)
+        }
+
+        val container = android.widget.FrameLayout(this).apply {
+            setPadding(48, 16, 48, 16)
+            addView(input)
+        }
+
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.forgot_password))
-            .setMessage("Please contact the Piat LGU transport admin to reset your driver password.")
-            .setPositiveButton("OK", null)
+            .setMessage("Enter your registered driver email to receive a 6-digit password reset code.")
+            .setView(container)
+            .setPositiveButton("Send Code") { _, _ ->
+                val email = input.text.toString().trim()
+                if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                resetEmailCurrent = email
+                showLoadingDialog("Sending verification code...")
+                viewModel.forgotPassword(email)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showResetPasswordDialog(email: String) {
+        val layout = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(60, 30, 60, 20)
+        }
+
+        val etOtp = EditText(this).apply {
+            hint = "6-Digit Code (e.g. 123456)"
+            inputType = InputType.TYPE_CLASS_NUMBER
+            filters = arrayOf(android.text.InputFilter.LengthFilter(6))
+            textSize = 16f
+        }
+
+        val etNewPassword = EditText(this).apply {
+            hint = "New Password (min. 8 chars)"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            textSize = 16f
+        }
+
+        val etConfirmPassword = EditText(this).apply {
+            hint = "Confirm New Password"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            textSize = 16f
+        }
+
+        layout.addView(etOtp)
+        layout.addView(etNewPassword)
+        layout.addView(etConfirmPassword)
+
+        AlertDialog.Builder(this)
+            .setTitle("Reset Password")
+            .setMessage("A verification code was sent to $email. Enter the code and your new password:")
+            .setView(layout)
+            .setCancelable(false)
+            .setPositiveButton("Reset Password") { _, _ ->
+                val otp = etOtp.text.toString().trim()
+                val newPass = etNewPassword.text.toString()
+                val confirmPass = etConfirmPassword.text.toString()
+
+                if (otp.length != 6) {
+                    Toast.makeText(this, "Please enter the 6-digit code", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                if (newPass.length < 8) {
+                    Toast.makeText(this, "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                if (newPass != confirmPass) {
+                    Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
+                showLoadingDialog("Resetting password...")
+                viewModel.resetPassword(email, otp, newPass)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                viewModel.clearResetState()
+            }
             .show()
     }
 
@@ -88,6 +207,47 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+
+        viewModel.forgotPasswordState.observe(this) { state ->
+            when (state) {
+                is Resource.Loading -> { /* Handled by showLoadingDialog */ }
+                is Resource.Success -> {
+                    hideLoadingDialog()
+                    Toast.makeText(this, state.data ?: "Verification code sent to your email", Toast.LENGTH_LONG).show()
+                    showResetPasswordDialog(resetEmailCurrent)
+                }
+                is Resource.Error -> {
+                    hideLoadingDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
+                }
+                null -> {}
+            }
+        }
+
+        viewModel.resetPasswordState.observe(this) { state ->
+            when (state) {
+                is Resource.Loading -> { /* Handled by showLoadingDialog */ }
+                is Resource.Success -> {
+                    hideLoadingDialog()
+                    AlertDialog.Builder(this)
+                        .setTitle("Success")
+                        .setMessage(state.data ?: "Password reset successfully! You can now log in.")
+                        .setPositiveButton("Log In Now") { _, _ ->
+                            binding.etEmail.setText(resetEmailCurrent)
+                            binding.etPassword.setText("")
+                            binding.etPassword.requestFocus()
+                        }
+                        .show()
+                    viewModel.clearResetState()
+                }
+                is Resource.Error -> {
+                    hideLoadingDialog()
+                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
+                    showResetPasswordDialog(resetEmailCurrent)
+                }
+                null -> {}
+            }
+        }
     }
 
     private fun showServerConfigDialog() {
@@ -118,3 +278,4 @@ class LoginActivity : AppCompatActivity() {
             .show()
     }
 }
+

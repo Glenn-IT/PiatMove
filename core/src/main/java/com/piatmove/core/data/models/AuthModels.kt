@@ -34,3 +34,14 @@ data class RegisterResponse(
     val role: String,
     val approval_status: String = "approved"
 )
+
+data class ForgotPasswordRequest(
+    val email: String
+)
+
+data class ResetPasswordRequest(
+    val email: String,
+    val otp: String,
+    val password: String
+)
+

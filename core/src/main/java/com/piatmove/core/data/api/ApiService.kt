@@ -51,6 +51,13 @@ interface ApiService {
     @POST("auth/login")
     suspend fun login(@Body body: LoginRequest): ApiResponse<LoginResponse>
 
+    @POST("auth/forgot-password")
+    suspend fun forgotPassword(@Body body: com.piatmove.core.data.models.ForgotPasswordRequest): ApiResponse<Unit>
+
+    @POST("auth/reset-password")
+    suspend fun resetPassword(@Body body: com.piatmove.core.data.models.ResetPasswordRequest): ApiResponse<Unit>
+
+
     // ── Bookings ──────────────────────────────────────────────────────────────
 
     @POST("bookings")

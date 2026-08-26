@@ -110,6 +110,32 @@ class AuthRepository(
         }
     }
 
+    suspend fun forgotPassword(email: String): Resource<String> {
+        return try {
+            val response = api.forgotPassword(com.piatmove.core.data.models.ForgotPasswordRequest(email))
+            if (response.success) {
+                Resource.Success(response.message)
+            } else {
+                Resource.Error(response.message)
+            }
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun resetPassword(email: String, otp: String, password: String): Resource<String> {
+        return try {
+            val response = api.resetPassword(com.piatmove.core.data.models.ResetPasswordRequest(email, otp, password))
+            if (response.success) {
+                Resource.Success(response.message)
+            } else {
+                Resource.Error(response.message)
+            }
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
     suspend fun getUserProfile(): Resource<UserProfile> {
         return try {
             val response = api.getUserProfile()
