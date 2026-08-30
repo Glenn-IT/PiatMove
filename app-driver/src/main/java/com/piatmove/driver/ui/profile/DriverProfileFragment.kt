@@ -1,6 +1,8 @@
 package com.piatmove.driver.ui.profile
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +12,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.piatmove.core.data.local.PrefsManager
 import com.piatmove.core.utils.Resource
 import com.piatmove.driver.R
 import com.piatmove.driver.databinding.FragmentDriverProfileBinding
 import com.piatmove.driver.ui.auth.LoginActivity
 import com.piatmove.driver.ui.home.DriverViewModel
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DriverProfileFragment : Fragment() {
 
@@ -69,6 +77,7 @@ class DriverProfileFragment : Fragment() {
         val email = PrefsManager.getUserEmail(context) ?: ""
         val id    = PrefsManager.getUserId(context)
         val status = PrefsManager.getDriverApprovalStatus(context)
+        val photo = PrefsManager.getUserPhotoPath(context)
 
         binding.tvHeaderName.text = name
         binding.etPhone.setText(phone)
@@ -77,6 +86,7 @@ class DriverProfileFragment : Fragment() {
         binding.etRestrictedEmail.setText(email)
 
         updateApprovalBadge(status)
+        loadAvatarImage(photo)
     }
 
     private fun updateApprovalBadge(status: String) {
@@ -105,6 +115,7 @@ class DriverProfileFragment : Fragment() {
                 binding.etRestrictedVehicle.setText(p.vehicle_no ?: "—")
                 binding.etRestrictedVehicleType.setText(p.vehicle_type ?: "Tricycle")
                 updateApprovalBadge(p.approval_status)
+                loadAvatarImage(p.photo_path)
             }
         }
 
@@ -196,6 +207,44 @@ class DriverProfileFragment : Fragment() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun loadAvatarImage(photoPath: String?) {
+        val fullUrl     = PrefsManager.getFullPhotoUrl(requireContext(), photoPath)
+        val fallbackUrl = PrefsManager.getFallbackPhotoUrl(requireContext(), photoPath)
+
+        if (fullUrl.isNullOrBlank()) {
+            binding.ivProfileAvatar.setImageResource(R.drawable.ic_profile)
+            return
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val bitmap = downloadBitmap(fullUrl) ?: fallbackUrl?.let { downloadBitmap(it) }
+            withContext(Dispatchers.Main) {
+                if (bitmap != null && _binding != null) {
+                    binding.ivProfileAvatar.setImageBitmap(bitmap)
+                    binding.ivProfileAvatar.imageTintList = null
+                }
+            }
+        }
+    }
+
+    private fun downloadBitmap(urlString: String): Bitmap? {
+        return try {
+            val url = URL(urlString)
+            val conn = url.openConnection() as HttpURLConnection
+            conn.connectTimeout = 8000
+            conn.readTimeout = 8000
+            conn.instanceFollowRedirects = true
+            conn.connect()
+            if (conn.responseCode == HttpURLConnection.HTTP_OK) {
+                BitmapFactory.decodeStream(conn.inputStream)
+            } else {
+                null
+            }
+        } catch (_: Exception) {
+            null
+        }
     }
 
     override fun onDestroyView() {
