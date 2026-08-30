@@ -1,18 +1,21 @@
-App Driver
-    - Make it uniform like the passenger app but more on Driver side that is useful function ok
+# 🛠️ PiatMove Issues & Enhancements Log
 
-Profile Tab <--- Create a profile tab
-    - Driver can update their creds like password and contact and barangay other is restricted ok
+## 1. App Driver UI Uniformity & Experience ✅ RESOLVED
+- Synchronized driver app design system, Material cards, and navigation with the passenger app while maintaining dedicated driver features.
 
-Ride Request 
-    - How does it work? wy is there a reject function there, the drivers accept bookings on first come first served basis ok
+## 2. Driver Profile Tab ✅ RESOLVED
+- Created dedicated **Driver Profile Tab** (`DriverProfileFragment.kt` & `fragment_driver_profile.xml`).
+- Allows driver to update contact number (`phone`), assigned `barangay`, and `password`.
+- Restricts official credentials (license number, tricycle plate number, full name, email) as verified read-only records.
+- Backend API route added: `PUT /driver/profile`.
 
+## 3. First-Come, First-Served Ride Requests ✅ RESOLVED
+- Removed the confusing "Reject" action from the ride request review screen.
+- Streamlined to **"Accept Ride (Claim Booking)"** operating strictly on a first-come, first-served basis. Drivers can return to the available request pool at any time using the back button without modifying the ride's availability for other drivers.
 
-Registration Tab
-    - Vehicle information, it should default as tricycle no other option
+## 4. Driver Registration Default to Tricycle ✅ RESOLVED
+- Fixed vehicle type to **Tricycle** only (`Tricycle` default, non-editable without irrelevant vehicle types).
 
-
-on Admin Side the documents why is there no image there? if the drivers register if i click the view full page This Page Does Not Exist
-Sorry, the page you are looking for could not be found. It's just an accident that was not intentional. this is what i t says
-
-Can you check on that also
+## 5. Admin Document Image 404 Resolution ✅ RESOLVED
+- Fixed file path replication in `api/routes/auth.php` to guarantee files are saved in both `admin/uploads/drivers/` and `api/uploads/drivers/`.
+- Updated `PiatMoveAdmin/drivers.php` with `get_driver_doc_url()` and automatic client-side image fallback handlers so modal previews and "View Full" links never 404.
