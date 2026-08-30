@@ -33,14 +33,7 @@ class RideRequestActivity : AppCompatActivity() {
 
         binding.btnAccept.setOnClickListener {
             if (bookingId != -1) {
-                isRejecting = false
                 viewModel.acceptRide(bookingId)
-            }
-        }
-        binding.btnReject.setOnClickListener {
-            if (bookingId != -1) {
-                isRejecting = true
-                viewModel.rejectRide(bookingId)
             }
         }
 
@@ -85,29 +78,22 @@ class RideRequestActivity : AppCompatActivity() {
         viewModel.actionState.observe(this) { state ->
             when (state) {
                 is Resource.Loading -> {
-                    binding.progressBar.visibility  = View.VISIBLE
-                    binding.btnAccept.isEnabled     = false
-                    binding.btnReject.isEnabled     = false
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.btnAccept.isEnabled    = false
                 }
                 is Resource.Success -> {
-                    binding.progressBar.visibility  = View.GONE
-                    binding.btnAccept.isEnabled     = true
-                    binding.btnReject.isEnabled     = true
-                    if (isRejecting) {
-                        Toast.makeText(this, "Ride rejected", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, "Ride accepted!", Toast.LENGTH_SHORT).show()
-                        startActivity(
-                            Intent(this, ActiveRideActivity::class.java)
-                                .putExtra(ActiveRideActivity.EXTRA_BOOKING_ID, bookingId)
-                        )
-                    }
+                    binding.progressBar.visibility = View.GONE
+                    binding.btnAccept.isEnabled    = true
+                    Toast.makeText(this, "Ride accepted successfully!", Toast.LENGTH_SHORT).show()
+                    startActivity(
+                        Intent(this, ActiveRideActivity::class.java)
+                            .putExtra(ActiveRideActivity.EXTRA_BOOKING_ID, bookingId)
+                    )
                     finish()
                 }
                 is Resource.Error -> {
-                    binding.progressBar.visibility  = View.GONE
-                    binding.btnAccept.isEnabled     = true
-                    binding.btnReject.isEnabled     = true
+                    binding.progressBar.visibility = View.GONE
+                    binding.btnAccept.isEnabled    = true
                     Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
                 }
             }

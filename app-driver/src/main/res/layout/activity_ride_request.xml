@@ -223,24 +223,29 @@
         android:layout_height="wrap_content"
         android:background="@color/colorSurface"
         android:elevation="8dp"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="16dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnReject"
-            style="@style/Widget.App.Button.Outlined"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:text="@string/btn_reject" />
-
-        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAccept"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:text="Accept Ride (Claim Booking)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="14dp"
+            app:icon="@drawable/ic_requests"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/btn_accept" />
+            android:layout_gravity="center"
+            android:layout_marginTop="6dp"
+            android:text="⚡ First-come, first-served basis"
+            android:textColor="@color/grey_text"
+            android:textSize="11sp" />
     </LinearLayout>
 
     <ProgressBar

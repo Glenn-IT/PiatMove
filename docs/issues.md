@@ -1,18 +1,18 @@
-# Resolved Issues
+App Driver
+    - Make it uniform like the passenger app but more on Driver side that is useful function ok
 
-## Book Ride
-- [x] **Add passenger count selector (Maximum 5 persons)**: Added passenger stepper (+ / –) with limit 1 to 5 passengers.
-- [x] **Auto compute estimated fare (₱20 per person)**: Dynamic live calculation (₱20.00 × count) displayed on fare card and passed to booking API.
-- [x] **Bottom navigation uniform with other tabs**: Persistent bottom navigation bar integrated in Book Ride screen matching Home, History, and Profile tabs.
+Profile Tab <--- Create a profile tab
+    - Driver can update their creds like password and contact and barangay other is restricted ok
 
-## Profile
-- [x] **Passenger can edit their details**: Editable Name and Phone Number fields with `PUT /user/profile` API synchronization.
-- [x] **Add profile picture feature**: Image gallery picker + multipart photo upload (`POST /user/profile-photo`), stored in `uploads/profiles/` and cached locally in `PrefsManager`.
+Ride Request 
+    - How does it work? wy is there a reject function there, the drivers accept bookings on first come first served basis ok
 
-## Account and Support
-- [x] **Add menu for System Manual**: Added System Manual modal with guide on municipal transport, booking steps, live tracking, and fares.
-- [x] **Add menu for Developers (2 Devs)**: Added Development Team dialog with formatted cards for the 2 lead developers.
-- [x] **Add menu for About Us**: Added About Us dialog with Municipality of Piat Municipal Transport Office overview, mission, and version info.
 
-## Sidebar Menu
-- [x] **Profile picture in Drawer Header**: Dynamic circular avatar in sidebar header that loads the passenger's actual profile photo (with default avatar fallback).
+Registration Tab
+    - Vehicle information, it should default as tricycle no other option
+
+
+on Admin Side the documents why is there no image there? if the drivers register if i click the view full page This Page Does Not Exist
+Sorry, the page you are looking for could not be found. It's just an accident that was not intentional. this is what i t says
+
+Can you check on that also

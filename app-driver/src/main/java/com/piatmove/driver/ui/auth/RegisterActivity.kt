@@ -58,7 +58,6 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private val vehicleTypes = listOf("Tricycle", "Motorcycle", "Jeepney", "Van", "Taxi")
     private val barangays = listOf(
         "Apayao", "Aquib", "Baung", "Calaoagan", "Catarauan", "Dugayung",
         "Gumarueng", "Macapil", "Maguilling", "Minanga", "Poblacion I",
@@ -72,10 +71,6 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
-
-        val vehicleAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, vehicleTypes)
-        binding.actvVehicleType.setAdapter(vehicleAdapter)
-        binding.actvVehicleType.setText("Tricycle", false)
 
         val barangayAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, barangays)
         binding.actvBarangay.setAdapter(barangayAdapter)
@@ -99,7 +94,7 @@ class RegisterActivity : AppCompatActivity() {
         val phone       = binding.etPhone.text.toString().trim()
         val licenseNo   = binding.etLicenseNo.text.toString().trim()
         val vehicleNo   = binding.etVehicleNo.text.toString().trim()
-        val vehicleType = binding.actvVehicleType.text.toString().trim().ifEmpty { "Tricycle" }
+        val vehicleType = "Tricycle"
         val barangay    = binding.actvBarangay.text.toString().trim()
 
         var hasError = false

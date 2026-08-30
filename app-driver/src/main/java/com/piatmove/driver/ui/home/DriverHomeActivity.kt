@@ -90,6 +90,10 @@ class DriverHomeActivity : AppCompatActivity() {
                     binding.bottomNav.selectedItemId = R.id.nav_status
                     true
                 }
+                R.id.drawer_profile -> {
+                    binding.bottomNav.selectedItemId = R.id.nav_profile
+                    true
+                }
                 R.id.drawer_help -> {
                     showHelpDialog()
                     true
@@ -109,6 +113,7 @@ class DriverHomeActivity : AppCompatActivity() {
                 R.id.nav_dashboard -> { showFragment(NAV_DASHBOARD, "Dashboard"); true }
                 R.id.nav_requests  -> { showFragment(NAV_REQUESTS, "Ride Requests"); true }
                 R.id.nav_status    -> { showFragment(NAV_STATUS, "Driver Status"); true }
+                R.id.nav_profile   -> { showFragment(NAV_PROFILE, "Driver Profile"); true }
                 else               -> false
             }
         }
@@ -120,6 +125,7 @@ class DriverHomeActivity : AppCompatActivity() {
             NAV_DASHBOARD -> DriverDashboardFragment()
             NAV_REQUESTS  -> DriverRequestsFragment()
             NAV_STATUS    -> DriverStatusFragment()
+            NAV_PROFILE   -> com.piatmove.driver.ui.profile.DriverProfileFragment()
             else          -> DriverDashboardFragment()
         }
         supportActionBar?.title = title
@@ -186,5 +192,6 @@ class DriverHomeActivity : AppCompatActivity() {
         const val NAV_DASHBOARD = "dashboard"
         const val NAV_REQUESTS  = "requests"
         const val NAV_STATUS    = "status"
+        const val NAV_PROFILE   = "profile"
     }
 }

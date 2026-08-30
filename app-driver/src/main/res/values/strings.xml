@@ -31,6 +31,7 @@
     <string name="nav_dashboard">Dashboard</string>
     <string name="nav_requests">Requests</string>
     <string name="nav_status">Status</string>
+    <string name="nav_profile">Profile</string>
     <string name="action_logout">Logout</string>
 
     <!-- Dashboard -->

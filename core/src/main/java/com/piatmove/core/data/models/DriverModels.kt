@@ -21,6 +21,7 @@ data class DriverProfile(
     val phone: String,
     val role: String,
     val account_status: String = "active",
+    val photo_path: String? = null,
     val license_no: String? = null,
     val vehicle_no: String? = null,
     val vehicle_type: String? = null,
@@ -29,6 +30,13 @@ data class DriverProfile(
     val is_online: Boolean = false,
     val current_lat: Double? = null,
     val current_lng: Double? = null
+)
+
+data class UpdateDriverProfileRequest(
+    val phone: String? = null,
+    val barangay: String? = null,
+    val current_password: String? = null,
+    val new_password: String? = null
 )
 
 // Returned by GET /admin/drivers/pending

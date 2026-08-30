@@ -146,6 +146,16 @@ class BookingRepository(
         }
     }
 
+    suspend fun updateDriverProfile(request: com.piatmove.core.data.models.UpdateDriverProfileRequest): Resource<Unit> {
+        return try {
+            val response = api.updateDriverProfile(request)
+            if (response.success) Resource.Success(Unit)
+            else Resource.Error(response.message)
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
     suspend fun updateDriverStatus(isOnline: Boolean): Resource<com.piatmove.core.data.models.DriverStatusResponse> {
         return try {
             val response = api.updateDriverStatus(UpdateDriverStatusRequest(isOnline))

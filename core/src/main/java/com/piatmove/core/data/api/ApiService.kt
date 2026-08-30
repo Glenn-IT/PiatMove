@@ -103,6 +103,9 @@ interface ApiService {
     @GET("driver/profile")
     suspend fun getDriverProfile(): ApiResponse<com.piatmove.core.data.models.DriverProfile>
 
+    @PUT("driver/profile")
+    suspend fun updateDriverProfile(@Body body: com.piatmove.core.data.models.UpdateDriverProfileRequest): ApiResponse<Unit>
+
     @PUT("driver/status")
     suspend fun updateDriverStatus(@Body body: UpdateDriverStatusRequest): ApiResponse<com.piatmove.core.data.models.DriverStatusResponse>
 

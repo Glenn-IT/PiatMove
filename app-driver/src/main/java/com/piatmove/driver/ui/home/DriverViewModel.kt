@@ -115,4 +115,52 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
         _actionState.value = Resource.Loading
         viewModelScope.launch { _actionState.value = repo.completeRide(bookingId) }
     }
+
+    private val _driverProfile = MutableLiveData<Resource<com.piatmove.core.data.models.DriverProfile>>()
+    val driverProfile: LiveData<Resource<com.piatmove.core.data.models.DriverProfile>> = _driverProfile
+
+    private val _updateProfileState = MutableLiveData<Resource<Unit>>()
+    val updateProfileState: LiveData<Resource<Unit>> = _updateProfileState
+
+    fun fetchDriverProfile() {
+        _driverProfile.value = Resource.Loading
+        viewModelScope.launch {
+            val result = repo.getDriverProfile()
+            if (result is Resource.Success && result.data != null) {
+                val p = result.data!!
+                com.piatmove.core.data.local.PrefsManager.saveUserProfile(
+                    getApplication(),
+                    name = p.name,
+                    phone = p.phone,
+                    email = p.email,
+                    photoPath = p.photo_path
+                )
+                com.piatmove.core.data.local.PrefsManager.saveDriverApprovalStatus(getApplication(), p.approval_status)
+                approvalStatus.value = p.approval_status
+                isOnline.value = p.is_online
+            }
+            _driverProfile.value = result
+        }
+    }
+
+    fun updateProfile(phone: String, barangay: String, currentPass: String?, newPass: String?) {
+        _updateProfileState.value = Resource.Loading
+        viewModelScope.launch {
+            val req = com.piatmove.core.data.models.UpdateDriverProfileRequest(
+                phone = phone.ifEmpty { null },
+                barangay = barangay.ifEmpty { null },
+                current_password = currentPass?.ifEmpty { null },
+                new_password = newPass?.ifEmpty { null }
+            )
+            val res = repo.updateDriverProfile(req)
+            if (res is Resource.Success) {
+                if (phone.isNotEmpty()) {
+                    val curName = com.piatmove.core.data.local.PrefsManager.getUserName(getApplication()) ?: ""
+                    com.piatmove.core.data.local.PrefsManager.saveUserProfile(getApplication(), curName, phone)
+                }
+                fetchDriverProfile()
+            }
+            _updateProfileState.value = res
+        }
+    }
 }
