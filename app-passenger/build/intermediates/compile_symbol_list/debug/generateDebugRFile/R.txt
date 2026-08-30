@@ -57,6 +57,12 @@ int id btnUseSampleData 0x0
 int id btnViewActiveRide 0x0
 int id cardActiveRide 0x0
 int id cardDriverInfo 0x0
+int id chipGroupDiscount 0x0
+int id chipPregnant 0x0
+int id chipPwd 0x0
+int id chipRegular 0x0
+int id chipSenior 0x0
+int id chipStudent 0x0
 int id drawerLayout 0x0
 int id drawer_about 0x0
 int id drawer_book_ride 0x0
@@ -81,6 +87,7 @@ int id fragmentContainer 0x0
 int id homeScrollView 0x0
 int id imgNavAvatar 0x0
 int id ivProfileAvatar 0x0
+int id layoutDiscountNotice 0x0
 int id layoutEmpty 0x0
 int id nav_book_ride 0x0
 int id nav_history 0x0
@@ -108,10 +115,14 @@ int id tvDev1Name 0x0
 int id tvDev1Role 0x0
 int id tvDev2Name 0x0
 int id tvDev2Role 0x0
+int id tvDiscountBadge 0x0
+int id tvDiscountNotice 0x0
 int id tvDriverEmail 0x0
 int id tvDriverName 0x0
 int id tvDropoff 0x0
 int id tvEstimatedFare 0x0
+int id tvFare 0x0
+int id tvFareAmount 0x0
 int id tvFareBreakdown 0x0
 int id tvForgotPassword 0x0
 int id tvGreeting 0x0
@@ -121,6 +132,7 @@ int id tvLogin 0x0
 int id tvNavName 0x0
 int id tvNavRole 0x0
 int id tvPassengerCount 0x0
+int id tvPassengerCountLabel 0x0
 int id tvPickup 0x0
 int id tvPolling 0x0
 int id tvProfileId 0x0

@@ -59,6 +59,12 @@ id btnUseSampleData
 id btnViewActiveRide
 id cardActiveRide
 id cardDriverInfo
+id chipGroupDiscount
+id chipPregnant
+id chipPwd
+id chipRegular
+id chipSenior
+id chipStudent
 id drawerLayout
 id drawer_about
 id drawer_book_ride
@@ -83,6 +89,7 @@ id fragmentContainer
 id homeScrollView
 id imgNavAvatar
 id ivProfileAvatar
+id layoutDiscountNotice
 id layoutEmpty
 id nav_book_ride
 id nav_history
@@ -110,10 +117,14 @@ id tvDev1Name
 id tvDev1Role
 id tvDev2Name
 id tvDev2Role
+id tvDiscountBadge
+id tvDiscountNotice
 id tvDriverEmail
 id tvDriverName
 id tvDropoff
 id tvEstimatedFare
+id tvFare
+id tvFareAmount
 id tvFareBreakdown
 id tvForgotPassword
 id tvGreeting
@@ -123,6 +134,7 @@ id tvLogin
 id tvNavName
 id tvNavRole
 id tvPassengerCount
+id tvPassengerCountLabel
 id tvPickup
 id tvPolling
 id tvProfileId

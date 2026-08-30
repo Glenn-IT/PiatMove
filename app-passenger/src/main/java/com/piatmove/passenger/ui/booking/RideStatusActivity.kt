@@ -128,6 +128,29 @@ class RideStatusActivity : AppCompatActivity() {
         }
         binding.tvStatus.setTextColor(color)
 
+        // Fare & Discount breakdown
+        val count = booking.passenger_count
+        val countText = "$count ${if (count > 1) "Passengers" else "Passenger"}"
+        val discount = booking.discount_type ?: "regular"
+
+        if (discount != "regular") {
+            val discountLabel = when (discount) {
+                "student"  -> "Student (20% OFF)"
+                "senior"   -> "Senior (20% OFF)"
+                "pwd"      -> "PWD (20% OFF)"
+                "pregnant" -> "Pregnant (20% OFF)"
+                else       -> "Discount (20% OFF)"
+            }
+            binding.tvDiscountBadge.visibility = View.VISIBLE
+            binding.tvDiscountBadge.text = discountLabel
+            binding.tvPassengerCountLabel.text = "$countText • $discountLabel"
+        } else {
+            binding.tvDiscountBadge.visibility = View.GONE
+            binding.tvPassengerCountLabel.text = "$countText (Regular Fare)"
+        }
+
+        binding.tvFareAmount.text = booking.fare?.let { "₱%.2f".format(it) } ?: "₱20.00"
+
         binding.btnCancelRide.visibility =
             if (booking.status == BookingStatus.PENDING) View.VISIBLE else View.GONE
 

@@ -51,11 +51,31 @@ class RideRequestActivity : AppCompatActivity() {
         viewModel.requests.observe(this) { state ->
             if (state is Resource.Success) {
                 val booking = state.data?.firstOrNull { it.id == bookingId } ?: return@observe
+                val count = booking.passenger_count
+                val passengerLabel = if (count > 1) "$count Passengers" else "1 Passenger"
+                val discount = booking.discount_type ?: "regular"
+
                 binding.tvPassengerName.text  = booking.passenger_name ?: "Passenger #${booking.passenger_id}"
                 binding.tvPassengerPhone.text = booking.passenger_phone ?: "—"
                 binding.tvPickup.text         = booking.pickup_address
                 binding.tvDropoff.text        = booking.dropoff_address
                 binding.tvFare.text           = booking.fare?.let { "₱%.2f".format(it) } ?: "₱--"
+
+                if (discount != "regular") {
+                    val discountTitle = when (discount) {
+                        "student"  -> "Student (20% OFF)"
+                        "senior"   -> "Senior Citizen (20% OFF)"
+                        "pwd"      -> "PWD (20% OFF)"
+                        "pregnant" -> "Pregnant (20% OFF)"
+                        else       -> "Discount (20% OFF)"
+                    }
+                    binding.tvFareBreakdown.text = "$passengerLabel • $discountTitle"
+                    binding.cardDiscountNotice.visibility = View.VISIBLE
+                    binding.tvDiscountNotice.text = "Passenger applied for $discountTitle. Please verify their valid ID / document upon pickup."
+                } else {
+                    binding.tvFareBreakdown.text = "$passengerLabel • Regular Fare"
+                    binding.cardDiscountNotice.visibility = View.GONE
+                }
             }
         }
         viewModel.loadRequests()

@@ -81,6 +81,22 @@ class ActiveRideActivity : AppCompatActivity() {
         binding.tvPassengerPhone.text = booking.passenger_phone ?: "—"
         binding.tvPickup.text        = booking.pickup_address
         binding.tvDropoff.text       = booking.dropoff_address
+        binding.tvActiveFare.text    = booking.fare?.let { "₱%.2f".format(it) } ?: "₱--"
+
+        val discount = booking.discount_type ?: "regular"
+        if (discount != "regular") {
+            val discountTitle = when (discount) {
+                "student"  -> "🎓 Student (20% OFF)"
+                "senior"   -> "👴 Senior (20% OFF)"
+                "pwd"      -> "♿ PWD (20% OFF)"
+                "pregnant" -> "🤰 Pregnant (20% OFF)"
+                else       -> "🏷️ Discount (20% OFF)"
+            }
+            binding.tvActiveDiscount.visibility = View.VISIBLE
+            binding.tvActiveDiscount.text       = discountTitle
+        } else {
+            binding.tvActiveDiscount.visibility = View.GONE
+        }
 
         when (booking.status) {
             BookingStatus.ACCEPTED -> {

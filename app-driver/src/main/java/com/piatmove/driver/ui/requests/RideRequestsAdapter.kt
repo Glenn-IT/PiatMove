@@ -20,6 +20,20 @@ class RideRequestsAdapter(
             binding.tvPickup.text        = booking.pickup_address
             binding.tvDropoff.text       = booking.dropoff_address
             binding.tvFare.text          = booking.fare?.let { "₱%.2f".format(it) } ?: "₱--"
+            val discount = booking.discount_type ?: "regular"
+            if (discount != "regular") {
+                val discountLabel = when (discount) {
+                    "student"  -> "🎓 Student"
+                    "senior"   -> "👴 Senior"
+                    "pwd"      -> "♿ PWD"
+                    "pregnant" -> "🤰 Pregnant"
+                    else       -> "🏷️ 20% OFF"
+                }
+                binding.tvDiscountBadge.visibility = android.view.View.VISIBLE
+                binding.tvDiscountBadge.text       = discountLabel
+            } else {
+                binding.tvDiscountBadge.visibility = android.view.View.GONE
+            }
             binding.root.setOnClickListener { onClick(booking) }
         }
     }

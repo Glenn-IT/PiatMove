@@ -18,7 +18,9 @@ class BookRideActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBookRideBinding
     private lateinit var viewModel: PassengerViewModel
     private var passengerCount: Int = 1
-    private val FARE_PER_PASSENGER: Double = 20.0
+    private var selectedDiscountType: String = "regular"
+    private val REGULAR_FARE_PER_PASSENGER: Double = 20.0
+    private val DISCOUNT_RATE: Double = 0.20 // 20% statutory discount (RA 10931, RA 9994, RA 7277)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,7 @@ class BookRideActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[PassengerViewModel::class.java]
 
         setupPassengerCounter()
+        setupDiscountSelector()
         setupBottomNav()
 
         binding.btnUseSampleData.setOnClickListener { fillSampleData() }
@@ -38,6 +41,19 @@ class BookRideActivity : AppCompatActivity() {
 
         observeViewModel()
         updateFareUI()
+    }
+
+    private fun setupDiscountSelector() {
+        binding.chipGroupDiscount.setOnCheckedStateChangeListener { _, checkedIds ->
+            selectedDiscountType = when (checkedIds.firstOrNull()) {
+                R.id.chipStudent  -> "student"
+                R.id.chipSenior   -> "senior"
+                R.id.chipPwd      -> "pwd"
+                R.id.chipPregnant -> "pregnant"
+                else              -> "regular"
+            }
+            updateFareUI()
+        }
     }
 
     private fun setupPassengerCounter() {
@@ -62,9 +78,34 @@ class BookRideActivity : AppCompatActivity() {
 
     private fun updateFareUI() {
         binding.tvPassengerCount.text = passengerCount.toString()
-        val totalFare = passengerCount * FARE_PER_PASSENGER
+
+        val isDiscounted = selectedDiscountType != "regular"
+        val farePerPax = if (isDiscounted) {
+            REGULAR_FARE_PER_PASSENGER * (1.0 - DISCOUNT_RATE) // ₱16.00
+        } else {
+            REGULAR_FARE_PER_PASSENGER // ₱20.00
+        }
+
+        val totalFare = passengerCount * farePerPax
         binding.tvEstimatedFare.text = "₱${String.format("%.2f", totalFare)}"
-        binding.tvFareBreakdown.text = "₱20.00 × $passengerCount passenger${if (passengerCount > 1) "s" else ""}"
+
+        val passengerLabel = if (passengerCount > 1) "passengers" else "passenger"
+        if (isDiscounted) {
+            val discountTitle = when (selectedDiscountType) {
+                "student"  -> "Student"
+                "senior"   -> "Senior Citizen"
+                "pwd"      -> "PWD"
+                "pregnant" -> "Pregnant"
+                else       -> "Discount"
+            }
+            val savings = passengerCount * (REGULAR_FARE_PER_PASSENGER * DISCOUNT_RATE)
+            binding.tvFareBreakdown.text = "₱${String.format("%.2f", farePerPax)} × $passengerCount $passengerLabel (20% OFF $discountTitle • Save ₱${String.format("%.2f", savings)})"
+            binding.layoutDiscountNotice.visibility = View.VISIBLE
+            binding.tvDiscountNotice.text = "Please present your valid ${discountTitle} ID / document to the driver upon boarding for 20% discount verification."
+        } else {
+            binding.tvFareBreakdown.text = "₱20.00 × $passengerCount $passengerLabel"
+            binding.layoutDiscountNotice.visibility = View.GONE
+        }
     }
 
     private fun setupBottomNav() {
@@ -131,7 +172,12 @@ class BookRideActivity : AppCompatActivity() {
         binding.tilDropoffLat.error     = null
         binding.tilDropoffLng.error     = null
 
-        val totalFare = passengerCount * FARE_PER_PASSENGER
+        val farePerPax = if (selectedDiscountType != "regular") {
+            REGULAR_FARE_PER_PASSENGER * (1.0 - DISCOUNT_RATE)
+        } else {
+            REGULAR_FARE_PER_PASSENGER
+        }
+        val totalFare = passengerCount * farePerPax
 
         viewModel.createBooking(
             BookingRequest(
@@ -142,7 +188,8 @@ class BookRideActivity : AppCompatActivity() {
                 dropoff_lat     = dropoffLat,
                 dropoff_lng     = dropoffLng,
                 passenger_count = passengerCount,
-                fare            = totalFare
+                fare            = totalFare,
+                discount_type   = selectedDiscountType
             )
         )
     }

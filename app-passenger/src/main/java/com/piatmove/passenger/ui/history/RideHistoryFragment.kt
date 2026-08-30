@@ -53,7 +53,10 @@ class RideHistoryFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    val list = state.data
+                    val list = state.data?.filter {
+                        it.status == com.piatmove.core.utils.BookingStatus.COMPLETED ||
+                        it.status == com.piatmove.core.utils.BookingStatus.CANCELLED
+                    } ?: emptyList()
                     if (list.isEmpty()) {
                         binding.layoutEmpty.visibility = View.VISIBLE
                         binding.rvHistory.visibility   = View.GONE
@@ -104,6 +107,15 @@ class RideHistoryFragment : Fragment() {
                 b.tvDropoff.text = booking.dropoff_address
                 b.tvDate.text    = "Booking #${booking.id}  •  ${booking.created_at.take(10)}"
                 b.tvStatus.text  = booking.status.replace("_", " ").uppercase()
+
+                val discountTag = when (booking.discount_type) {
+                    "student"  -> " (Student)"
+                    "senior"   -> " (Senior)"
+                    "pwd"      -> " (PWD)"
+                    "pregnant" -> " (Pregnant)"
+                    else       -> ""
+                }
+                b.tvFare.text = (booking.fare?.let { "₱%.2f".format(it) } ?: "₱20.00") + discountTag
 
                 val (textColorRes, bgColorRes) = statusColors(booking.status)
                 val textColor = ContextCompat.getColor(requireContext(), textColorRes)

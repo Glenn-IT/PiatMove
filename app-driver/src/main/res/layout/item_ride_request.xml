@@ -43,14 +43,33 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvFare"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="₱--"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:gravity="end"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvFare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₱--"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvDiscountBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:background="#DCFCE7"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:text="20% OFF"
+                    android:textColor="#15803D"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Divider -->

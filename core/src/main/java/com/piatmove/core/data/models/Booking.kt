@@ -17,6 +17,7 @@ data class Booking(
     val status: String,
     val passenger_count: Int = 1,
     val fare: Double? = null,
+    val discount_type: String? = "regular",
     val created_at: String,
     val updated_at: String?,
     // Joined fields (present on some endpoints)
@@ -34,11 +35,13 @@ data class BookingRequest(
     val dropoff_lat: Double,
     val dropoff_lng: Double,
     val passenger_count: Int = 1,
-    val fare: Double?        = null
+    val fare: Double?        = null,
+    val discount_type: String? = "regular"
 )
 
 data class CreateBookingResponse(
     val booking_id: Int,
     val passenger_count: Int = 1,
-    val fare: Double? = null
+    val fare: Double? = null,
+    val discount_type: String? = "regular"
 )

@@ -72,14 +72,29 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Passenger"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Passenger"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvActiveFare"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₱--"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                     <TextView
                         android:id="@+id/tvPassengerName"
                         android:layout_width="wrap_content"
@@ -96,6 +111,19 @@
                         android:text="—"
                         android:textColor="@color/grey_text"
                         android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tvActiveDiscount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="#DCFCE7"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="3dp"
+                        android:text="🎓 Student (20% OFF)"
+                        android:textColor="#15803D"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
