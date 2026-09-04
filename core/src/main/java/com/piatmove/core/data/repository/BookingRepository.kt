@@ -3,6 +3,10 @@ package com.piatmove.core.data.repository
 import com.piatmove.core.data.api.ApiService
 import com.piatmove.core.data.models.Booking
 import com.piatmove.core.data.models.BookingRequest
+import com.piatmove.core.data.models.DriverDailyReport
+import com.piatmove.core.data.models.DriverProfile
+import com.piatmove.core.data.models.DriverStatusResponse
+import com.piatmove.core.data.models.UpdateDriverProfileRequest
 import com.piatmove.core.data.models.UpdateDriverStatusRequest
 import com.piatmove.core.data.models.UpdateLocationRequest
 import com.piatmove.core.utils.Resource
@@ -81,6 +85,36 @@ class BookingRepository(
         }
     }
 
+    suspend fun getDriverHistory(): Resource<List<Booking>> {
+        return try {
+            val response = api.getDriverHistory()
+            if (response.success && response.data != null) Resource.Success(response.data)
+            else Resource.Error(response.message)
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun getDriverDailyReport(date: String? = null): Resource<DriverDailyReport> {
+        return try {
+            val response = api.getDriverDailyReport(date)
+            if (response.success && response.data != null) Resource.Success(response.data)
+            else Resource.Error(response.message)
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun getDriverTrips(status: String? = null): Resource<List<Booking>> {
+        return try {
+            val response = api.getDriverTrips(status)
+            if (response.success && response.data != null) Resource.Success(response.data)
+            else Resource.Error(response.message)
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
     suspend fun acceptRide(bookingId: Int): Resource<Unit> {
         return try {
             val response = api.acceptRide(bookingId)
@@ -93,6 +127,15 @@ class BookingRepository(
     suspend fun rejectRide(bookingId: Int): Resource<Unit> {
         return try {
             val response = api.rejectRide(bookingId)
+            if (response.success) Resource.Success(Unit) else Resource.Error(response.message)
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun cancelDriverRide(bookingId: Int): Resource<Unit> {
+        return try {
+            val response = api.cancelDriverRide(bookingId)
             if (response.success) Resource.Success(Unit) else Resource.Error(response.message)
         } catch (e: Exception) {
             Resource.Error(parseApiError(e))
@@ -126,7 +169,7 @@ class BookingRepository(
         }
     }
 
-    suspend fun getDriverStatus(): Resource<com.piatmove.core.data.models.DriverStatusResponse> {
+    suspend fun getDriverStatus(): Resource<DriverStatusResponse> {
         return try {
             val response = api.getDriverStatus()
             if (response.success && response.data != null) Resource.Success(response.data)
@@ -136,7 +179,7 @@ class BookingRepository(
         }
     }
 
-    suspend fun getDriverProfile(): Resource<com.piatmove.core.data.models.DriverProfile> {
+    suspend fun getDriverProfile(): Resource<DriverProfile> {
         return try {
             val response = api.getDriverProfile()
             if (response.success && response.data != null) Resource.Success(response.data)
@@ -146,7 +189,7 @@ class BookingRepository(
         }
     }
 
-    suspend fun updateDriverProfile(request: com.piatmove.core.data.models.UpdateDriverProfileRequest): Resource<Unit> {
+    suspend fun updateDriverProfile(request: UpdateDriverProfileRequest): Resource<Unit> {
         return try {
             val response = api.updateDriverProfile(request)
             if (response.success) Resource.Success(Unit)
@@ -156,7 +199,7 @@ class BookingRepository(
         }
     }
 
-    suspend fun updateDriverStatus(isOnline: Boolean): Resource<com.piatmove.core.data.models.DriverStatusResponse> {
+    suspend fun updateDriverStatus(isOnline: Boolean): Resource<DriverStatusResponse> {
         return try {
             val response = api.updateDriverStatus(UpdateDriverStatusRequest(isOnline))
             if (response.success && response.data != null) Resource.Success(response.data)

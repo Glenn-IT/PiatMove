@@ -7,6 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.piatmove.core.data.api.ApiClient
 import com.piatmove.core.data.models.Booking
+import com.piatmove.core.data.models.DriverDailyReport
+import com.piatmove.core.data.models.DriverProfile
+import com.piatmove.core.data.models.UpdateDriverProfileRequest
 import com.piatmove.core.data.repository.BookingRepository
 import com.piatmove.core.utils.BookingStatus
 import com.piatmove.core.utils.Resource
@@ -25,6 +28,15 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
 
     private val _activeBooking = MutableLiveData<Resource<Booking?>>()
     val activeBooking: LiveData<Resource<Booking?>> = _activeBooking
+
+    private val _history = MutableLiveData<Resource<List<Booking>>>()
+    val history: LiveData<Resource<List<Booking>>> = _history
+
+    private val _dailyReport = MutableLiveData<Resource<DriverDailyReport>>()
+    val dailyReport: LiveData<Resource<DriverDailyReport>> = _dailyReport
+
+    private val _trips = MutableLiveData<Resource<List<Booking>>>()
+    val trips: LiveData<Resource<List<Booking>>> = _trips
 
     private val _actionState = MutableLiveData<Resource<Unit>>()
     val actionState: LiveData<Resource<Unit>> = _actionState
@@ -71,6 +83,27 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun fetchDriverHistory() {
+        _history.value = Resource.Loading
+        viewModelScope.launch {
+            _history.value = repo.getDriverHistory()
+        }
+    }
+
+    fun fetchDailyReport(date: String? = null) {
+        _dailyReport.value = Resource.Loading
+        viewModelScope.launch {
+            _dailyReport.value = repo.getDriverDailyReport(date)
+        }
+    }
+
+    fun fetchDriverTrips(status: String? = null) {
+        _trips.value = Resource.Loading
+        viewModelScope.launch {
+            _trips.value = repo.getDriverTrips(status)
+        }
+    }
+
     fun toggleOnline(online: Boolean) {
         val currentApproval = approvalStatus.value ?: com.piatmove.core.data.local.PrefsManager.getDriverApprovalStatus(getApplication())
         if (online && currentApproval != "approved") {
@@ -106,6 +139,11 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch { _actionState.value = repo.rejectRide(bookingId) }
     }
 
+    fun cancelRide(bookingId: Int) {
+        _actionState.value = Resource.Loading
+        viewModelScope.launch { _actionState.value = repo.cancelDriverRide(bookingId) }
+    }
+
     fun startRide(bookingId: Int) {
         _actionState.value = Resource.Loading
         viewModelScope.launch { _actionState.value = repo.startRide(bookingId) }
@@ -116,8 +154,8 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch { _actionState.value = repo.completeRide(bookingId) }
     }
 
-    private val _driverProfile = MutableLiveData<Resource<com.piatmove.core.data.models.DriverProfile>>()
-    val driverProfile: LiveData<Resource<com.piatmove.core.data.models.DriverProfile>> = _driverProfile
+    private val _driverProfile = MutableLiveData<Resource<DriverProfile>>()
+    val driverProfile: LiveData<Resource<DriverProfile>> = _driverProfile
 
     private val _updateProfileState = MutableLiveData<Resource<Unit>>()
     val updateProfileState: LiveData<Resource<Unit>> = _updateProfileState
@@ -146,7 +184,7 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
     fun updateProfile(phone: String, barangay: String, currentPass: String?, newPass: String?) {
         _updateProfileState.value = Resource.Loading
         viewModelScope.launch {
-            val req = com.piatmove.core.data.models.UpdateDriverProfileRequest(
+            val req = UpdateDriverProfileRequest(
                 phone = phone.ifEmpty { null },
                 barangay = barangay.ifEmpty { null },
                 current_password = currentPass?.ifEmpty { null },

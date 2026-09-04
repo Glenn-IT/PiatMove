@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.piatmove.core.utils.Resource
@@ -33,7 +34,22 @@ class RideRequestActivity : AppCompatActivity() {
 
         binding.btnAccept.setOnClickListener {
             if (bookingId != -1) {
+                isRejecting = false
                 viewModel.acceptRide(bookingId)
+            }
+        }
+
+        binding.btnReject.setOnClickListener {
+            if (bookingId != -1) {
+                AlertDialog.Builder(this)
+                    .setTitle("Decline Ride Request")
+                    .setMessage("Are you sure you want to decline this ride request?")
+                    .setPositiveButton("Yes, Decline") { _, _ ->
+                        isRejecting = true
+                        viewModel.rejectRide(bookingId)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
             }
         }
 
@@ -80,27 +96,39 @@ class RideRequestActivity : AppCompatActivity() {
                 is Resource.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.btnAccept.isEnabled    = false
+                    binding.btnReject.isEnabled    = false
                 }
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.GONE
                     binding.btnAccept.isEnabled    = true
-                    Toast.makeText(this, "Ride accepted successfully!", Toast.LENGTH_SHORT).show()
-                    startActivity(
-                        Intent(this, ActiveRideActivity::class.java)
-                            .putExtra(ActiveRideActivity.EXTRA_BOOKING_ID, bookingId)
-                    )
-                    finish()
+                    binding.btnReject.isEnabled    = true
+
+                    if (isRejecting) {
+                        Toast.makeText(this, "Ride request declined", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Ride accepted successfully!", Toast.LENGTH_SHORT).show()
+                        startActivity(
+                            Intent(this, ActiveRideActivity::class.java)
+                                .putExtra(ActiveRideActivity.EXTRA_BOOKING_ID, bookingId)
+                        )
+                        finish()
+                    }
                 }
                 is Resource.Error -> {
                     binding.progressBar.visibility = View.GONE
                     binding.btnAccept.isEnabled    = true
+                    binding.btnReject.isEnabled    = true
                     Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean { onBackPressedDispatcher.onBackPressed(); return true }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
+    }
 
     companion object {
         const val EXTRA_BOOKING_ID = "extra_booking_id"

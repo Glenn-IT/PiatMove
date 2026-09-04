@@ -51,3 +51,17 @@ data class PendingDriver(
     val approval_status: String,
     val created_at: String
 )
+
+// Driver Daily Income & Reporting
+data class DriverDailyReport(
+    val date: String,
+    val total_income: Double = 0.0,
+    val total_trips: Int = 0,
+    val regular_trips: Int = 0,
+    val discounted_trips: Int = 0,
+    val student_trips: Int = 0,
+    val senior_trips: Int = 0,
+    val pwd_trips: Int = 0,
+    val pregnant_trips: Int = 0,
+    val trips: List<Booking> = emptyList()
+)

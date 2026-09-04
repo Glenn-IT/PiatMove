@@ -1,21 +1,21 @@
-# 🛠️ PiatMove Issues & Enhancements Log
+# Issues Resolution Status
 
-## 1. App Driver UI Uniformity & Experience ✅ RESOLVED
-- Synchronized driver app design system, Material cards, and navigation with the passenger app while maintaining dedicated driver features.
+## Driver Side Features & Enhancements
 
-## 2. Driver Profile Tab ✅ RESOLVED
-- Created dedicated **Driver Profile Tab** (`DriverProfileFragment.kt` & `fragment_driver_profile.xml`).
-- Allows driver to update contact number (`phone`), assigned `barangay`, and `password`.
-- Restricts official credentials (license number, tricycle plate number, full name, email) as verified read-only records.
-- Backend API route added: `PUT /driver/profile`.
+- [x] **Include history transaction feature**
+  - Added `GET /driver/history` and `GET /driver/trips` backend endpoints in `piatmove-api` and `piatmove-deploy`.
+  - Added `DriverTripsAdapter` and `DriverActivityFragment` supporting full transaction history with fare amount (₱), discount tags (Student, Senior, PWD, Pregnant), passenger details, and route breakdown.
+  - Linked to Navigation Drawer and Driver Dashboard.
 
-## 3. First-Come, First-Served Ride Requests ✅ RESOLVED
-- Removed the confusing "Reject" action from the ride request review screen.
-- Streamlined to **"Accept Ride (Claim Booking)"** operating strictly on a first-come, first-served basis. Drivers can return to the available request pool at any time using the back button without modifying the ride's availability for other drivers.
+- [x] **Include Daily income for report feature**
+  - Added `GET /driver/reports` and `GET /driver/daily-income` backend endpoints for daily gross income calculation and trip categorization.
+  - Created `DriverIncomeReportActivity` with interactive date navigation (Previous/Next day, Calendar DatePicker), Gross Earnings summary, Average / Trip, Regular vs Discounted breakdown, statutory discount counts (🎓 Student, 👴 Senior, ♿ PWD, 🤰 Pregnant), detailed transaction lists, and "Share Income Report" feature.
+  - Added Today's Income live summary card and quick report action on `DriverDashboardFragment`.
 
-## 4. Driver Registration Default to Tricycle ✅ RESOLVED
-- Fixed vehicle type to **Tricycle** only (`Tricycle` default, non-editable without irrelevant vehicle types).
-
-## 5. Admin Document Image 404 Resolution ✅ RESOLVED
-- Fixed file path replication in `api/routes/auth.php` to guarantee files are saved in both `admin/uploads/drivers/` and `api/uploads/drivers/`.
-- Updated `PiatMoveAdmin/drivers.php` with `get_driver_doc_url()` and automatic client-side image fallback handlers so modal previews and "View Full" links never 404.
+- [x] **Include also all accepted and rejected feature**
+  - Backend `GET /driver/trips` supports status filtering (`all`, `accepted`, `started`, `completed`, `rejected`, `cancelled`).
+  - Enhanced `POST /driver/reject/{id}` to preserve `driver_id` and track rejected requests.
+  - Added `POST /driver/cancel/{id}` for driver ride cancellation.
+  - Added interactive Choice Chips in `DriverActivityFragment` for **All Activity**, **Accepted** (Active), **Completed**, and **Rejected / Cancelled**.
+  - Added "Decline / Reject Request" button with confirmation dialog in `RideRequestActivity`.
+  - Added "Cancel Ride" button with confirmation dialog in `ActiveRideActivity`.

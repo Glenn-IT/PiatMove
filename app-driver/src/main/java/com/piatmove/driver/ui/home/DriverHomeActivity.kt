@@ -20,6 +20,9 @@ import com.piatmove.driver.databinding.ActivityDriverHomeBinding
 import com.piatmove.driver.ui.auth.AuthViewModel
 import com.piatmove.driver.ui.auth.LoginActivity
 import com.piatmove.driver.ui.dashboard.DriverDashboardFragment
+import com.piatmove.driver.ui.history.DriverActivityFragment
+import com.piatmove.driver.ui.profile.DriverProfileFragment
+import com.piatmove.driver.ui.report.DriverIncomeReportActivity
 import com.piatmove.driver.ui.requests.DriverRequestsFragment
 import com.piatmove.driver.ui.status.DriverStatusFragment
 
@@ -86,6 +89,14 @@ class DriverHomeActivity : AppCompatActivity() {
                     binding.bottomNav.selectedItemId = R.id.nav_requests
                     true
                 }
+                R.id.drawer_activity -> {
+                    showFragment(NAV_ACTIVITY, "Trip Logs & History")
+                    true
+                }
+                R.id.drawer_report -> {
+                    startActivity(Intent(this, DriverIncomeReportActivity::class.java))
+                    true
+                }
                 R.id.drawer_status -> {
                     binding.bottomNav.selectedItemId = R.id.nav_status
                     true
@@ -119,13 +130,24 @@ class DriverHomeActivity : AppCompatActivity() {
         }
     }
 
+    fun switchToTab(tag: String) {
+        when (tag) {
+            NAV_DASHBOARD -> binding.bottomNav.selectedItemId = R.id.nav_dashboard
+            NAV_REQUESTS  -> binding.bottomNav.selectedItemId = R.id.nav_requests
+            NAV_STATUS    -> binding.bottomNav.selectedItemId = R.id.nav_status
+            NAV_PROFILE   -> binding.bottomNav.selectedItemId = R.id.nav_profile
+            NAV_ACTIVITY  -> showFragment(NAV_ACTIVITY, "Trip Logs & History")
+        }
+    }
+
     private fun showFragment(tag: String, title: String) {
         val existing = supportFragmentManager.findFragmentByTag(tag)
-        val fragment = existing ?: when (tag) {
+        val fragment: Fragment = existing ?: when (tag) {
             NAV_DASHBOARD -> DriverDashboardFragment()
             NAV_REQUESTS  -> DriverRequestsFragment()
+            NAV_ACTIVITY  -> DriverActivityFragment()
             NAV_STATUS    -> DriverStatusFragment()
-            NAV_PROFILE   -> com.piatmove.driver.ui.profile.DriverProfileFragment()
+            NAV_PROFILE   -> DriverProfileFragment()
             else          -> DriverDashboardFragment()
         }
         supportActionBar?.title = title
@@ -191,6 +213,7 @@ class DriverHomeActivity : AppCompatActivity() {
     companion object {
         const val NAV_DASHBOARD = "dashboard"
         const val NAV_REQUESTS  = "requests"
+        const val NAV_ACTIVITY  = "activity"
         const val NAV_STATUS    = "status"
         const val NAV_PROFILE   = "profile"
     }

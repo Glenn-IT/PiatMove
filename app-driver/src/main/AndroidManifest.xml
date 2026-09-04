@@ -41,6 +41,10 @@
             android:name=".ui.ride.ActiveRideActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.report.DriverIncomeReportActivity"
+            android:exported="false" />
+
         <service
             android:name="com.piatmove.core.services.PiatMoveFirebaseMessagingService"
             android:exported="false">

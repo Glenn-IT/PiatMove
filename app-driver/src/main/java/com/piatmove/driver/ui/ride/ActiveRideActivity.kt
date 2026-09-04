@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.piatmove.core.data.models.Booking
@@ -20,6 +21,7 @@ class ActiveRideActivity : AppCompatActivity() {
     private lateinit var viewModel: DriverViewModel
     private var bookingId: Int = -1
     private var currentStatus: String = ""
+    private var isCancelling: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +35,23 @@ class ActiveRideActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[DriverViewModel::class.java]
 
         binding.btnAction.setOnClickListener {
+            isCancelling = false
             when (currentStatus) {
                 BookingStatus.ACCEPTED -> viewModel.startRide(bookingId)
                 BookingStatus.STARTED  -> viewModel.completeRide(bookingId)
             }
+        }
+
+        binding.btnCancelRide.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Cancel Active Ride")
+                .setMessage("Are you sure you want to cancel this ride? This action will be logged in your activity history.")
+                .setPositiveButton("Yes, Cancel Ride") { _, _ ->
+                    isCancelling = true
+                    viewModel.cancelRide(bookingId)
+                }
+                .setNegativeButton("No, Keep Ride", null)
+                .show()
         }
 
         viewModel.activeBooking.observe(this) { state ->
@@ -48,14 +63,22 @@ class ActiveRideActivity : AppCompatActivity() {
         viewModel.actionState.observe(this) { state ->
             when (state) {
                 is Resource.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.btnAction.isEnabled    = false
+                    binding.progressBar.visibility   = View.VISIBLE
+                    binding.btnAction.isEnabled      = false
+                    binding.btnCancelRide.isEnabled  = false
                 }
                 is Resource.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.btnAction.isEnabled    = true
-                    if (currentStatus == BookingStatus.STARTED) {
-                        Toast.makeText(this, "Ride completed!", Toast.LENGTH_LONG).show()
+                    binding.progressBar.visibility   = View.GONE
+                    binding.btnAction.isEnabled      = true
+                    binding.btnCancelRide.isEnabled  = true
+
+                    if (isCancelling) {
+                        Toast.makeText(this, "Ride cancelled", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, DriverHomeActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        })
+                    } else if (currentStatus == BookingStatus.STARTED) {
+                        Toast.makeText(this, "Ride completed successfully!", Toast.LENGTH_LONG).show()
                         startActivity(Intent(this, DriverHomeActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         })
@@ -64,8 +87,9 @@ class ActiveRideActivity : AppCompatActivity() {
                     }
                 }
                 is Resource.Error -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.btnAction.isEnabled    = true
+                    binding.progressBar.visibility   = View.GONE
+                    binding.btnAction.isEnabled      = true
+                    binding.btnCancelRide.isEnabled  = true
                     Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
                 }
             }
@@ -102,12 +126,17 @@ class ActiveRideActivity : AppCompatActivity() {
             BookingStatus.ACCEPTED -> {
                 binding.btnAction.text = getString(R.string.btn_start_ride)
                 binding.btnAction.visibility = View.VISIBLE
+                binding.btnCancelRide.visibility = View.VISIBLE
             }
             BookingStatus.STARTED -> {
                 binding.btnAction.text = getString(R.string.btn_complete_ride)
                 binding.btnAction.visibility = View.VISIBLE
+                binding.btnCancelRide.visibility = View.VISIBLE
             }
-            else -> binding.btnAction.visibility = View.GONE
+            else -> {
+                binding.btnAction.visibility = View.GONE
+                binding.btnCancelRide.visibility = View.GONE
+            }
         }
     }
 

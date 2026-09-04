@@ -3,15 +3,24 @@ package com.piatmove.core.data.api
 import com.piatmove.core.data.models.Booking
 import com.piatmove.core.data.models.BookingRequest
 import com.piatmove.core.data.models.CreateBookingResponse
+import com.piatmove.core.data.models.DriverDailyReport
+import com.piatmove.core.data.models.DriverProfile
+import com.piatmove.core.data.models.DriverStatusResponse
 import com.piatmove.core.data.models.FcmTokenRequest
+import com.piatmove.core.data.models.ForgotPasswordRequest
 import com.piatmove.core.data.models.LoginRequest
 import com.piatmove.core.data.models.LoginResponse
 import com.piatmove.core.data.models.PendingDriver
 import com.piatmove.core.data.models.RegisterRequest
 import com.piatmove.core.data.models.RegisterResponse
+import com.piatmove.core.data.models.ResetPasswordRequest
+import com.piatmove.core.data.models.UpdateDriverProfileRequest
 import com.piatmove.core.data.models.UpdateDriverStatusRequest
 import com.piatmove.core.data.models.UpdateLocationRequest
+import com.piatmove.core.data.models.UpdateProfilePhotoResponse
+import com.piatmove.core.data.models.UpdateProfileRequest
 import com.piatmove.core.data.models.User
+import com.piatmove.core.data.models.UserProfile
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -22,6 +31,7 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -52,10 +62,10 @@ interface ApiService {
     suspend fun login(@Body body: LoginRequest): ApiResponse<LoginResponse>
 
     @POST("auth/forgot-password")
-    suspend fun forgotPassword(@Body body: com.piatmove.core.data.models.ForgotPasswordRequest): ApiResponse<Unit>
+    suspend fun forgotPassword(@Body body: ForgotPasswordRequest): ApiResponse<Unit>
 
     @POST("auth/reset-password")
-    suspend fun resetPassword(@Body body: com.piatmove.core.data.models.ResetPasswordRequest): ApiResponse<Unit>
+    suspend fun resetPassword(@Body body: ResetPasswordRequest): ApiResponse<Unit>
 
 
     // ── Bookings ──────────────────────────────────────────────────────────────
@@ -82,11 +92,23 @@ interface ApiService {
     @GET("driver/requests")
     suspend fun getDriverRequests(): ApiResponse<List<Booking>>
 
+    @GET("driver/history")
+    suspend fun getDriverHistory(): ApiResponse<List<Booking>>
+
+    @GET("driver/reports")
+    suspend fun getDriverDailyReport(@Query("date") date: String? = null): ApiResponse<DriverDailyReport>
+
+    @GET("driver/trips")
+    suspend fun getDriverTrips(@Query("status") status: String? = null): ApiResponse<List<Booking>>
+
     @POST("driver/accept/{id}")
     suspend fun acceptRide(@Path("id") bookingId: Int): ApiResponse<Unit>
 
     @POST("driver/reject/{id}")
     suspend fun rejectRide(@Path("id") bookingId: Int): ApiResponse<Unit>
+
+    @POST("driver/cancel/{id}")
+    suspend fun cancelDriverRide(@Path("id") bookingId: Int): ApiResponse<Unit>
 
     @POST("driver/start/{id}")
     suspend fun startRide(@Path("id") bookingId: Int): ApiResponse<Unit>
@@ -98,28 +120,28 @@ interface ApiService {
     suspend fun updateLocation(@Body body: UpdateLocationRequest): ApiResponse<Unit>
 
     @GET("driver/status")
-    suspend fun getDriverStatus(): ApiResponse<com.piatmove.core.data.models.DriverStatusResponse>
+    suspend fun getDriverStatus(): ApiResponse<DriverStatusResponse>
 
     @GET("driver/profile")
-    suspend fun getDriverProfile(): ApiResponse<com.piatmove.core.data.models.DriverProfile>
+    suspend fun getDriverProfile(): ApiResponse<DriverProfile>
 
     @PUT("driver/profile")
-    suspend fun updateDriverProfile(@Body body: com.piatmove.core.data.models.UpdateDriverProfileRequest): ApiResponse<Unit>
+    suspend fun updateDriverProfile(@Body body: UpdateDriverProfileRequest): ApiResponse<Unit>
 
     @PUT("driver/status")
-    suspend fun updateDriverStatus(@Body body: UpdateDriverStatusRequest): ApiResponse<com.piatmove.core.data.models.DriverStatusResponse>
+    suspend fun updateDriverStatus(@Body body: UpdateDriverStatusRequest): ApiResponse<DriverStatusResponse>
 
     // ── User ──────────────────────────────────────────────────────────────────
 
     @GET("user/profile")
-    suspend fun getUserProfile(): ApiResponse<com.piatmove.core.data.models.UserProfile>
+    suspend fun getUserProfile(): ApiResponse<UserProfile>
 
     @PUT("user/profile")
-    suspend fun updateProfile(@Body body: com.piatmove.core.data.models.UpdateProfileRequest): ApiResponse<com.piatmove.core.data.models.UpdateProfileRequest>
+    suspend fun updateProfile(@Body body: UpdateProfileRequest): ApiResponse<UpdateProfileRequest>
 
     @Multipart
     @POST("user/profile-photo")
-    suspend fun uploadProfilePhoto(@Part photo: MultipartBody.Part): ApiResponse<com.piatmove.core.data.models.UpdateProfilePhotoResponse>
+    suspend fun uploadProfilePhoto(@Part photo: MultipartBody.Part): ApiResponse<UpdateProfilePhotoResponse>
 
     @PUT("user/fcm-token")
     suspend fun updateFcmToken(@Body body: FcmTokenRequest): ApiResponse<Unit>

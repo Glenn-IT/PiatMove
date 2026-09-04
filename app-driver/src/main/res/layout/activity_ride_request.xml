@@ -238,6 +238,18 @@
             app:iconGravity="textStart"
             app:iconPadding="8dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReject"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="Decline / Reject Request"
+            android:textColor="@color/statusRejected"
+            android:textSize="14sp"
+            app:cornerRadius="14dp"
+            app:strokeColor="@color/statusRejected" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

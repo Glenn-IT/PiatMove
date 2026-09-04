@@ -1,5 +1,6 @@
 package com.piatmove.driver.ui.dashboard
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +10,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.piatmove.core.data.local.PrefsManager
+import com.piatmove.core.utils.Resource
 import com.piatmove.driver.R
 import com.piatmove.driver.databinding.FragmentDriverDashboardBinding
+import com.piatmove.driver.ui.home.DriverHomeActivity
 import com.piatmove.driver.ui.home.DriverViewModel
+import com.piatmove.driver.ui.report.DriverIncomeReportActivity
 
 class DriverDashboardFragment : Fragment() {
 
@@ -33,6 +37,7 @@ class DriverDashboardFragment : Fragment() {
         binding.tvGreeting.text = "Hello, $name!"
 
         viewModel.checkDriverStatus()
+        viewModel.fetchDailyReport()
 
         binding.switchOnline.setOnClickListener {
             val isApproved = viewModel.approvalStatus.value == "approved"
@@ -42,6 +47,23 @@ class DriverDashboardFragment : Fragment() {
             } else {
                 viewModel.toggleOnline(binding.switchOnline.isChecked)
             }
+        }
+
+        // Daily report navigation
+        val openReportAction = View.OnClickListener {
+            startActivity(Intent(requireContext(), DriverIncomeReportActivity::class.java))
+        }
+        binding.cardTodayIncome.setOnClickListener(openReportAction)
+        binding.btnDailyReport.setOnClickListener(openReportAction)
+        binding.tvViewReportBtn.setOnClickListener(openReportAction)
+
+        // Quick shortcut buttons
+        binding.cardQuickRequests.setOnClickListener {
+            (activity as? DriverHomeActivity)?.switchToTab(DriverHomeActivity.NAV_REQUESTS)
+        }
+
+        binding.cardQuickActivity.setOnClickListener {
+            (activity as? DriverHomeActivity)?.switchToTab(DriverHomeActivity.NAV_ACTIVITY)
         }
 
         viewModel.approvalStatus.observe(viewLifecycleOwner) { status ->
@@ -72,6 +94,15 @@ class DriverDashboardFragment : Fragment() {
             }
         }
 
+        viewModel.dailyReport.observe(viewLifecycleOwner) { state ->
+            if (state is Resource.Success && state.data != null) {
+                val report = state.data!!
+                binding.tvDashTodayIncome.text = "₱%.2f".format(report.total_income)
+                val tripCount = report.total_trips
+                binding.tvDashTodayTrips.text = if (tripCount == 1) "1 completed trip today" else "$tripCount completed trips today"
+            }
+        }
+
         viewModel.statusError.observe(viewLifecycleOwner) { error ->
             error?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
@@ -83,6 +114,7 @@ class DriverDashboardFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.checkDriverStatus()
+        viewModel.fetchDailyReport()
     }
 
     override fun onDestroyView() {
