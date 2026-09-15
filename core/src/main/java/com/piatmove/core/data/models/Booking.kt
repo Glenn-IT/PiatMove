@@ -21,10 +21,14 @@ data class Booking(
     val created_at: String,
     val updated_at: String?,
     // Joined fields (present on some endpoints)
-    val passenger_name: String?  = null,
-    val passenger_phone: String? = null,
-    val driver_name: String?     = null,
-    val driver_phone: String?    = null
+    val passenger_name: String?        = null,
+    val passenger_phone: String?       = null,
+    val driver_name: String?           = null,
+    val driver_phone: String?          = null,
+    val driver_vehicle_no: String?     = null,
+    val driver_vehicle_type: String?   = null,
+    val driver_lat: Double?            = null,
+    val driver_lng: Double?            = null
 )
 
 data class BookingRequest(

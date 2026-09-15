@@ -1,13 +1,24 @@
 package com.piatmove.driver.ui.ride
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -28,12 +39,26 @@ class ActiveRideActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityActiveRideBinding
     private lateinit var viewModel: DriverViewModel
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var locationCallback: LocationCallback? = null
+
     private var googleMap: GoogleMap? = null
     private var currentBooking: Booking? = null
 
     private var bookingId: Int = -1
     private var currentStatus: String = ""
     private var isCancelling: Boolean = false
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val fineGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        val coarseGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+        if (fineGranted || coarseGranted) {
+            enableMyLocationOnMap()
+            startLocationUpdates()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +70,7 @@ class ActiveRideActivity : AppCompatActivity(), OnMapReadyCallback {
 
         bookingId = intent.getIntExtra(EXTRA_BOOKING_ID, -1)
         viewModel = ViewModelProvider(this)[DriverViewModel::class.java]
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setupMap()
 
@@ -121,6 +147,66 @@ class ActiveRideActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel.loadActiveBooking()
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkLocationPermissionAndStartUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+
+    private fun checkLocationPermissionAndStartUpdates() {
+        val fineGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarseGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+        if (fineGranted || coarseGranted) {
+            enableMyLocationOnMap()
+            startLocationUpdates()
+        } else {
+            locationPermissionLauncher.launch(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            )
+        }
+    }
+
+    private fun startLocationUpdates() {
+        if (locationCallback != null) return
+
+        val permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (permission != PackageManager.PERMISSION_GRANTED) return
+
+        try {
+            val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 4000L)
+                .setMinUpdateIntervalMillis(2500L)
+                .setMinUpdateDistanceMeters(2f)
+                .build()
+
+            locationCallback = object : LocationCallback() {
+                override fun onLocationResult(result: LocationResult) {
+                    val location = result.lastLocation ?: return
+                    viewModel.updateLocation(location.latitude, location.longitude)
+                }
+            }
+
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback!!, Looper.getMainLooper())
+        } catch (_: SecurityException) {}
+    }
+
+    private fun stopLocationUpdates() {
+        locationCallback?.let {
+            fusedLocationClient.removeLocationUpdates(it)
+            locationCallback = null
+        }
+    }
+
+    private fun enableMyLocationOnMap() {
+        try {
+            googleMap?.isMyLocationEnabled = true
+        } catch (_: SecurityException) {}
+    }
+
     private fun setupMap() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
@@ -132,6 +218,7 @@ class ActiveRideActivity : AppCompatActivity(), OnMapReadyCallback {
         map.uiSettings.isCompassEnabled = true
         map.uiSettings.isMapToolbarEnabled = false
 
+        enableMyLocationOnMap()
         currentBooking?.let { renderMapMarkers(it) }
     }
 

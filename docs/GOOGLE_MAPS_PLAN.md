@@ -51,12 +51,13 @@
 
 ---
 
-### 🛺 Phase 2: Live Tracking & Moving Tricycle Icon (Planned Next)
-- [ ] **Step 2.1:** Create custom tricycle vector asset (`ic_tricycle_marker.xml` / bitmap).
-- [ ] **Step 2.2:** Add `SupportMapFragment` to `RideStatusActivity.kt`.
-- [ ] **Step 2.3:** Plot passenger pickup point and driver starting point on the map.
-- [ ] **Step 2.4:** Connect periodic driver GPS coordinate updates (API polling or socket).
-- [ ] **Step 2.5:** Implement marker animation (bearing rotation + coordinate interpolation) so the tricycle moves smoothly along the road.
+### 🛺 Phase 2: Live Tracking & Moving Tricycle Icon (Completed)
+- [x] **Step 2.1:** Created custom top-down Philippine tricycle vector asset (`ic_tricycle_marker.xml`).
+- [x] **Step 2.2:** Added `SupportMapFragment` to `RideStatusActivity.kt` & `activity_ride_status.xml`.
+- [x] **Step 2.3:** Plotted passenger pickup (Azure) and dropoff (Red) markers on the live map with a legend.
+- [x] **Step 2.4:** Implemented continuous driver GPS location broadcasting in `ActiveRideActivity.kt` (`PUT /driver/location`).
+- [x] **Step 2.5:** Implemented marker animation with bearing heading rotation and linear coordinate interpolation so the tricycle smoothly drives along the road towards the passenger.
+- [x] **Step 2.6:** Successfully compiled both APKs (`BUILD SUCCESSFUL in 13s`).
 
 ---
 

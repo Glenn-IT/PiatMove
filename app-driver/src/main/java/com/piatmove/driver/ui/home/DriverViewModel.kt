@@ -201,4 +201,10 @@ class DriverViewModel(application: Application) : AndroidViewModel(application) 
             _updateProfileState.value = res
         }
     }
+
+    fun updateLocation(lat: Double, lng: Double) {
+        viewModelScope.launch {
+            repo.updateLocation(lat, lng)
+        }
+    }
 }
