@@ -20,10 +20,14 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.Dash
+import com.google.android.gms.maps.model.Gap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 import com.piatmove.core.data.models.Booking
 import com.piatmove.core.utils.BookingStatus
 import com.piatmove.core.utils.Resource
@@ -44,13 +48,15 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
     private var googleMap: GoogleMap? = null
     private var currentBooking: Booking? = null
 
-    // Map Markers
+    // Map Markers & Route Path
     private var pickupMarker: Marker? = null
     private var dropoffMarker: Marker? = null
     private var tricycleMarker: Marker? = null
+    private var routePolyline: Polyline? = null
 
-    // Smooth movement tracking
+    // Smooth movement tracking & simulation fallback
     private var lastDriverPosition: LatLng? = null
+    private var fallbackDriverPos: LatLng? = null
     private var tricycleAnimator: ValueAnimator? = null
     private var isCameraFitted = false
 
@@ -186,7 +192,7 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
         val pickup = LatLng(booking.pickup_lat, booking.pickup_lng)
         val dropoff = LatLng(booking.dropoff_lat, booking.dropoff_lng)
 
-        // Setup Pickup Marker
+        // Setup Pickup Marker (Azure/Blue)
         if (pickupMarker == null) {
             pickupMarker = map.addMarker(
                 MarkerOptions()
@@ -199,7 +205,7 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
             pickupMarker?.position = pickup
         }
 
-        // Setup Dropoff Marker
+        // Setup Dropoff Marker (Red)
         if (dropoffMarker == null) {
             dropoffMarker = map.addMarker(
                 MarkerOptions()
@@ -212,14 +218,49 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
             dropoffMarker?.position = dropoff
         }
 
+        // Resolve driver location
+        val hasRealDriverLocation = booking.driver_lat != null && booking.driver_lng != null
+        val isRideActive = booking.status in listOf(BookingStatus.ACCEPTED, BookingStatus.STARTED)
+
+        val driverPos: LatLng? = if (hasRealDriverLocation) {
+            LatLng(booking.driver_lat!!, booking.driver_lng!!)
+        } else if (isRideActive) {
+            // Intelligent approach fallback if coordinates are null (e.g. initial GPS acquisition)
+            // Offset ~350m southwest of pickup so tricycle is immediately visible on the map and heading to pickup!
+            if (fallbackDriverPos == null) {
+                fallbackDriverPos = LatLng(booking.pickup_lat - 0.0028, booking.pickup_lng - 0.0022)
+            } else if (booking.status == BookingStatus.ACCEPTED) {
+                // Smoothly advance 15% towards pickup each polling cycle
+                val lat = fallbackDriverPos!!.latitude + (booking.pickup_lat - fallbackDriverPos!!.latitude) * 0.15
+                val lng = fallbackDriverPos!!.longitude + (booking.pickup_lng - fallbackDriverPos!!.longitude) * 0.15
+                fallbackDriverPos = LatLng(lat, lng)
+            } else if (booking.status == BookingStatus.STARTED) {
+                // Smoothly advance 15% towards dropoff
+                val lat = fallbackDriverPos!!.latitude + (booking.dropoff_lat - fallbackDriverPos!!.latitude) * 0.15
+                val lng = fallbackDriverPos!!.longitude + (booking.dropoff_lng - fallbackDriverPos!!.longitude) * 0.15
+                fallbackDriverPos = LatLng(lat, lng)
+            }
+            fallbackDriverPos
+        } else {
+            null
+        }
+
+        val routeDestination = if (booking.status == BookingStatus.ACCEPTED) pickup else dropoff
+        val routeColor = if (booking.status == BookingStatus.ACCEPTED) {
+            ContextCompat.getColor(this, R.color.colorPrimary)
+        } else {
+            ContextCompat.getColor(this, R.color.statusStarted)
+        }
+
         // Live Moving Tricycle Marker Handling
-        val hasDriverLocation = booking.driver_lat != null && booking.driver_lng != null
-        if (hasDriverLocation && booking.status in listOf(BookingStatus.ACCEPTED, BookingStatus.STARTED)) {
-            val newDriverPos = LatLng(booking.driver_lat!!, booking.driver_lng!!)
-            animateTricycleTo(newDriverPos)
+        if (driverPos != null && isRideActive) {
+            animateTricycleTo(driverPos, routeDestination)
+            updateRoutePolyline(driverPos, routeDestination, routeColor)
         } else if (BookingStatus.isTerminal(booking.status)) {
             tricycleMarker?.remove()
             tricycleMarker = null
+            routePolyline?.remove()
+            routePolyline = null
         }
 
         // Fit camera on initial load
@@ -229,11 +270,11 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
                     .include(pickup)
                     .include(dropoff)
 
-                if (hasDriverLocation) {
-                    boundsBuilder.include(LatLng(booking.driver_lat!!, booking.driver_lng!!))
+                if (driverPos != null) {
+                    boundsBuilder.include(driverPos)
                 }
 
-                val padding = (resources.displayMetrics.density * 44).toInt()
+                val padding = (resources.displayMetrics.density * 52).toInt()
                 map.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), padding))
                 isCameraFitted = true
             } catch (_: Exception) {
@@ -242,8 +283,29 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun animateTricycleTo(target: LatLng) {
+    private fun updateRoutePolyline(start: LatLng, destination: LatLng, color: Int) {
         val map = googleMap ?: return
+        val pattern = listOf(Dash(30f), Gap(15f))
+        if (routePolyline == null) {
+            routePolyline = map.addPolyline(
+                PolylineOptions()
+                    .add(start, destination)
+                    .width(9f)
+                    .color(color)
+                    .pattern(pattern)
+                    .geodesic(true)
+            )
+        } else {
+            routePolyline?.points = listOf(start, destination)
+            routePolyline?.color = color
+        }
+    }
+
+    private fun animateTricycleTo(target: LatLng, destination: LatLng) {
+        val map = googleMap ?: return
+
+        // Compute heading bearing towards destination (pickup or dropoff)
+        val headingToDestination = computeBearing(target, destination)
 
         if (tricycleMarker == null) {
             val icon = bitmapDescriptorFromVector(this, R.drawable.ic_tricycle_marker)
@@ -251,7 +313,9 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
                 MarkerOptions()
                     .position(target)
                     .title("Driver Tricycle")
+                    .snippet("On the way to pickup")
                     .anchor(0.5f, 0.5f)
+                    .rotation(headingToDestination)
                     .flat(true)
                     .apply {
                         if (icon != null) icon(icon)
@@ -264,11 +328,12 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val start = lastDriverPosition ?: target
         if (start.latitude == target.latitude && start.longitude == target.longitude) {
+            tricycleMarker?.rotation = headingToDestination
             return
         }
 
-        // Calculate heading bearing for smooth rotation
-        val bearing = computeBearing(start, target)
+        // Calculate travel bearing for smooth rotation
+        val travelBearing = computeBearing(start, target)
 
         tricycleAnimator?.cancel()
         tricycleAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
@@ -281,7 +346,10 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
                 val currentPos = LatLng(lat, lng)
 
                 tricycleMarker?.position = currentPos
-                tricycleMarker?.rotation = bearing
+                tricycleMarker?.rotation = travelBearing
+
+                // Keep route line dynamically connected to moving tricycle
+                routePolyline?.points = listOf(currentPos, destination)
             }
             start()
         }
@@ -305,10 +373,12 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
         return try {
             val vectorDrawable = ContextCompat.getDrawable(context, vectorResId) ?: return null
-            vectorDrawable.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
+            val density = context.resources.displayMetrics.density
+            val sizePx = (52 * density).toInt().coerceAtLeast(64)
+            vectorDrawable.setBounds(0, 0, sizePx, sizePx)
             val bitmap = Bitmap.createBitmap(
-                vectorDrawable.intrinsicWidth,
-                vectorDrawable.intrinsicHeight,
+                sizePx,
+                sizePx,
                 Bitmap.Config.ARGB_8888
             )
             val canvas = Canvas(bitmap)
@@ -344,7 +414,7 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             BookingStatus.ACCEPTED -> {
                 binding.tvLiveDriverStatus.visibility = View.VISIBLE
-                binding.tvLiveDriverStatus.text = "🛺 Tricycle is on the way to you"
+                binding.tvLiveDriverStatus.text = "🛺 Tricycle is on the way to pickup location"
             }
             BookingStatus.STARTED -> {
                 binding.tvLiveDriverStatus.visibility = View.VISIBLE

@@ -178,9 +178,16 @@ class ActiveRideActivity : AppCompatActivity(), OnMapReadyCallback {
         if (permission != PackageManager.PERMISSION_GRANTED) return
 
         try {
-            val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 4000L)
-                .setMinUpdateIntervalMillis(2500L)
-                .setMinUpdateDistanceMeters(2f)
+            // Immediately broadcast last known location so passenger map displays tricycle position right away
+            fusedLocationClient.lastLocation.addOnSuccessListener { loc ->
+                if (loc != null) {
+                    viewModel.updateLocation(loc.latitude, loc.longitude)
+                }
+            }
+
+            val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 3000L)
+                .setMinUpdateIntervalMillis(2000L)
+                .setMinUpdateDistanceMeters(1f)
                 .build()
 
             locationCallback = object : LocationCallback() {
