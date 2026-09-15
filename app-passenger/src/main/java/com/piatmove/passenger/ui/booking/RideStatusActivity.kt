@@ -96,6 +96,9 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
 
         observeViewModel()
         observeCancelState()
+
+        // Fetch immediately on launch
+        viewModel.fetchBooking(bookingId)
     }
 
     private fun setupMap() {
@@ -136,7 +139,11 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun observeViewModel() {
         viewModel.booking.observe(this) { state ->
             when (state) {
-                is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Resource.Loading -> {
+                    if (currentBooking == null) {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                }
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.GONE
                     state.data?.let {
@@ -147,6 +154,10 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 is Resource.Error -> {
                     binding.progressBar.visibility = View.GONE
+                    if (currentBooking == null) {
+                        binding.tvStatus.text = "Error Loading"
+                        Toast.makeText(this, "Status error: ${state.message}", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }

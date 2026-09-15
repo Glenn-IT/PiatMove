@@ -18,7 +18,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackground">
+        android:background="@color/colorBackground"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -173,7 +174,7 @@
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Route Card -->
+            <!-- Route Details Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -462,6 +463,7 @@
                 android:textStyle="bold"
                 android:visibility="gone"
                 app:strokeColor="@color/statusRejected" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
