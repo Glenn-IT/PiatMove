@@ -143,10 +143,103 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="Route"
+                        android:text="Route &amp; Live Map"
                         android:textColor="@color/colorPrimary"
                         android:textSize="13sp"
                         android:textStyle="bold" />
+
+                    <!-- Route Map Container with Legend -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/colorDivider"
+                        app:strokeWidth="1dp">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.fragment.app.FragmentContainerView
+                                android:id="@+id/mapFragment"
+                                android:name="com.google.android.gms.maps.SupportMapFragment"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                            <!-- Floating Legend Pill -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="top|start"
+                                android:layout_margin="10dp"
+                                app:cardBackgroundColor="#FFFFFF"
+                                app:cardCornerRadius="14dp"
+                                app:cardElevation="4dp"
+                                app:strokeColor="#CBD5E1"
+                                app:strokeWidth="1dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:paddingHorizontal="10dp"
+                                    android:paddingVertical="5dp">
+
+                                    <ImageView
+                                        android:layout_width="9dp"
+                                        android:layout_height="9dp"
+                                        android:contentDescription="Pickup Dot"
+                                        android:src="@drawable/ic_dot_pickup" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="4dp"
+                                        android:layout_marginEnd="8dp"
+                                        android:text="Pickup (Blue)"
+                                        android:textColor="@color/black"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold" />
+
+                                    <ImageView
+                                        android:layout_width="9dp"
+                                        android:layout_height="9dp"
+                                        android:contentDescription="Dropoff Dot"
+                                        android:src="@drawable/ic_dot_dropoff" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="4dp"
+                                        android:text="Dropoff (Red)"
+                                        android:textColor="@color/black"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+                        </FrameLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Turn-by-Turn GPS Navigation Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNavigate"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginBottom="14dp"
+                        android:text="Open in Google Maps Navigation"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="10dp"
+                        app:icon="@drawable/ic_navigation"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconTint="@color/colorPrimary"
+                        app:strokeColor="@color/colorPrimary" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

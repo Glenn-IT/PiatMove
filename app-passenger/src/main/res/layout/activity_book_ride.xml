@@ -7,10 +7,12 @@
     android:background="@color/colorBackground"
     android:orientation="vertical">
 
+    <!-- Top App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="0dp">
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -21,15 +23,134 @@
             app:titleTextColor="@color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
+    <!-- Main Content: Map on Top + Scrollable Booking Sheet Below -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <ScrollView
+        <!-- Interactive Map Container (Grab-Style) -->
+        <FrameLayout
+            android:id="@+id/mapContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="0dp"
+            android:layout_weight="1.1">
+
+            <!-- Google Map Fragment -->
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/mapFragment"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Stationary Center Floating Pin -->
+            <FrameLayout
+                android:id="@+id/layoutCenterPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:focusable="false">
+
+                <!-- Floating Pin Instruction Bubble -->
+                <TextView
+                    android:id="@+id/tvPinBubble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginBottom="44dp"
+                    android:background="@drawable/dialog_rounded_bg"
+                    android:backgroundTint="#0F172A"
+                    android:elevation="6dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="5dp"
+                    android:text="📍 Drag to set Pickup"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <!-- Pin Shadow on ground -->
+                <ImageView
+                    android:id="@+id/ivPinShadow"
+                    android:layout_width="16dp"
+                    android:layout_height="6dp"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:contentDescription="Pin Shadow"
+                    android:src="@drawable/ic_pin_shadow" />
+
+                <!-- Floating Pin Icon -->
+                <ImageView
+                    android:id="@+id/ivCenterPin"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="4dp"
+                    android:contentDescription="Center Pin"
+                    android:src="@drawable/ic_center_pin" />
+            </FrameLayout>
+
+            <!-- Floating "My Location" GPS Button -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnMyLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                android:contentDescription="My Location"
+                android:src="@drawable/ic_my_location"
+                app:backgroundTint="@color/white"
+                app:elevation="4dp"
+                app:fabCustomSize="44dp"
+                app:maxImageSize="22dp"
+                app:tint="@color/colorPrimary" />
+
+            <!-- Demo Route Pill (Quick Fill) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardQuickDemo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeColor="#CBD5E1"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:id="@+id/btnUseSampleData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⚡ Fast Demo"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </FrameLayout>
+
+        <!-- Scrollable Booking Form / Fare Panel -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.2"
+            android:background="@drawable/dialog_rounded_bg"
+            android:backgroundTint="@color/colorBackground"
+            android:fillViewport="true"
+            android:overScrollMode="never">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,351 +158,330 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Sample data quick fill card -->
-                <com.google.android.material.card.MaterialCardView
+                <!-- Mode Indicator / Step Buttons -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
-                    app:cardBackgroundColor="#FFFBEB"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="0dp"
-                    app:strokeColor="#FCD34D"
-                    app:strokeWidth="1dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="12dp">
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="⚡ Fast Demo Route"
-                                android:textColor="#B45309"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Piat Public Market ➔ Municipal Hall"
-                                android:textColor="@color/grey_text"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnUseSampleData"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Fill Route"
-                            android:textColor="@color/colorPrimary"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal">
 
-                <!-- Pickup Card -->
+                    <!-- Step 1: Pickup Selector Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardPickup"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp"
+                        app:strokeColor="@color/colorPrimary"
+                        app:strokeWidth="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tvBadgePickup"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="#DCFCE7"
+                                    android:paddingHorizontal="6dp"
+                                    android:paddingVertical="1dp"
+                                    android:text="PINNING"
+                                    android:textColor="#15803D"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:layout_weight="1"
+                                    android:text="📍 PICKUP"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvPickupAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:ellipsize="end"
+                                android:maxLines="2"
+                                android:text="Move map to set pickup"
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Step 2: Dropoff Selector Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardDropoff"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/colorDivider"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tvBadgeDropoff"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="#F1F5F9"
+                                    android:paddingHorizontal="6dp"
+                                    android:paddingVertical="1dp"
+                                    android:text="TAP TO PIN"
+                                    android:textColor="@color/grey_text"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:layout_weight="1"
+                                    android:text="🏁 DESTINATION"
+                                    android:textColor="@color/grey_text"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvDropoffAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:ellipsize="end"
+                                android:maxLines="2"
+                                android:text="Tap to pin dropoff"
+                                android:textColor="@color/grey_text"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- Editable Address Note / Manual Edit Inputs (Collapsible or Clean) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
+                    android:layout_marginBottom="12dp"
                     app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="2dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
                     app:strokeColor="@color/colorDivider"
                     app:strokeWidth="1dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="12dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:text="📍 PICKUP LOCATION"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.06" />
+                            android:layout_marginBottom="6dp"
+                            android:text="📝 Specific Landmark or Note (Optional)"
+                            android:textColor="@color/grey_text"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/tilPickupAddress"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:hint="@string/pickup_address"
-                            app:boxCornerRadiusTopStart="12dp"
-                            app:boxCornerRadiusTopEnd="12dp"
-                            app:boxCornerRadiusBottomStart="12dp"
-                            app:boxCornerRadiusBottomEnd="12dp">
+                            android:layout_marginBottom="8dp"
+                            android:hint="Pickup Details / Landmark"
+                            app:boxCornerRadiusBottomEnd="8dp"
+                            app:boxCornerRadiusBottomStart="8dp"
+                            app:boxCornerRadiusTopEnd="8dp"
+                            app:boxCornerRadiusTopStart="8dp">
+
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etPickupAddress"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="13sp" />
                         </com.google.android.material.textfield.TextInputLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:baselineAligned="false"
-                            android:orientation="horizontal">
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/tilPickupLat"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="6dp"
-                                android:layout_weight="1"
-                                android:hint="Latitude"
-                                app:boxCornerRadiusTopStart="12dp"
-                                app:boxCornerRadiusTopEnd="12dp"
-                                app:boxCornerRadiusBottomStart="12dp"
-                                app:boxCornerRadiusBottomEnd="12dp">
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/etPickupLat"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:inputType="numberDecimal" />
-                            </com.google.android.material.textfield.TextInputLayout>
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/tilPickupLng"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:layout_weight="1"
-                                android:hint="Longitude"
-                                app:boxCornerRadiusTopStart="12dp"
-                                app:boxCornerRadiusTopEnd="12dp"
-                                app:boxCornerRadiusBottomStart="12dp"
-                                app:boxCornerRadiusBottomEnd="12dp">
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/etPickupLng"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:inputType="numberDecimal" />
-                            </com.google.android.material.textfield.TextInputLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Dropoff Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="2dp"
-                    app:strokeColor="@color/colorDivider"
-                    app:strokeWidth="1dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:text="🏁 DESTINATION / DROPOFF"
-                            android:textColor="@color/statusCompleted"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.06" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/tilDropoffAddress"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:hint="@string/dropoff_address"
-                            app:boxCornerRadiusTopStart="12dp"
-                            app:boxCornerRadiusTopEnd="12dp"
-                            app:boxCornerRadiusBottomStart="12dp"
-                            app:boxCornerRadiusBottomEnd="12dp">
+                            android:hint="Dropoff Details / Landmark"
+                            app:boxCornerRadiusBottomEnd="8dp"
+                            app:boxCornerRadiusBottomStart="8dp"
+                            app:boxCornerRadiusTopEnd="8dp"
+                            app:boxCornerRadiusTopStart="8dp">
+
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etDropoffAddress"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="13sp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:baselineAligned="false"
-                            android:orientation="horizontal">
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/tilDropoffLat"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="6dp"
-                                android:layout_weight="1"
-                                android:hint="Latitude"
-                                app:boxCornerRadiusTopStart="12dp"
-                                app:boxCornerRadiusTopEnd="12dp"
-                                app:boxCornerRadiusBottomStart="12dp"
-                                app:boxCornerRadiusBottomEnd="12dp">
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/etDropoffLat"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:inputType="numberDecimal" />
-                            </com.google.android.material.textfield.TextInputLayout>
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/tilDropoffLng"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:layout_weight="1"
-                                android:hint="Longitude"
-                                app:boxCornerRadiusTopStart="12dp"
-                                app:boxCornerRadiusTopEnd="12dp"
-                                app:boxCornerRadiusBottomStart="12dp"
-                                app:boxCornerRadiusBottomEnd="12dp">
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/etDropoffLng"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:inputType="numberDecimal" />
-                            </com.google.android.material.textfield.TextInputLayout>
-                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Passenger Count Selector (Max 5 Persons) -->
+                <!-- Passenger Count Card (Max 5 Persons) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
+                    android:layout_marginBottom="12dp"
                     app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="2dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
                     app:strokeColor="@color/colorDivider"
                     app:strokeWidth="1dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="👥 Number of Passengers"
-                                    android:textColor="@color/black"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="2dp"
-                                    android:text="Maximum of 5 passengers per tricycle"
-                                    android:textColor="@color/grey_text"
-                                    android:textSize="11sp" />
-                            </LinearLayout>
-
-                            <!-- Stepper Buttons -->
-                            <LinearLayout
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:text="👥 Number of Passengers"
+                                android:textColor="@color/black"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btnMinusPassenger"
-                                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:insetLeft="0dp"
-                                    android:insetTop="0dp"
-                                    android:insetRight="0dp"
-                                    android:insetBottom="0dp"
-                                    android:padding="0dp"
-                                    android:text="–"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="18sp"
-                                    app:cornerRadius="20dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Max 5 passengers per tricycle"
+                                android:textColor="@color/grey_text"
+                                android:textSize="11sp" />
+                        </LinearLayout>
 
-                                <TextView
-                                    android:id="@+id/tvPassengerCount"
-                                    android:layout_width="42dp"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="1"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
+                        <!-- Stepper Buttons -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btnPlusPassenger"
-                                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:insetLeft="0dp"
-                                    android:insetTop="0dp"
-                                    android:insetRight="0dp"
-                                    android:insetBottom="0dp"
-                                    android:padding="0dp"
-                                    android:text="+"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="18sp"
-                                    app:cornerRadius="20dp" />
-                            </LinearLayout>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusPassenger"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:insetLeft="0dp"
+                                android:insetTop="0dp"
+                                android:insetRight="0dp"
+                                android:insetBottom="0dp"
+                                android:padding="0dp"
+                                android:text="–"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp"
+                                app:cornerRadius="19dp" />
+
+                            <TextView
+                                android:id="@+id/tvPassengerCount"
+                                android:layout_width="36dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="1"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusPassenger"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:insetLeft="0dp"
+                                android:insetTop="0dp"
+                                android:insetRight="0dp"
+                                android:insetBottom="0dp"
+                                android:padding="0dp"
+                                android:text="+"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp"
+                                app:cornerRadius="19dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Passenger Category / Discount Card -->
+                <!-- Discount Category Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
+                    android:layout_marginBottom="12dp"
                     app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="2dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
                     app:strokeColor="@color/colorDivider"
                     app:strokeWidth="1dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="12dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="🏷️ Passenger Type &amp; Discount"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="13sp"
                                 android:textStyle="bold" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -390,24 +490,15 @@
                                 android:paddingVertical="2dp"
                                 android:text="20% OFF"
                                 android:textColor="#15803D"
-                                android:textSize="11sp"
+                                android:textSize="10sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="12dp"
-                            android:text="Select eligible passenger discount category"
-                            android:textColor="@color/grey_text"
-                            android:textSize="11sp" />
-
-                        <!-- Discount Type Chips -->
                         <com.google.android.material.chip.ChipGroup
                             android:id="@+id/chipGroupDiscount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
                             app:selectionRequired="true"
                             app:singleSelection="true">
 
@@ -418,7 +509,7 @@
                                 android:layout_height="wrap_content"
                                 android:checked="true"
                                 android:text="👤 Regular (₱20)"
-                                android:textSize="12sp" />
+                                android:textSize="11sp" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipStudent"
@@ -426,7 +517,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="🎓 Student (₱16)"
-                                android:textSize="12sp" />
+                                android:textSize="11sp" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipSenior"
@@ -434,7 +525,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="👴 Senior (₱16)"
-                                android:textSize="12sp" />
+                                android:textSize="11sp" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipPwd"
@@ -442,7 +533,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="♿ PWD (₱16)"
-                                android:textSize="12sp" />
+                                android:textSize="11sp" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipPregnant"
@@ -450,63 +541,68 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="🤰 Pregnant (₱16)"
-                                android:textSize="12sp" />
+                                android:textSize="11sp" />
                         </com.google.android.material.chip.ChipGroup>
 
-                        <!-- Discount Verification Banner -->
+                        <!-- Discount Verification Notice -->
                         <LinearLayout
                             android:id="@+id/layoutDiscountNotice"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="8dp"
                             android:background="#EFF6FF"
                             android:orientation="horizontal"
-                            android:padding="10dp"
+                            android:padding="8dp"
                             android:visibility="gone">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
+                                android:layout_marginEnd="6dp"
                                 android:text="ℹ️"
-                                android:textSize="14sp" />
+                                android:textSize="12sp" />
+
                             <TextView
                                 android:id="@+id/tvDiscountNotice"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Please present your valid ID (Student ID, OSCA Senior ID, PWD ID, or Pregnancy Booklet) upon boarding for driver verification."
+                                android:text="Please present valid ID upon boarding."
                                 android:textColor="#1E40AF"
                                 android:textSize="11sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Auto-Computed Estimated Fare Card -->
+                <!-- Fare Summary Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     app:cardBackgroundColor="@color/colorPrimary"
-                    app:cardCornerRadius="14dp"
+                    app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="16dp">
+                        android:padding="14dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Estimated Regulated Fare"
                                 android:textColor="@color/colorHeroSubtitle"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
+
                             <TextView
                                 android:id="@+id/tvFareBreakdown"
                                 android:layout_width="wrap_content"
@@ -523,7 +619,7 @@
                             android:layout_height="wrap_content"
                             android:text="₱20.00"
                             android:textColor="@color/white"
-                            android:textSize="22sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -532,13 +628,13 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRequestRide"
                     android:layout_width="match_parent"
-                    android:layout_height="54dp"
+                    android:layout_height="52dp"
                     android:layout_marginBottom="12dp"
                     android:backgroundTint="@color/colorPrimary"
                     android:text="Request Tricycle Ride"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
-                    app:cornerRadius="14dp"
+                    app:cornerRadius="12dp"
                     app:icon="@drawable/ic_book_ride"
                     app:iconGravity="textStart"
                     app:iconPadding="8dp" />
@@ -552,10 +648,10 @@
                     android:visibility="gone" />
 
             </LinearLayout>
-        </ScrollView>
-    </FrameLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
-    <!-- Persistent Bottom Navigation for Uniformity -->
+    <!-- Persistent Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"

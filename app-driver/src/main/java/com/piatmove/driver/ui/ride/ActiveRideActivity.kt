@@ -1,12 +1,21 @@
 package com.piatmove.driver.ui.ride
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MarkerOptions
 import com.piatmove.core.data.models.Booking
 import com.piatmove.core.utils.BookingStatus
 import com.piatmove.core.utils.Resource
@@ -15,10 +24,13 @@ import com.piatmove.driver.databinding.ActivityActiveRideBinding
 import com.piatmove.driver.ui.home.DriverHomeActivity
 import com.piatmove.driver.ui.home.DriverViewModel
 
-class ActiveRideActivity : AppCompatActivity() {
+class ActiveRideActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityActiveRideBinding
     private lateinit var viewModel: DriverViewModel
+    private var googleMap: GoogleMap? = null
+    private var currentBooking: Booking? = null
+
     private var bookingId: Int = -1
     private var currentStatus: String = ""
     private var isCancelling: Boolean = false
@@ -33,6 +45,8 @@ class ActiveRideActivity : AppCompatActivity() {
 
         bookingId = intent.getIntExtra(EXTRA_BOOKING_ID, -1)
         viewModel = ViewModelProvider(this)[DriverViewModel::class.java]
+
+        setupMap()
 
         binding.btnAction.setOnClickListener {
             isCancelling = false
@@ -52,6 +66,15 @@ class ActiveRideActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("No, Keep Ride", null)
                 .show()
+        }
+
+        binding.btnNavigate.setOnClickListener {
+            val booking = currentBooking ?: return@setOnClickListener
+            if (currentStatus == BookingStatus.ACCEPTED) {
+                launchNavigation(booking.pickup_lat, booking.pickup_lng, "Pickup: ${booking.pickup_address}")
+            } else {
+                launchNavigation(booking.dropoff_lat, booking.dropoff_lng, "Dropoff: ${booking.dropoff_address}")
+            }
         }
 
         viewModel.activeBooking.observe(this) { state ->
@@ -98,8 +121,76 @@ class ActiveRideActivity : AppCompatActivity() {
         viewModel.loadActiveBooking()
     }
 
+    private fun setupMap() {
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as? SupportMapFragment
+        mapFragment?.getMapAsync(this)
+    }
+
+    override fun onMapReady(map: GoogleMap) {
+        this.googleMap = map
+        map.uiSettings.isZoomControlsEnabled = false
+        map.uiSettings.isCompassEnabled = true
+        map.uiSettings.isMapToolbarEnabled = false
+
+        currentBooking?.let { renderMapMarkers(it) }
+    }
+
+    private fun renderMapMarkers(booking: Booking) {
+        val map = googleMap ?: return
+        map.clear()
+
+        val pickup = LatLng(booking.pickup_lat, booking.pickup_lng)
+        val dropoff = LatLng(booking.dropoff_lat, booking.dropoff_lng)
+
+        map.addMarker(
+            MarkerOptions()
+                .position(pickup)
+                .title("Pickup: ${booking.pickup_address}")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+        )
+
+        map.addMarker(
+            MarkerOptions()
+                .position(dropoff)
+                .title("Dropoff: ${booking.dropoff_address}")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+        )
+
+        try {
+            val bounds = LatLngBounds.Builder()
+                .include(pickup)
+                .include(dropoff)
+                .build()
+            val padding = (resources.displayMetrics.density * 40).toInt()
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding))
+        } catch (_: Exception) {
+            val target = if (currentStatus == BookingStatus.STARTED) dropoff else pickup
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 15f))
+        }
+    }
+
+    private fun launchNavigation(lat: Double, lng: Double, label: String) {
+        try {
+            val gmmIntentUri = Uri.parse("google.navigation:q=$lat,$lng")
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
+                setPackage("com.google.android.apps.maps")
+            }
+            if (mapIntent.resolveActivity(packageManager) != null) {
+                startActivity(mapIntent)
+            } else {
+                val fallbackUri = Uri.parse("geo:$lat,$lng?q=$lat,$lng($label)")
+                startActivity(Intent(Intent.ACTION_VIEW, fallbackUri))
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Unable to open navigation: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun renderBooking(booking: Booking) {
+        currentBooking = booking
         currentStatus = booking.status
+        renderMapMarkers(booking)
+
         binding.tvStatus.text        = booking.status.replaceFirstChar { it.uppercase() }
         binding.tvPassengerName.text = booking.passenger_name ?: "Passenger #${booking.passenger_id}"
         binding.tvPassengerPhone.text = booking.passenger_phone ?: "—"
@@ -127,15 +218,20 @@ class ActiveRideActivity : AppCompatActivity() {
                 binding.btnAction.text = getString(R.string.btn_start_ride)
                 binding.btnAction.visibility = View.VISIBLE
                 binding.btnCancelRide.visibility = View.VISIBLE
+                binding.btnNavigate.text = "Navigate to Pickup (Google Maps)"
+                binding.btnNavigate.visibility = View.VISIBLE
             }
             BookingStatus.STARTED -> {
                 binding.btnAction.text = getString(R.string.btn_complete_ride)
                 binding.btnAction.visibility = View.VISIBLE
                 binding.btnCancelRide.visibility = View.VISIBLE
+                binding.btnNavigate.text = "Navigate to Dropoff (Google Maps)"
+                binding.btnNavigate.visibility = View.VISIBLE
             }
             else -> {
                 binding.btnAction.visibility = View.GONE
                 binding.btnCancelRide.visibility = View.GONE
+                binding.btnNavigate.visibility = View.GONE
             }
         }
     }
