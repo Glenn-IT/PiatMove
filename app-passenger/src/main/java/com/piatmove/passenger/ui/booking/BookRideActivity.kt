@@ -70,8 +70,8 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
     private var pickupMarker: Marker? = null
     private var dropoffMarker: Marker? = null
 
-    // Default Town Center: Piat, Cagayan
-    private val PIAT_CENTER = LatLng(17.7887, 121.4673)
+    // Default Town Center: Piat, Cagayan (Poblacion near Basilica & Market)
+    private val PIAT_CENTER = LatLng(17.7885, 121.4805)
 
     // Passenger & Fare calculation
     private var passengerCount: Int = 1
@@ -331,16 +331,10 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
                 dropoffMarker?.position = LatLng(place.lat, place.lng)
                 dropoffMarker?.title = "Destination: ${place.name}"
             }
+            dropoffMarker?.showInfoWindow()
 
-            if (pickupLat != null && pickupLng != null) {
-                val bounds = LatLngBounds.Builder()
-                    .include(LatLng(pickupLat!!, pickupLng!!))
-                    .include(LatLng(place.lat, place.lng))
-                    .build()
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(70)))
-            } else {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(place.lat, place.lng), 16f))
-            }
+            // Zoom in on the picked destination for clear visual confirmation
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(place.lat, place.lng), 17.5f))
         }
 
         currentPinMode = PinMode.DROPOFF
@@ -369,16 +363,10 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
                 pickupMarker?.position = LatLng(place.lat, place.lng)
                 pickupMarker?.title = "Pickup: ${place.name}"
             }
+            pickupMarker?.showInfoWindow()
 
-            if (dropoffLat != null && dropoffLng != null) {
-                val bounds = LatLngBounds.Builder()
-                    .include(LatLng(place.lat, place.lng))
-                    .include(LatLng(dropoffLat!!, dropoffLng!!))
-                    .build()
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(70)))
-            } else {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(place.lat, place.lng), 16f))
-            }
+            // Zoom in on the picked pickup location for visual confirmation
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(place.lat, place.lng), 17.5f))
         }
 
         currentPinMode = PinMode.DROPOFF
