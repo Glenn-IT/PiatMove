@@ -1,7 +1,7 @@
 # 🧠 PiatMove System Memory & Live Production Registry
 
 > **System Status:** 🟢 **LIVE IN PRODUCTION**  
-> **Last Deployment Sync:** 2026-08-31  
+> **Last Deployment Sync:** 2026-09-20  
 > **Hosting Provider:** Hostinger (Single Web Hosting Plan)  
 > **Production Domain:** `https://piatmoveadmin.online`  
 
@@ -60,7 +60,7 @@ When you or the AI modifies an Admin Web page or styling:
 
 ### 3. 🗄️ Modifying the Database (Adding Columns or New Tables)
 
-When modifying the database structure (e.g., adding `discount_type` or emergency contacts):
+When modifying the database structure (e.g., adding `discount_type` or `rating`):
 
 > ⚠️ **DO NOT re-import `piatmove.sql`** because it will delete all live users and bookings.
 
@@ -68,9 +68,13 @@ Instead, run targeted SQL migrations found in `C:\xampp\htdocs\piatmove-deploy\d
 1. Go to **Hostinger hPanel** → **Databases** → **Management** → Click **Enter phpMyAdmin**.
 2. Select your database from the left menu.
 3. Click the **SQL** tab at the top.
-4. Paste the specific `ALTER TABLE` statement (e.g., from `2026_08_31_add_discount_type_to_bookings.sql`):
+4. Paste the specific `ALTER TABLE` statement:
+   - *Driver Rating & Feedback Migration (`2026_09_20_add_rating_to_bookings.sql`):*
    ```sql
-   ALTER TABLE bookings ADD COLUMN discount_type VARCHAR(20) NOT NULL DEFAULT 'regular' AFTER fare;
+   ALTER TABLE `bookings`
+   ADD COLUMN `rating` TINYINT UNSIGNED DEFAULT NULL AFTER `discount_type`,
+   ADD COLUMN `rating_comment` VARCHAR(255) DEFAULT NULL AFTER `rating`,
+   ADD COLUMN `rated_at` TIMESTAMP NULL DEFAULT NULL AFTER `rating_comment`;
    ```
 5. Click **Go**.
 
