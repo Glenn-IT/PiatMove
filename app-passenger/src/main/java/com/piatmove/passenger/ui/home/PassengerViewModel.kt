@@ -45,6 +45,16 @@ class PassengerViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    private val _rateState = MutableLiveData<Resource<Unit>>()
+    val rateState: LiveData<Resource<Unit>> = _rateState
+
+    fun rateDriver(bookingId: Int, rating: Int, comment: String? = null) {
+        _rateState.value = Resource.Loading
+        viewModelScope.launch {
+            _rateState.value = repo.rateDriver(bookingId, rating, comment)
+        }
+    }
+
     private val _history = MutableLiveData<Resource<List<Booking>>>()
     val history: LiveData<Resource<List<Booking>>> = _history
 

@@ -11,6 +11,7 @@ import com.piatmove.core.data.models.ForgotPasswordRequest
 import com.piatmove.core.data.models.LoginRequest
 import com.piatmove.core.data.models.LoginResponse
 import com.piatmove.core.data.models.PendingDriver
+import com.piatmove.core.data.models.RateDriverRequest
 import com.piatmove.core.data.models.RegisterRequest
 import com.piatmove.core.data.models.RegisterResponse
 import com.piatmove.core.data.models.ResetPasswordRequest
@@ -81,6 +82,12 @@ interface ApiService {
 
     @POST("bookings/{id}/cancel")
     suspend fun cancelBooking(@Path("id") bookingId: Int): ApiResponse<Unit>
+
+    @POST("bookings/{id}/rate")
+    suspend fun rateDriver(
+        @Path("id") bookingId: Int,
+        @Body body: RateDriverRequest
+    ): ApiResponse<Unit>
 
     // ── Passenger ─────────────────────────────────────────────────────────────
 

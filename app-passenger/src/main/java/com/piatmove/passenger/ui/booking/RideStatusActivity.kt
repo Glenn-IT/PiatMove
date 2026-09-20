@@ -59,6 +59,8 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
     private var fallbackDriverPos: LatLng? = null
     private var tricycleAnimator: ValueAnimator? = null
     private var isCameraFitted = false
+    private var hasShownRatingDialog = false
+    private var ratingDialog: AlertDialog? = null
 
     private val handler = Handler(Looper.getMainLooper())
     private val pollDelay = 4_000L // Poll every 4 seconds for responsive live tracking
@@ -140,6 +142,7 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onDestroy() {
         super.onDestroy()
         tricycleAnimator?.cancel()
+        ratingDialog?.dismiss()
     }
 
     private fun observeViewModel() {
@@ -164,6 +167,25 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
                         binding.tvStatus.text = "Error Loading"
                         Toast.makeText(this, "Status error: ${state.message}", Toast.LENGTH_LONG).show()
                     }
+                }
+            }
+        }
+
+        viewModel.rateState.observe(this) { state ->
+            when (state) {
+                is Resource.Loading -> {
+                    // Handled inside dialog
+                }
+                is Resource.Success -> {
+                    ratingDialog?.dismiss()
+                    Toast.makeText(this, "⭐ Thank you for rating your driver!", Toast.LENGTH_SHORT).show()
+                    viewModel.fetchBooking(bookingId)
+                }
+                is Resource.Error -> {
+                    ratingDialog?.findViewById<View>(R.id.pbRatingLoading)?.visibility = View.GONE
+                    ratingDialog?.findViewById<View>(R.id.btnSubmitRating)?.isEnabled = true
+                    ratingDialog?.findViewById<View>(R.id.btnSkipRating)?.isEnabled = true
+                    Toast.makeText(this, "Rating error: ${state.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -464,9 +486,127 @@ class RideStatusActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        // Rating Status & Prompt for Completed Ride
+        if (booking.status == BookingStatus.COMPLETED) {
+            val currentRating = booking.rating
+            if (currentRating != null && currentRating > 0) {
+                binding.cardRatedDriverBanner.visibility = View.VISIBLE
+                binding.cardRateDriverPrompt.visibility = View.GONE
+                val starCount = currentRating.coerceIn(1, 5)
+                val starsStr = "⭐".repeat(starCount)
+                binding.tvYourRatingStars.text = "$starsStr Rated $currentRating.0 / 5.0"
+                if (!booking.rating_comment.isNullOrBlank()) {
+                    binding.tvYourRatingComment.visibility = View.VISIBLE
+                    binding.tvYourRatingComment.text = "\"${booking.rating_comment}\""
+                } else {
+                    binding.tvYourRatingComment.visibility = View.GONE
+                }
+            } else {
+                binding.cardRatedDriverBanner.visibility = View.GONE
+                binding.cardRateDriverPrompt.visibility = View.VISIBLE
+                binding.tvRatePromptDriverName.text = "How was your ride with ${booking.driver_name ?: "your driver"}?"
+                binding.btnOpenRating.setOnClickListener {
+                    showRatingDialog(booking)
+                }
+
+                // Automatically pop up rating dialog on completion if not yet presented
+                if (!hasShownRatingDialog) {
+                    hasShownRatingDialog = true
+                    showRatingDialog(booking)
+                }
+            }
+        } else {
+            binding.cardRateDriverPrompt.visibility = View.GONE
+            binding.cardRatedDriverBanner.visibility = View.GONE
+        }
+
         if (BookingStatus.isTerminal(booking.status)) {
             handler.removeCallbacks(pollRunnable)
             binding.tvPolling.visibility = View.GONE
         }
+    }
+
+    private fun showRatingDialog(booking: Booking) {
+        if (isFinishing || isDestroyed) return
+        ratingDialog?.dismiss()
+
+        val dialogBinding = com.piatmove.passenger.databinding.DialogRateDriverBinding.inflate(layoutInflater)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogBinding.tvRateDriverName.text = booking.driver_name ?: "Your Tricycle Driver"
+        dialogBinding.tvRateDriverVehicle.text = booking.driver_vehicle_no?.let { "Tricycle Plate #$it" } ?: "Piat Tricycle"
+        dialogBinding.tvRatingPrompt.text = "How was your trip with ${booking.driver_name ?: "your driver"}?"
+
+        var currentSelectedRating = 5
+        val stars = listOf(
+            dialogBinding.ivStar1,
+            dialogBinding.ivStar2,
+            dialogBinding.ivStar3,
+            dialogBinding.ivStar4,
+            dialogBinding.ivStar5
+        )
+
+        fun updateStars(rating: Int) {
+            currentSelectedRating = rating
+            for (i in stars.indices) {
+                if (i < rating) {
+                    stars[i].setImageResource(R.drawable.ic_star_filled)
+                } else {
+                    stars[i].setImageResource(R.drawable.ic_star_empty)
+                }
+            }
+            dialogBinding.tvRatingLabel.text = when (rating) {
+                1 -> "⭐ Needs Improvement (1 Star)"
+                2 -> "⭐⭐ Fair (2 Stars)"
+                3 -> "⭐⭐⭐ Good (3 Stars)"
+                4 -> "⭐⭐⭐⭐ Very Good (4 Stars)"
+                5 -> "⭐⭐⭐⭐⭐ Excellent (5 Stars)"
+                else -> ""
+            }
+        }
+
+        updateStars(5)
+
+        stars.forEachIndexed { index, imageView ->
+            imageView.setOnClickListener {
+                updateStars(index + 1)
+            }
+        }
+
+        dialogBinding.btnSubmitRating.setOnClickListener {
+            dialogBinding.pbRatingLoading.visibility = View.VISIBLE
+            dialogBinding.btnSubmitRating.isEnabled = false
+            dialogBinding.btnSkipRating.isEnabled = false
+
+            val selectedCompliments = mutableListOf<String>()
+            if (dialogBinding.chipSafe.isChecked) selectedCompliments.add("Safe Driving")
+            if (dialogBinding.chipPolite.isChecked) selectedCompliments.add("Polite & Friendly")
+            if (dialogBinding.chipFast.isChecked) selectedCompliments.add("Fast & On-Time")
+            if (dialogBinding.chipClean.isChecked) selectedCompliments.add("Clean Ride")
+
+            val customNote = dialogBinding.etRatingComment.text.toString().trim()
+            val commentParts = mutableListOf<String>()
+            if (selectedCompliments.isNotEmpty()) {
+                commentParts.add(selectedCompliments.joinToString(", "))
+            }
+            if (customNote.isNotEmpty()) {
+                commentParts.add(customNote)
+            }
+            val finalComment = if (commentParts.isNotEmpty()) commentParts.joinToString(" • ") else null
+
+            viewModel.rateDriver(booking.id, currentSelectedRating, finalComment)
+        }
+
+        dialogBinding.btnSkipRating.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        ratingDialog = dialog
+        dialog.show()
     }
 }

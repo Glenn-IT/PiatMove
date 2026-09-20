@@ -73,6 +73,15 @@ class BookingRepository(
         }
     }
 
+    suspend fun rateDriver(bookingId: Int, rating: Int, comment: String? = null): Resource<Unit> {
+        return try {
+            val response = api.rateDriver(bookingId, com.piatmove.core.data.models.RateDriverRequest(rating, comment))
+            if (response.success) Resource.Success(Unit) else Resource.Error(response.message)
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
     // ── Driver ────────────────────────────────────────────────────────────────
 
     suspend fun getDriverRequests(): Resource<List<Booking>> {

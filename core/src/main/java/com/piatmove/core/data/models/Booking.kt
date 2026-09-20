@@ -28,7 +28,15 @@ data class Booking(
     val driver_vehicle_no: String?     = null,
     val driver_vehicle_type: String?   = null,
     val driver_lat: Double?            = null,
-    val driver_lng: Double?            = null
+    val driver_lng: Double?            = null,
+    val rating: Int?                   = null,
+    val rating_comment: String?        = null,
+    val rated_at: String?              = null
+)
+
+data class RateDriverRequest(
+    val rating: Int,
+    val comment: String? = null
 )
 
 data class BookingRequest(
