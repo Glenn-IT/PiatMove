@@ -315,47 +315,140 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
-                            android:text="📝 Specific Landmark or Note (Optional)"
+                            android:text="📍 Pickup &amp; 🏁 Destination Search"
                             android:textColor="@color/grey_text"
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
+                        <!-- Pickup Address / Auto-Pinned GPS -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/tilPickupAddress"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:hint="Pickup Details / Landmark"
+                            android:hint="📍 Pickup Location (Auto-Pinned GPS)"
                             app:boxCornerRadiusBottomEnd="8dp"
                             app:boxCornerRadiusBottomStart="8dp"
                             app:boxCornerRadiusTopEnd="8dp"
-                            app:boxCornerRadiusTopStart="8dp">
+                            app:boxCornerRadiusTopStart="8dp"
+                            app:endIconMode="clear_text"
+                            app:startIconDrawable="@drawable/ic_dot_pickup">
 
-                            <com.google.android.material.textfield.TextInputEditText
+                            <AutoCompleteTextView
                                 android:id="@+id/etPickupAddress"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:completionThreshold="1"
+                                android:dropDownHeight="240dp"
+                                android:imeOptions="actionNext"
+                                android:inputType="textCapWords|textNoSuggestions"
+                                android:maxLines="1"
                                 android:textSize="13sp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
+                        <!-- Destination Address with Search Droplist -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/tilDropoffAddress"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Dropoff Details / Landmark"
+                            android:hint="🔍 Search Destination or Landmark in Piat"
                             app:boxCornerRadiusBottomEnd="8dp"
                             app:boxCornerRadiusBottomStart="8dp"
                             app:boxCornerRadiusTopEnd="8dp"
-                            app:boxCornerRadiusTopStart="8dp">
+                            app:boxCornerRadiusTopStart="8dp"
+                            app:endIconMode="clear_text"
+                            app:helperText="Type to search landmarks, schools, or barangays"
+                            app:helperTextTextColor="@color/grey_text"
+                            app:startIconDrawable="@drawable/ic_dot_dropoff">
 
-                            <com.google.android.material.textfield.TextInputEditText
+                            <AutoCompleteTextView
                                 android:id="@+id/etDropoffAddress"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:completionThreshold="1"
+                                android:dropDownHeight="260dp"
+                                android:imeOptions="actionSearch"
+                                android:inputType="textCapWords|textNoSuggestions"
+                                android:maxLines="1"
                                 android:textSize="13sp" />
                         </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Quick Popular Destination Suggestions -->
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:overScrollMode="never"
+                            android:scrollbars="none">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="6dp"
+                                    android:text="Quick:"
+                                    android:textColor="@color/grey_text"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipQuickBasilica"
+                                    style="@style/Widget.MaterialComponents.Chip.Action"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="4dp"
+                                    android:text="⛪ Basilica"
+                                    android:textSize="11sp"
+                                    app:chipMinHeight="28dp" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipQuickMunicipalHall"
+                                    style="@style/Widget.MaterialComponents.Chip.Action"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="4dp"
+                                    android:text="🏛️ Mun. Hall"
+                                    android:textSize="11sp"
+                                    app:chipMinHeight="28dp" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipQuickMarket"
+                                    style="@style/Widget.MaterialComponents.Chip.Action"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="4dp"
+                                    android:text="🛒 Market"
+                                    android:textSize="11sp"
+                                    app:chipMinHeight="28dp" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipQuickCsu"
+                                    style="@style/Widget.MaterialComponents.Chip.Action"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="4dp"
+                                    android:text="🎓 CSU Piat"
+                                    android:textSize="11sp"
+                                    app:chipMinHeight="28dp" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipQuickRhu"
+                                    style="@style/Widget.MaterialComponents.Chip.Action"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="4dp"
+                                    android:text="🏥 RHU Clinic"
+                                    android:textSize="11sp"
+                                    app:chipMinHeight="28dp" />
+                            </LinearLayout>
+                        </HorizontalScrollView>
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

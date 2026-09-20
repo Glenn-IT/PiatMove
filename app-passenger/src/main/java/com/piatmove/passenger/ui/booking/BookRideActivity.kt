@@ -3,6 +3,7 @@ package com.piatmove.passenger.ui.booking
 import android.Manifest
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -11,6 +12,8 @@ import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -51,6 +55,7 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var googleMap: GoogleMap? = null
     private var currentPinMode = PinMode.PICKUP
+    private var isGestureMove = false
 
     // Coordinates and addresses
     private var pickupLat: Double? = null
@@ -84,7 +89,7 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
         val coarseGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
         if (fineGranted || coarseGranted) {
             enableMyLocationOnMap()
-            zoomToCurrentLocation()
+            acquireAndPinCurrentLocation(isInitialAutoPin = true)
         } else {
             Toast.makeText(this, "Location permission helps automatically pinpoint your pickup.", Toast.LENGTH_SHORT).show()
         }
@@ -103,6 +108,8 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
 
         setupMap()
         setupPinModeSelectors()
+        setupPlacesSearch()
+        setupQuickDestinationChips()
         setupPassengerCounter()
         setupDiscountSelector()
         setupBottomNav()
@@ -128,20 +135,27 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
         // Center initially on Piat town center
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(PIAT_CENTER, 15.5f))
 
-        checkLocationPermission()
+        // Automatically check and request location to pin passenger's current location
+        checkLocationPermission(requestIfNotGranted = true, autoPinPickup = true)
 
         // Drag animations (Grab floating pin effect)
         map.setOnCameraMoveStartedListener { reason ->
             if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                isGestureMove = true
                 liftPinAnimation()
+            } else {
+                isGestureMove = false
             }
         }
 
-        // Camera idle listener (captures exact coordinates where pin dropped)
+        // Camera idle listener (captures coordinates only when user manually pans/drags the map)
         map.setOnCameraIdleListener {
             dropPinAnimation()
-            val center = map.cameraPosition.target
-            onLocationPinned(center.latitude, center.longitude)
+            if (isGestureMove) {
+                val center = map.cameraPosition.target
+                onLocationPinned(center.latitude, center.longitude)
+                isGestureMove = false
+            }
         }
     }
 
@@ -196,9 +210,7 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
                     val resolvedAddr = reverseGeocode(lat, lng)
                     pickupAddress = resolvedAddr
                     binding.tvPickupAddress.text = resolvedAddr
-                    if (binding.etPickupAddress.text.isNullOrBlank() || binding.etPickupAddress.text.toString().startsWith("Near") || binding.etPickupAddress.text.toString().startsWith("Piat")) {
-                        binding.etPickupAddress.setText(resolvedAddr)
-                    }
+                    binding.etPickupAddress.setText(resolvedAddr, false)
                 }
             }
             PinMode.DROPOFF -> {
@@ -224,12 +236,208 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
                     val resolvedAddr = reverseGeocode(lat, lng)
                     dropoffAddress = resolvedAddr
                     binding.tvDropoffAddress.text = resolvedAddr
-                    if (binding.etDropoffAddress.text.isNullOrBlank() || binding.etDropoffAddress.text.toString().startsWith("Near") || binding.etDropoffAddress.text.toString().startsWith("Piat")) {
-                        binding.etDropoffAddress.setText(resolvedAddr)
-                    }
+                    binding.etDropoffAddress.setText(resolvedAddr, false)
                 }
             }
         }
+    }
+
+    private fun setupPlacesSearch() {
+        val places = PiatPlacesDirectory.places
+
+        // Setup Dropoff / Destination Autocomplete Droplist
+        val dropoffAdapter = PiatPlaceAdapter(this, places)
+        binding.etDropoffAddress.setAdapter(dropoffAdapter)
+
+        binding.etDropoffAddress.setOnItemClickListener { _, _, position, _ ->
+            val place = dropoffAdapter.getItem(position) ?: return@setOnItemClickListener
+            selectDestinationPlace(place)
+        }
+
+        binding.etDropoffAddress.setOnClickListener {
+            binding.etDropoffAddress.showDropDown()
+        }
+
+        binding.etDropoffAddress.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.etDropoffAddress.showDropDown()
+            }
+        }
+
+        binding.etDropoffAddress.setOnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                val query = textView.text.toString().trim()
+                if (query.isNotEmpty()) {
+                    searchAndGeocodeDestination(query)
+                }
+                hideKeyboard(textView)
+                true
+            } else {
+                false
+            }
+        }
+
+        // Also setup Pickup Autocomplete Droplist if passenger wants to search or change pickup
+        val pickupAdapter = PiatPlaceAdapter(this, places)
+        binding.etPickupAddress.setAdapter(pickupAdapter)
+
+        binding.etPickupAddress.setOnItemClickListener { _, _, position, _ ->
+            val place = pickupAdapter.getItem(position) ?: return@setOnItemClickListener
+            selectPickupPlace(place)
+        }
+
+        binding.etPickupAddress.setOnClickListener {
+            binding.etPickupAddress.showDropDown()
+        }
+    }
+
+    private fun setupQuickDestinationChips() {
+        val places = PiatPlacesDirectory.places
+
+        binding.chipQuickBasilica.setOnClickListener {
+            places.find { it.name.contains("Basilica") }?.let { selectDestinationPlace(it) }
+        }
+        binding.chipQuickMunicipalHall.setOnClickListener {
+            places.find { it.name.contains("Municipal Hall") }?.let { selectDestinationPlace(it) }
+        }
+        binding.chipQuickMarket.setOnClickListener {
+            places.find { it.name.contains("Public Market") }?.let { selectDestinationPlace(it) }
+        }
+        binding.chipQuickCsu.setOnClickListener {
+            places.find { it.name.contains("CSU") }?.let { selectDestinationPlace(it) }
+        }
+        binding.chipQuickRhu.setOnClickListener {
+            places.find { it.name.contains("Rural Health") }?.let { selectDestinationPlace(it) }
+        }
+    }
+
+    private fun selectDestinationPlace(place: PiatPlace) {
+        dropoffLat = place.lat
+        dropoffLng = place.lng
+        dropoffAddress = place.fullDisplayName
+
+        binding.etDropoffAddress.setText(place.fullDisplayName, false)
+        binding.tvDropoffAddress.text = place.fullDisplayName
+
+        googleMap?.let { map ->
+            if (dropoffMarker == null) {
+                dropoffMarker = map.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(place.lat, place.lng))
+                        .title("Destination: ${place.name}")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                )
+            } else {
+                dropoffMarker?.position = LatLng(place.lat, place.lng)
+                dropoffMarker?.title = "Destination: ${place.name}"
+            }
+
+            if (pickupLat != null && pickupLng != null) {
+                val bounds = LatLngBounds.Builder()
+                    .include(LatLng(pickupLat!!, pickupLng!!))
+                    .include(LatLng(place.lat, place.lng))
+                    .build()
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(70)))
+            } else {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(place.lat, place.lng), 16f))
+            }
+        }
+
+        currentPinMode = PinMode.DROPOFF
+        updatePinModeUI()
+        hideKeyboard(binding.etDropoffAddress)
+        Toast.makeText(this, "🏁 Destination: ${place.name}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun selectPickupPlace(place: PiatPlace) {
+        pickupLat = place.lat
+        pickupLng = place.lng
+        pickupAddress = place.fullDisplayName
+
+        binding.etPickupAddress.setText(place.fullDisplayName, false)
+        binding.tvPickupAddress.text = place.fullDisplayName
+
+        googleMap?.let { map ->
+            if (pickupMarker == null) {
+                pickupMarker = map.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(place.lat, place.lng))
+                        .title("Pickup: ${place.name}")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                )
+            } else {
+                pickupMarker?.position = LatLng(place.lat, place.lng)
+                pickupMarker?.title = "Pickup: ${place.name}"
+            }
+
+            if (dropoffLat != null && dropoffLng != null) {
+                val bounds = LatLngBounds.Builder()
+                    .include(LatLng(place.lat, place.lng))
+                    .include(LatLng(dropoffLat!!, dropoffLng!!))
+                    .build()
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(70)))
+            } else {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(place.lat, place.lng), 16f))
+            }
+        }
+
+        currentPinMode = PinMode.DROPOFF
+        updatePinModeUI()
+        hideKeyboard(binding.etPickupAddress)
+        Toast.makeText(this, "📍 Pickup: ${place.name}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun searchAndGeocodeDestination(query: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val geocoder = Geocoder(this@BookRideActivity, Locale.getDefault())
+                val fullQuery = if (!query.contains("Piat", ignoreCase = true)) "$query, Piat, Cagayan" else query
+                val results = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    var addrList: List<android.location.Address> = emptyList()
+                    geocoder.getFromLocationName(fullQuery, 1) { addresses ->
+                        addrList = addresses
+                    }
+                    var count = 0
+                    while (addrList.isEmpty() && count < 10) {
+                        delay(50)
+                        count++
+                    }
+                    addrList
+                } else {
+                    @Suppress("DEPRECATION")
+                    geocoder.getFromLocationName(fullQuery, 1) ?: emptyList()
+                }
+
+                if (results.isNotEmpty()) {
+                    val addr = results[0]
+                    withContext(Dispatchers.Main) {
+                        val customPlace = PiatPlace(
+                            name = addr.featureName ?: query,
+                            category = "Searched Location",
+                            barangay = addr.subLocality ?: addr.locality ?: "Piat",
+                            lat = addr.latitude,
+                            lng = addr.longitude,
+                            icon = "📍"
+                        )
+                        selectDestinationPlace(customPlace)
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@BookRideActivity, "Place not found in Piat. Drag map to pin destination.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (_: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@BookRideActivity, "Search unavailable offline. Move pin to destination.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(view.windowToken, 0)
+        view.clearFocus()
     }
 
     private suspend fun reverseGeocode(lat: Double, lng: Double): String = withContext(Dispatchers.IO) {
@@ -243,7 +451,6 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
                         result = formatAddress(addr)
                     }
                 }
-                // Wait briefly for callback
                 var attempts = 0
                 while (result.isEmpty() && attempts < 10) {
                     delay(50)
@@ -258,7 +465,7 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         } catch (_: Exception) {
-            // Geocoder service unavailable or network offline
+            // Geocoder service unavailable or offline
         }
         return@withContext "Location near Piat (${String.format(Locale.US, "%.4f", lat)}, ${String.format(Locale.US, "%.4f", lng)})"
     }
@@ -297,6 +504,9 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
                 updatePinModeUI()
                 if (dropoffLat != null && dropoffLng != null) {
                     googleMap?.animateCamera(CameraUpdateFactory.newLatLng(LatLng(dropoffLat!!, dropoffLng!!)))
+                } else {
+                    binding.etDropoffAddress.requestFocus()
+                    binding.etDropoffAddress.showDropDown()
                 }
             }
         }
@@ -312,7 +522,7 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
             PinMode.PICKUP -> {
                 binding.cardPickup.strokeColor = primaryBlue
                 binding.cardPickup.strokeWidth = dpToPx(2)
-                binding.tvBadgePickup.text = "PINNING"
+                binding.tvBadgePickup.text = if (pickupLat != null) "PINNED" else "PINNING"
                 binding.tvBadgePickup.setBackgroundColor(Color.parseColor("#DCFCE7"))
                 binding.tvBadgePickup.setTextColor(Color.parseColor("#15803D"))
 
@@ -323,30 +533,30 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
                 binding.tvBadgeDropoff.setTextColor(greyText)
 
                 binding.ivCenterPin.imageTintList = ColorStateList.valueOf(primaryBlue)
-                binding.tvPinBubble.text = "📍 Drag to set Pickup"
+                binding.tvPinBubble.text = "📍 Drag map to adjust Pickup"
             }
             PinMode.DROPOFF -> {
                 binding.cardDropoff.strokeColor = greenAccent
                 binding.cardDropoff.strokeWidth = dpToPx(2)
-                binding.tvBadgeDropoff.text = "PINNING"
-                binding.tvBadgeDropoff.setBackgroundColor(Color.parseColor("#DCFCE7"))
-                binding.tvBadgeDropoff.setTextColor(Color.parseColor("#15803D"))
+                binding.tvBadgeDropoff.text = if (dropoffLat != null) "SAVED" else "SEARCH / PIN"
+                binding.tvBadgeDropoff.setBackgroundColor(if (dropoffLat != null) Color.parseColor("#DCFCE7") else Color.parseColor("#FEF3C7"))
+                binding.tvBadgeDropoff.setTextColor(if (dropoffLat != null) Color.parseColor("#15803D") else Color.parseColor("#B45309"))
 
                 binding.cardPickup.strokeColor = dividerColor
                 binding.cardPickup.strokeWidth = dpToPx(1)
-                binding.tvBadgePickup.text = if (pickupLat != null) "SAVED" else "TAP TO PIN"
-                binding.tvBadgePickup.setBackgroundColor(Color.parseColor("#F1F5F9"))
-                binding.tvBadgePickup.setTextColor(greyText)
+                binding.tvBadgePickup.text = if (pickupLat != null) "PINNED" else "TAP TO PIN"
+                binding.tvBadgePickup.setBackgroundColor(Color.parseColor("#DCFCE7"))
+                binding.tvBadgePickup.setTextColor(Color.parseColor("#15803D"))
 
                 binding.ivCenterPin.imageTintList = ColorStateList.valueOf(greenAccent)
-                binding.tvPinBubble.text = "🏁 Drag to set Destination"
+                binding.tvPinBubble.text = "🏁 Search or Drag to set Destination"
             }
         }
     }
 
     private fun setupActionButtons() {
         binding.btnMyLocation.setOnClickListener {
-            checkLocationPermission(requestIfNotGranted = true)
+            checkLocationPermission(requestIfNotGranted = true, autoPinPickup = true)
         }
 
         binding.btnUseSampleData.setOnClickListener {
@@ -358,14 +568,14 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun checkLocationPermission(requestIfNotGranted: Boolean = false) {
+    private fun checkLocationPermission(requestIfNotGranted: Boolean = false, autoPinPickup: Boolean = false) {
         val fineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
         val coarseLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
 
         if (fineLocation == PackageManager.PERMISSION_GRANTED || coarseLocation == PackageManager.PERMISSION_GRANTED) {
             enableMyLocationOnMap()
-            if (requestIfNotGranted) {
-                zoomToCurrentLocation()
+            if (autoPinPickup) {
+                acquireAndPinCurrentLocation(isInitialAutoPin = true)
             }
         } else if (requestIfNotGranted) {
             locationPermissionLauncher.launch(
@@ -384,17 +594,90 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
         } catch (_: SecurityException) {}
     }
 
-    private fun zoomToCurrentLocation() {
+    /**
+     * Automatically retrieves passenger's current GPS location and pins it as the Pickup point.
+     */
+    private fun acquireAndPinCurrentLocation(isInitialAutoPin: Boolean = false) {
         try {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    val userLatLng = LatLng(location.latitude, location.longitude)
-                    googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 16f))
-                } else {
-                    Toast.makeText(this, "Acquiring GPS location...", Toast.LENGTH_SHORT).show()
-                }
+            if (pickupLat == null) {
+                binding.tvPickupAddress.text = "📍 Detecting your current GPS location..."
             }
-        } catch (_: SecurityException) {}
+            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener { location ->
+                    if (location != null) {
+                        pinCurrentLocation(location.latitude, location.longitude, isInitialAutoPin)
+                    } else {
+                        fusedLocationClient.lastLocation.addOnSuccessListener { lastLoc ->
+                            if (lastLoc != null) {
+                                pinCurrentLocation(lastLoc.latitude, lastLoc.longitude, isInitialAutoPin)
+                            } else {
+                                if (pickupLat == null) {
+                                    binding.tvPickupAddress.text = "Acquiring GPS location... Drag map if needed."
+                                }
+                            }
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    fusedLocationClient.lastLocation.addOnSuccessListener { lastLoc ->
+                        if (lastLoc != null) {
+                            pinCurrentLocation(lastLoc.latitude, lastLoc.longitude, isInitialAutoPin)
+                        }
+                    }
+                }
+        } catch (_: SecurityException) {
+            Toast.makeText(this, "Location permission required to pinpoint your location.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun pinCurrentLocation(lat: Double, lng: Double, isInitialAutoPin: Boolean) {
+        pickupLat = lat
+        pickupLng = lng
+        val userLatLng = LatLng(lat, lng)
+
+        googleMap?.let { map ->
+            if (pickupMarker == null) {
+                pickupMarker = map.addMarker(
+                    MarkerOptions()
+                        .position(userLatLng)
+                        .title("Pickup: Current Location")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                )
+            } else {
+                pickupMarker?.position = userLatLng
+            }
+
+            if (dropoffLat != null && dropoffLng != null) {
+                val bounds = LatLngBounds.Builder()
+                    .include(userLatLng)
+                    .include(LatLng(dropoffLat!!, dropoffLng!!))
+                    .build()
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(70)))
+            } else {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 16.5f))
+            }
+        }
+
+        // Reverse geocode to resolve street/barangay
+        geocodeJob?.cancel()
+        geocodeJob = lifecycleScope.launch {
+            val resolvedAddr = reverseGeocode(lat, lng)
+            pickupAddress = resolvedAddr
+            binding.tvPickupAddress.text = resolvedAddr
+            binding.etPickupAddress.setText(resolvedAddr, false)
+        }
+
+        binding.tvBadgePickup.text = "PINNED"
+        binding.tvBadgePickup.setBackgroundColor(Color.parseColor("#DCFCE7"))
+        binding.tvBadgePickup.setTextColor(Color.parseColor("#15803D"))
+
+        Toast.makeText(this, "📍 Current location pinned as Pickup!", Toast.LENGTH_SHORT).show()
+
+        // After auto-pinning current location for pickup, switch focus to Destination
+        if (isInitialAutoPin && dropoffLat == null) {
+            currentPinMode = PinMode.DROPOFF
+            updatePinModeUI()
+        }
     }
 
     private fun setupDiscountSelector() {
@@ -463,47 +746,48 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun fillSampleData() {
-        val pickup = LatLng(17.7887, 121.4673)
-        val dropoff = LatLng(17.7912, 121.4698)
+        val places = PiatPlacesDirectory.places
+        val market = places.find { it.name.contains("Public Market") } ?: places[3]
+        val municipalHall = places.find { it.name.contains("Municipal Hall") } ?: places[2]
 
-        pickupLat = pickup.latitude
-        pickupLng = pickup.longitude
-        pickupAddress = "Piat Public Market, Piat, Cagayan"
+        pickupLat = market.lat
+        pickupLng = market.lng
+        pickupAddress = market.fullDisplayName
         binding.tvPickupAddress.text = pickupAddress
-        binding.etPickupAddress.setText(pickupAddress)
+        binding.etPickupAddress.setText(pickupAddress, false)
 
-        dropoffLat = dropoff.latitude
-        dropoffLng = dropoff.longitude
-        dropoffAddress = "Piat Municipal Hall, Piat, Cagayan"
+        dropoffLat = municipalHall.lat
+        dropoffLng = municipalHall.lng
+        dropoffAddress = municipalHall.fullDisplayName
         binding.tvDropoffAddress.text = dropoffAddress
-        binding.etDropoffAddress.setText(dropoffAddress)
+        binding.etDropoffAddress.setText(dropoffAddress, false)
 
         googleMap?.let { map ->
             if (pickupMarker == null) {
                 pickupMarker = map.addMarker(
                     MarkerOptions()
-                        .position(pickup)
+                        .position(LatLng(market.lat, market.lng))
                         .title("Pickup: Market")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                 )
             } else {
-                pickupMarker?.position = pickup
+                pickupMarker?.position = LatLng(market.lat, market.lng)
             }
 
             if (dropoffMarker == null) {
                 dropoffMarker = map.addMarker(
                     MarkerOptions()
-                        .position(dropoff)
+                        .position(LatLng(municipalHall.lat, municipalHall.lng))
                         .title("Dropoff: Municipal Hall")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                 )
             } else {
-                dropoffMarker?.position = dropoff
+                dropoffMarker?.position = LatLng(municipalHall.lat, municipalHall.lng)
             }
 
             val bounds = LatLngBounds.Builder()
-                .include(pickup)
-                .include(dropoff)
+                .include(LatLng(market.lat, market.lng))
+                .include(LatLng(municipalHall.lat, municipalHall.lng))
                 .build()
             map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, dpToPx(60)))
         }
@@ -525,7 +809,7 @@ class BookRideActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         if (dropoffLat == null || dropoffLng == null || finalDropoffAddr.isEmpty()) {
-            Toast.makeText(this, "Please move map to set your Destination.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please search or move map to set your Destination.", Toast.LENGTH_SHORT).show()
             currentPinMode = PinMode.DROPOFF
             updatePinModeUI()
             return

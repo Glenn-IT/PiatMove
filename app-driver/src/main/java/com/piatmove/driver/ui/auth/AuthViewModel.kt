@@ -30,8 +30,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val _forgotPasswordState = MutableLiveData<Resource<String>>()
-    val forgotPasswordState: LiveData<Resource<String>> = _forgotPasswordState
+    private val _forgotPasswordState = MutableLiveData<Resource<String>?>()
+    val forgotPasswordState: LiveData<Resource<String>?> = _forgotPasswordState
 
     fun forgotPassword(email: String) {
         _forgotPasswordState.value = Resource.Loading
@@ -40,8 +40,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val _resetPasswordState = MutableLiveData<Resource<String>>()
-    val resetPasswordState: LiveData<Resource<String>> = _resetPasswordState
+    private val _resetPasswordState = MutableLiveData<Resource<String>?>()
+    val resetPasswordState: LiveData<Resource<String>?> = _resetPasswordState
 
     fun resetPassword(email: String, otp: String, password: String) {
         _resetPasswordState.value = Resource.Loading
