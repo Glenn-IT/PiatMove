@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+const fs = require('fs');
+const path = require('path');
+
+const targetHtml = path.resolve(__dirname, '..', 'prototype_piatmove.html');
+console.log('Building Simple Monochrome Prototype (Just like MBPSAAS) at:', targetHtml);
+
+let p = [];
+
+p.push(`<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -507,7 +515,12 @@
     </header>
 
     <main class="prototype-canvas">
+`);
 
+// ==========================================
+// PAGE 1: SYSTEM TOPOLOGY & ECOSYSTEM
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p1">
             <div class="proto-header">
                 <div class="proto-tag">MUNICIPAL TRANSPORT SYSTEM SPECIFICATION</div>
@@ -623,7 +636,12 @@
                 <span>Page 1 of 12 &bull; Architecture &amp; System Topology</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 2: PASSENGER AUTH & 20% DISCOUNT SIGNUP
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p2">
             <div class="proto-header">
                 <div class="proto-tag">PASSENGER APPLICATION PROTOTYPE</div>
@@ -739,7 +757,12 @@
                 <span>Page 2 of 12 &bull; Passenger Authentication &amp; Registration</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 3: PASSENGER BOOKING & LANDMARK MATRIX
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p3">
             <div class="proto-header">
                 <div class="proto-tag">PASSENGER APPLICATION PROTOTYPE</div>
@@ -862,7 +885,12 @@
                 <span>Page 3 of 12 &bull; Passenger Route Booking &amp; Fare Calculation</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 4: PASSENGER RIDE TRACKER & RATING
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p4">
             <div class="proto-header">
                 <div class="proto-tag">PASSENGER APPLICATION PROTOTYPE</div>
@@ -980,7 +1008,12 @@
                 <span>Page 4 of 12 &bull; Ride Status Tracking &amp; Driver Feedback</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 5: PASSENGER HISTORY & COMMUTER PROFILE
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p5">
             <div class="proto-header">
                 <div class="proto-tag">PASSENGER APPLICATION PROTOTYPE</div>
@@ -1125,7 +1158,12 @@
                 <span>Page 5 of 12 &bull; Commuter Trip Ledger &amp; Profile Hub</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 6: DRIVER PARTNER AUTH & TODA KYC UPLOAD
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p6">
             <div class="proto-header">
                 <div class="proto-tag">DRIVER PARTNER APPLICATION PROTOTYPE</div>
@@ -1242,7 +1280,12 @@
                 <span>Page 6 of 12 &bull; Driver Partner Authentication &amp; KYC</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 7: DRIVER DUTY CONSOLE & INCOMING ALERT
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p7">
             <div class="proto-header">
                 <div class="proto-tag">DRIVER PARTNER APPLICATION PROTOTYPE</div>
@@ -1351,7 +1394,12 @@
                 <span>Page 7 of 12 &bull; Driver Partner Duty Console &amp; Booking Radar</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 8: DRIVER ACTIVE TRIP & FARE COLLECTION
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p8">
             <div class="proto-header">
                 <div class="proto-tag">DRIVER PARTNER APPLICATION PROTOTYPE</div>
@@ -1454,7 +1502,12 @@
                 <span>Page 8 of 12 &bull; Active Trip Navigation &amp; Fare Settlement</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 9: DRIVER TRIP LOG & SHIFT INCOME REPORT
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p9">
             <div class="proto-header">
                 <div class="proto-tag">DRIVER PARTNER APPLICATION PROTOTYPE</div>
@@ -1588,7 +1641,12 @@
                 <span>Page 9 of 12 &bull; Driver Partner Shift Log &amp; Income Analytics</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 10: ADMIN WEB DISPATCH & EXECUTIVE KPI
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p10">
             <div class="proto-header">
                 <div class="proto-tag">MUNICIPAL ADMIN WEB PORTAL PROTOTYPE</div>
@@ -1724,7 +1782,12 @@
                 <span>Page 10 of 12 &bull; Municipal Admin Command Center</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 11: ADMIN DRIVER FRANCHISE & KYC AUDIT
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p11">
             <div class="proto-header">
                 <div class="proto-tag">MUNICIPAL ADMIN WEB PORTAL PROTOTYPE</div>
@@ -1857,7 +1920,12 @@
                 <span>Page 11 of 12 &bull; Municipal Driver Accreditation &amp; KYC Audit</span>
             </div>
         </section>
+`);
 
+// ==========================================
+// PAGE 12: ADMIN FARE MATRIX & REGULATORY AUDIT
+// ==========================================
+p.push(`
         <section class="prototype-page" id="p12">
             <div class="proto-header">
                 <div class="proto-tag">MUNICIPAL ADMIN WEB PORTAL PROTOTYPE</div>
@@ -2007,7 +2075,10 @@
                 <span>Page 12 of 12 &bull; Municipal Fare Regulations &amp; Regulatory Audit</span>
             </div>
         </section>
+`);
 
+// Close Main & Add Interactive Scripts
+p.push(`
     </main>
 
     <script>
@@ -2020,3 +2091,8 @@
     </script>
 </body>
 </html>
+`);
+
+const finalOutput = p.join('');
+fs.writeFileSync(targetHtml, finalOutput, 'utf8');
+console.log('Successfully wrote simple monochrome prototype HTML (' + finalOutput.length + ' bytes)');
