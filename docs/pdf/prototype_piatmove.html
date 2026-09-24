@@ -1,0 +1,2787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PiatMove - Visual UI/UX Prototype Specification (Blue Theme)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1565c0;
+            --primary-dark: #0d47a1;
+            --primary-light: #e3f2fd;
+            --electric-blue: #2454e0;
+            --accent-green: #12b76a;
+            --accent-green-bg: #ecfdf3;
+            --accent-amber: #f59e0b;
+            --accent-amber-bg: #fffbeb;
+            --accent-red: #ef4444;
+            --accent-red-bg: #fef2f2;
+            --accent-purple: #7c3aed;
+            --accent-purple-bg: #f5f3ff;
+            --slate-900: #0f172a;
+            --slate-700: #334155;
+            --slate-500: #64748b;
+            --slate-300: #cbd5e1;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --border-color: #90caf9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: #1e293b;
+            color: #0f172a;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Top Navigation Bar for Web Preview */
+        .no-print-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            background: #0a192f;
+            color: #ffffff;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border-bottom: 2px solid var(--electric-blue);
+        }
+
+        .toolbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .toolbar-badge {
+            background: var(--electric-blue);
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toolbar-btn {
+            background: #1565c0;
+            color: #fff;
+            border: 1px solid #90caf9;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.80rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            background: #1976d2;
+        }
+
+        .toolbar-btn-print {
+            background: #12b76a;
+            border-color: #86efac;
+            font-weight: 700;
+        }
+        .toolbar-btn-print:hover {
+            background: #0e9355;
+        }
+
+        .toolbar-select {
+            background: #040d1a;
+            color: #fff;
+            border: 1px solid #1976d2;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.80rem;
+        }
+
+        /* Printable Canvas */
+        .prototype-canvas {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 60px;
+            gap: 30px;
+        }
+
+        .prototype-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 10mm 12mm 9mm 12mm;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            page-break-after: always;
+            break-after: page;
+        }
+
+        /* Page Header */
+        .page-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+        }
+
+        .header-title-box h1 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-title-box p {
+            font-size: 0.68rem;
+            color: var(--slate-500);
+            font-weight: 600;
+            margin-top: 1px;
+        }
+
+        .header-tag-pill {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border: 1px solid var(--border-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.64rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* Dual Phone Mockup Layout */
+        .dual-phone-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            justify-items: center;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .phone-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .phone-title-badge {
+            background: #f0f4ff;
+            border: 1px solid #90caf9;
+            color: #1565c0;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+
+        /* Realistic Smartphone Device Mockup */
+        .phone-mockup {
+            width: 320px;
+            height: 610px;
+            background: #0f172a;
+            border-radius: 40px;
+            padding: 9px;
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22), 0 0 0 2px #334155;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            font-size: 0.72rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Dynamic Island & Status Bar */
+        .status-bar {
+            height: 32px;
+            padding: 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #0f172a;
+            position: relative;
+            z-index: 20;
+            flex-shrink: 0;
+            background: transparent;
+        }
+
+        .status-bar.white-text {
+            color: #ffffff;
+        }
+
+        .dynamic-island {
+            width: 78px;
+            height: 18px;
+            background: #000000;
+            border-radius: 12px;
+            position: absolute;
+            left: 50%;
+            top: 6px;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7px;
+        }
+
+        .notch-camera {
+            width: 7px;
+            height: 7px;
+            background: #111e38;
+            border-radius: 50%;
+            border: 1px solid #1e293b;
+        }
+
+        .notch-sensor {
+            width: 5px;
+            height: 5px;
+            background: #082f49;
+            border-radius: 50%;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.65rem;
+        }
+
+        /* Screen Content Body */
+        .screen-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #ffffff;
+            position: relative;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            height: 48px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 8px;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: var(--slate-500);
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--electric-blue);
+            font-weight: 700;
+        }
+
+        .nav-item-icon {
+            font-size: 0.95rem;
+        }
+
+        .home-indicator {
+            width: 110px;
+            height: 4px;
+            background: #0f172a;
+            border-radius: 3px;
+            margin: 4px auto 3px;
+            opacity: 0.7;
+        }
+
+        /* UI Component Primitives */
+        .ui-header-card {
+            background: linear-gradient(135deg, #1565c0, #2454e0);
+            color: #ffffff;
+            padding: 16px 14px 14px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-top: -32px;
+            padding-top: 40px;
+        }
+
+        .ui-input-group {
+            margin-bottom: 9px;
+        }
+
+        .ui-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--slate-700);
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        .ui-input {
+            width: 100%;
+            height: 32px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 0 10px;
+            font-size: 0.68rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .ui-btn-primary {
+            background: #2454e0;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(36, 84, 224, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .ui-btn-success {
+            background: #12b76a;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(18, 183, 106, 0.3);
+        }
+
+        .ui-btn-outline {
+            background: #ffffff;
+            color: #1565c0;
+            border: 1.5px solid #1565c0;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .ui-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-size: 0.58rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .badge-green { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+        .badge-blue { background: #dbeafe; color: #1e40af; border: 1px solid #3b82f6; }
+        .badge-amber { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+        .badge-red { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; border: 1px solid #8b5cf6; }
+
+        /* Map Simulation Container */
+        .map-bg {
+            background: #e5e9f0;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            border-radius: 12px;
+            background-image: 
+                radial-gradient(#cbd5e1 1.5px, transparent 1.5px),
+                linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+                linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px, 40px 40px, 40px 40px;
+        }
+
+        .map-road-1 {
+            position: absolute;
+            width: 160%;
+            height: 12px;
+            background: #ffffff;
+            border-top: 1px solid #cbd5e1;
+            border-bottom: 1px solid #cbd5e1;
+            transform: rotate(-25deg);
+            top: 45%;
+            left: -30%;
+        }
+
+        .map-road-2 {
+            position: absolute;
+            height: 160%;
+            width: 10px;
+            background: #ffffff;
+            border-left: 1px solid #cbd5e1;
+            border-right: 1px solid #cbd5e1;
+            transform: rotate(35deg);
+            top: -30%;
+            left: 55%;
+        }
+
+        .route-polyline {
+            position: absolute;
+            width: 130px;
+            height: 3px;
+            background: #2454e0;
+            box-shadow: 0 0 6px rgba(36, 84, 224, 0.8);
+            transform: rotate(-15deg);
+            top: 50%;
+            left: 28%;
+            z-index: 5;
+        }
+
+        .map-pin {
+            position: absolute;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+        }
+
+        /* Desktop Browser Window Mockup */
+        .browser-window {
+            width: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.15);
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 6px;
+        }
+
+        .browser-chrome {
+            height: 34px;
+            background: #0d2847;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+            border-bottom: 1px solid #1e3a8a;
+        }
+
+        .chrome-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .chrome-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+
+        .chrome-url-bar {
+            flex: 1;
+            height: 22px;
+            background: #081a30;
+            border-radius: 4px;
+            border: 1px solid #1e3a8a;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 0.65rem;
+            color: #93c5fd;
+            font-family: 'JetBrains Mono', monospace;
+            gap: 6px;
+        }
+
+        .browser-body {
+            height: 615px;
+            display: flex;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+
+        /* Admin Layout Structure */
+        .admin-sidebar {
+            width: 165px;
+            background: #0a192f;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 12px 8px;
+            flex-shrink: 0;
+            border-right: 1px solid #1e293b;
+        }
+
+        .admin-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 2px;
+            cursor: pointer;
+        }
+
+        .admin-nav-item.active {
+            background: #1565c0;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .admin-content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #f1f5f9;
+        }
+
+        .admin-top-bar {
+            height: 42px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            flex-shrink: 0;
+        }
+
+        .admin-main-scroll {
+            flex: 1;
+            padding: 12px 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Admin Cards & Data Tables */
+        .admin-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .admin-kpi-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 9px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border-left: 3px solid #1565c0;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.66rem;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .admin-table th {
+            background: #e3f2fd;
+            color: #0d47a1;
+            padding: 6px 10px;
+            text-align: left;
+            font-weight: 700;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .admin-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #1e293b;
+        }
+
+        .admin-table tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Annotation Bar at Bottom of Page */
+        .page-annotations {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 0.65rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            color: #334155;
+        }
+
+        .anno-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .anno-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #1565c0;
+        }
+
+        /* Footer */
+        .proto-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid #cbd5e1;
+            padding-top: 5px;
+            margin-top: 6px;
+            font-size: 0.65rem;
+            color: var(--slate-500);
+            font-weight: 600;
+        }
+
+        .proto-footer-brand {
+            font-weight: 800;
+            color: #1565c0;
+        }
+
+        @media print {
+            body { background: #ffffff; margin: 0; padding: 0; }
+            .no-print-toolbar { display: none !important; }
+            .prototype-canvas { padding: 0; gap: 0; }
+            .prototype-page {
+                box-shadow: none;
+                margin: 0;
+                width: 100% !important;
+                min-height: 100vh !important;
+                padding: 10mm 12mm !important;
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+            @page { size: A4 portrait; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="no-print-toolbar">
+        <div class="toolbar-brand">
+            <span>🛵 PiatMove Mobility Platform</span>
+            <span class="toolbar-badge">Visual UI/UX Blueprint &bull; Blue Theme</span>
+        </div>
+        <div class="toolbar-actions">
+            <select class="toolbar-select" onchange="jumpToPage(this.value)">
+                <option value="p1">Page 1: Visual Design System &amp; Portal Topology</option>
+                <option value="p2">Page 2: Passenger &mdash; Splash &amp; Login Visual</option>
+                <option value="p3">Page 3: Passenger &mdash; Landmark Route &amp; Booking</option>
+                <option value="p4">Page 4: Passenger &mdash; Live Tracking &amp; Driver Rating</option>
+                <option value="p5">Page 5: Passenger &mdash; Trip History &amp; Profile Hub</option>
+                <option value="p6">Page 6: Driver &mdash; Partner Sign-In &amp; TODA KYC</option>
+                <option value="p7">Page 7: Driver &mdash; Duty Console &amp; Incoming Radar</option>
+                <option value="p8">Page 8: Driver &mdash; Turn Navigation &amp; Cash Fare</option>
+                <option value="p9">Page 9: Driver &mdash; Shift Trips &amp; Income Analytics</option>
+                <option value="p10">Page 10: Admin &mdash; Live Dispatch Command Center</option>
+                <option value="p11">Page 11: Admin &mdash; Driver Franchise &amp; KYC Audit</option>
+                <option value="p12">Page 12: Admin &mdash; Fare Matrix &amp; Subsidy Analytics</option>
+            </select>
+            <button class="toolbar-btn toolbar-btn-print" onclick="window.print()">
+                <span>🖨️ Export / Print PDF (A4)</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="prototype-canvas">
+
+    <section class="prototype-page" id="p1">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>🛵 PiatMove Integrated Mobility System</h1>
+                <p>Municipal Tricycle Booking &amp; Transport Regulation &bull; Municipality of Piat, Cagayan</p>
+            </div>
+            <div class="header-tag-pill">Page 1 of 12 &bull; Visual Ecosystem</div>
+        </div>
+
+        <div style="background:#f0f4ff; border:1px solid #90caf9; border-radius:10px; padding:12px 16px; margin-bottom:12px;">
+            <div style="font-weight:800; font-size:0.82rem; color:#0d47a1; margin-bottom:4px;">OFFICIAL MUNICIPAL BLUE DESIGN SYSTEM &bull; TARIFF ORDINANCE NO. 2026-04</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:28px; height:28px; border-radius:6px; background:#2454e0;"></div>
+                    <div><div style="font-size:0.65rem; font-weight:700;">#2454E0</div><div style="font-size:0.58rem; color:#64748b;">Electric Blue (Primary)</div></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:28px; height:28px; border-radius:6px; background:#1565c0;"></div>
+                    <div><div style="font-size:0.65rem; font-weight:700;">#1565C0</div><div style="font-size:0.58rem; color:#64748b;">Deep Navy (Brand)</div></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:28px; height:28px; border-radius:6px; background:#12b76a;"></div>
+                    <div><div style="font-size:0.65rem; font-weight:700;">#12B76A</div><div style="font-size:0.58rem; color:#64748b;">Emerald (Success)</div></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:28px; height:28px; border-radius:6px; background:#f59e0b;"></div>
+                    <div><div style="font-size:0.65rem; font-weight:700;">#F59E0B</div><div style="font-size:0.58rem; color:#64748b;">Amber (Pending)</div></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:28px; height:28px; border-radius:6px; background:#0f172a;"></div>
+                    <div><div style="font-size:0.65rem; font-weight:700;">#0F172A</div><div style="font-size:0.58rem; color:#64748b;">Slate 900 (Text)</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:10px;">
+            <div style="border:1.5px solid #2454e0; border-radius:12px; padding:10px; background:#ffffff; box-shadow:0 4px 12px rgba(36,84,224,0.08);">
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                    <span style="font-size:1.1rem;">📱</span>
+                    <div>
+                        <div style="font-weight:800; font-size:0.75rem; color:#1565c0;">PASSENGER MOBILE APP</div>
+                        <div style="font-size:0.58rem; color:#64748b;">Native Android &bull; app-passenger</div>
+                    </div>
+                </div>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; font-size:0.64rem; line-height:1.4;">
+                    <div style="font-weight:700; color:#0f172a; margin-bottom:3px;">Key Visual Experiences:</div>
+                    &bull; Instant Landmark Route Selector<br>
+                    &bull; <strong>Statutory 20% Discount</strong> (&#8369;16 Fare)<br>
+                    &bull; Live Tricycle Dispatch &amp; Tracking Map<br>
+                    &bull; Driver 5-Star Rating &amp; Feedback Dialog
+                </div>
+                <div style="margin-top:8px; text-align:center;">
+                    <span class="ui-badge-pill badge-blue">PAGES 2 &bull; 3 &bull; 4 &bull; 5</span>
+                </div>
+            </div>
+
+            <div style="border:1.5px solid #12b76a; border-radius:12px; padding:10px; background:#ffffff; box-shadow:0 4px 12px rgba(18,183,106,0.08);">
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                    <span style="font-size:1.1rem;">🛵</span>
+                    <div>
+                        <div style="font-weight:800; font-size:0.75rem; color:#065f46;">DRIVER PARTNER APP</div>
+                        <div style="font-size:0.58rem; color:#64748b;">Native Android &bull; app-driver</div>
+                    </div>
+                </div>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; font-size:0.64rem; line-height:1.4;">
+                    <div style="font-weight:700; color:#0f172a; margin-bottom:3px;">Key Visual Experiences:</div>
+                    &bull; Online/Offline Duty Availability Radar<br>
+                    &bull; Real-time Booking Sound Alert &amp; Countdown<br>
+                    &bull; Turn-by-Turn Pickup Navigation Screen<br>
+                    &bull; Cash Collection &amp; Shift Income Report
+                </div>
+                <div style="margin-top:8px; text-align:center;">
+                    <span class="ui-badge-pill badge-green">PAGES 6 &bull; 7 &bull; 8 &bull; 9</span>
+                </div>
+            </div>
+
+            <div style="border:1.5px solid #0d47a1; border-radius:12px; padding:10px; background:#ffffff; box-shadow:0 4px 12px rgba(13,71,161,0.08);">
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                    <span style="font-size:1.1rem;">💻</span>
+                    <div>
+                        <div style="font-weight:800; font-size:0.75rem; color:#0d47a1;">ADMIN DISPATCH WEB</div>
+                        <div style="font-size:0.58rem; color:#64748b;">PHP 8.2 &bull; piatmoveadmin.online</div>
+                    </div>
+                </div>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; font-size:0.64rem; line-height:1.4;">
+                    <div style="font-weight:700; color:#0f172a; margin-bottom:3px;">Key Visual Experiences:</div>
+                    &bull; Executive Command Center &amp; Live Map<br>
+                    &bull; TODA Franchise &amp; KYC Document Inspector<br>
+                    &bull; Master Filterable Commuter Booking Ledger<br>
+                    &bull; Social Subsidy &amp; Fare Regulation Reports
+                </div>
+                <div style="margin-top:8px; text-align:center;">
+                    <span class="ui-badge-pill badge-blue">PAGES 10 &bull; 11 &bull; 12</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:12px; margin-bottom:6px;">
+            <div style="font-weight:800; font-size:0.75rem; color:#0f172a; margin-bottom:6px;">MUNICIPAL TRANSPORT FARE COMPUTATION POLICY:</div>
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:8px; border-radius:6px; text-align:center;">
+                    <div style="font-size:0.60rem; color:#64748b; font-weight:700;">REGULAR BASE FARE</div>
+                    <div style="font-size:1.1rem; font-weight:800; color:#0f172a; font-family:'JetBrains Mono';">&#8369;20.00</div>
+                    <div style="font-size:0.56rem; color:#64748b;">Per Commuter / Trip</div>
+                </div>
+                <div style="background:#ecfdf3; border:1px solid #86efac; padding:8px; border-radius:6px; text-align:center;">
+                    <div style="font-size:0.60rem; color:#065f46; font-weight:700;">STUDENT (RA 11314)</div>
+                    <div style="font-size:1.1rem; font-weight:800; color:#047857; font-family:'JetBrains Mono';">&#8369;16.00</div>
+                    <div style="font-size:0.56rem; color:#047857;">Save &#8369;4.00 (20% OFF)</div>
+                </div>
+                <div style="background:#fffbeb; border:1px solid #fde68a; padding:8px; border-radius:6px; text-align:center;">
+                    <div style="font-size:0.60rem; color:#92400e; font-weight:700;">SENIOR &bull; PWD &bull; PREGNANT</div>
+                    <div style="font-size:1.1rem; font-weight:800; color:#b45309; font-family:'JetBrains Mono';">&#8369;16.00</div>
+                    <div style="font-size:0.56rem; color:#b45309;">Save &#8369;4.00 (20% OFF)</div>
+                </div>
+                <div style="background:#eff6ff; border:1px solid #bfdbfe; padding:8px; border-radius:6px; text-align:center;">
+                    <div style="font-size:0.60rem; color:#1e40af; font-weight:700;">LGU PLATFORM DEDUCTION</div>
+                    <div style="font-size:1.1rem; font-weight:800; color:#1d4ed8; font-family:'JetBrains Mono';">&#8369;0.00</div>
+                    <div style="font-size:0.56rem; color:#1d4ed8;">100% Remitted to Driver</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Document Scale:</strong> ISO A4 Portrait Device-Frame Specification</span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Hosting:</strong> Live on Hostinger at <code>https://piatmoveadmin.online</code></span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Design Framework:</strong> Google Material 3 / Android Jetpack</span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 1 of 12 &bull; Ecosystem Overview</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p2">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>📱 Passenger App &mdash; Authentication &amp; Discount Onboarding</h1>
+                <p>Native Mobile Visual Layout &bull; Splash, Commuter Sign-In, and Statutory 20% Category Declaration</p>
+            </div>
+            <div class="header-tag-pill">Page 2 of 12 &bull; Passenger App</div>
+        </div>
+
+        <div class="dual-phone-grid">
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 1: COMMUTER LOGIN (LoginActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:20px 18px; justify-content:center;">
+                            <div style="width:52px; height:52px; background:#2454e0; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 6px 16px rgba(36,84,224,0.35);">
+                                <span style="font-size:1.6rem; color:#ffffff;">🛵</span>
+                            </div>
+
+                            <div style="font-size:1.35rem; font-weight:800; color:#0f172a; margin-bottom:4px; letter-spacing:-0.5px;">Welcome back</div>
+                            <div style="font-size:0.68rem; color:#64748b; line-height:1.4; margin-bottom:20px;">
+                                Sign in to book municipal tricycles and track your trips in Piat.
+                            </div>
+
+                            <div class="ui-input-group">
+                                <label class="ui-label">Mobile Number</label>
+                                <div class="ui-input">
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="font-size:0.85rem;">📞</span>
+                                        <span style="font-weight:600; font-family:'JetBrains Mono';">0917 555 0142</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ui-input-group">
+                                <label class="ui-label">Password</label>
+                                <div class="ui-input">
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="font-size:0.85rem;">🔒</span>
+                                        <span style="font-family:'JetBrains Mono';">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span>
+                                    </div>
+                                    <span style="color:#94a3b8; font-size:0.8rem;">👁️</span>
+                                </div>
+                            </div>
+
+                            <div style="text-align:right; margin-bottom:16px;">
+                                <a href="#p2" style="font-size:0.65rem; color:#2454e0; font-weight:700; text-decoration:none;">Forgot password?</a>
+                            </div>
+
+                            <div class="ui-btn-primary" style="margin-bottom:16px;">
+                                Log In
+                            </div>
+
+                            <div style="text-align:center; font-size:0.66rem; color:#64748b; margin-bottom:24px;">
+                                New to PiatMove? <strong style="color:#2454e0; cursor:pointer;">Create an account</strong>
+                            </div>
+
+                            <div style="text-align:center; font-size:0.60rem; color:#94a3b8; display:flex; align-items:center; justify-content:center; gap:4px;">
+                                <span>🛡️</span>
+                                <span>Secured by the Municipality of Piat</span>
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 2: STATUTORY 20% DISCOUNT SIGNUP (RegisterActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:14px 18px; justify-content:flex-start;">
+                            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:2px;">Create Account</div>
+                            <div style="font-size:0.64rem; color:#64748b; margin-bottom:12px;">Register to enjoy safe fares and statutory discounts.</div>
+
+                            <div class="ui-input-group">
+                                <label class="ui-label">Full Name</label>
+                                <div class="ui-input"><span style="font-weight:600;">Maria Cristina Santos</span></div>
+                            </div>
+
+                            <div class="ui-input-group">
+                                <label class="ui-label">Mobile Number (+63)</label>
+                                <div class="ui-input"><span style="font-family:'JetBrains Mono'; font-weight:600;">+63 998 765 4321</span></div>
+                            </div>
+
+                            <div class="ui-input-group">
+                                <label class="ui-label">Commuter Category &bull; Mandated 20% Discount</label>
+                                <div style="display:flex; flex-direction:column; gap:4px;">
+                                    <div style="border:1.5px solid #2454e0; background:#f0f4ff; border-radius:8px; padding:6px 8px; display:flex; justify-content:space-between; align-items:center;">
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span>🎓</span>
+                                            <div>
+                                                <div style="font-size:0.65rem; font-weight:800; color:#1565c0;">Student (CSU / High School)</div>
+                                                <div style="font-size:0.56rem; color:#1e40af;">Mandated fare: &#8369;16.00 (Save &#8369;4.00)</div>
+                                            </div>
+                                        </div>
+                                        <span style="font-size:0.9rem; color:#2454e0;">🔘</span>
+                                    </div>
+
+                                    <div style="border:1px solid #cbd5e1; background:#ffffff; border-radius:8px; padding:5px 8px; display:flex; justify-content:space-between; align-items:center; opacity:0.8;">
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span>👴</span>
+                                            <span style="font-size:0.62rem; font-weight:700;">Senior Citizen (OSCA ID) &bull; &#8369;16.00</span>
+                                        </div>
+                                        <span style="font-size:0.8rem; color:#cbd5e1;">⚪</span>
+                                    </div>
+
+                                    <div style="border:1px solid #cbd5e1; background:#ffffff; border-radius:8px; padding:5px 8px; display:flex; justify-content:space-between; align-items:center; opacity:0.8;">
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span>♿</span>
+                                            <span style="font-size:0.62rem; font-weight:700;">PWD / Pregnant &bull; &#8369;16.00</span>
+                                        </div>
+                                        <span style="font-size:0.8rem; color:#cbd5e1;">⚪</span>
+                                    </div>
+
+                                    <div style="border:1px solid #cbd5e1; background:#ffffff; border-radius:8px; padding:5px 8px; display:flex; justify-content:space-between; align-items:center; opacity:0.8;">
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span>👤</span>
+                                            <span style="font-size:0.62rem; font-weight:700;">Regular Commuter &bull; &#8369;20.00</span>
+                                        </div>
+                                        <span style="font-size:0.8rem; color:#cbd5e1;">⚪</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:6px; font-size:0.58rem; color:#92400e; margin-bottom:10px; line-height:1.3;">
+                                ⚠️ <strong>ID Requirement:</strong> Please present valid School ID or Senior ID upon boarding your tricycle for driver verification.
+                            </div>
+
+                            <div class="ui-btn-primary" style="margin-top:auto; margin-bottom:6px;">
+                                Complete Registration
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Layout Files:</strong> <code>activity_login.xml</code> &amp; <code>activity_register.xml</code></span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Backend API:</strong> <code>POST /api/auth/passenger/register</code> with <code>discount_type</code></span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 2 of 12 &bull; Passenger Authentication &amp; Signup</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p3">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>📱 Passenger App &mdash; Landmark Route &amp; Fare Matrix</h1>
+                <p>Native Mobile Visual Layout &bull; Interactive Piat Map, Destination Selector, and Real-time Fare Calculator</p>
+            </div>
+            <div class="header-tag-pill">Page 3 of 12 &bull; Passenger App</div>
+        </div>
+
+        <div class="dual-phone-grid">
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 1: PASSENGER HOME DASHBOARD (PassengerHomeActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar white-text">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="ui-header-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <div style="font-size:0.64rem; color:#93c5fd; font-weight:600;">Good Morning ☀️</div>
+                                    <div style="font-size:1.05rem; font-weight:800; color:#ffffff;">Maria Santos</div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="ui-badge-pill badge-green" style="background:#ffffff; color:#047857; font-size:0.56rem;">🎓 STUDENT 20%</span>
+                                    <div style="width:32px; height:32px; background:#ffffff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem;">👩‍🎓</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="screen-content" style="padding:10px 14px; gap:8px;">
+                            <div class="map-bg" style="height:175px;">
+                                <div class="map-road-1"></div>
+                                <div class="map-road-2"></div>
+                                
+                                <div class="map-pin" style="top:30%; left:40%; width:24px; height:24px; background:#2454e0; color:#fff; font-size:0.75rem;">🛵</div>
+                                <div class="map-pin" style="top:55%; left:65%; width:24px; height:24px; background:#2454e0; color:#fff; font-size:0.75rem;">🛵</div>
+                                <div class="map-pin" style="top:60%; left:25%; width:24px; height:24px; background:#12b76a; color:#fff; font-size:0.75rem;">📍</div>
+
+                                <div style="position:absolute; bottom:8px; left:8px; right:8px; background:rgba(255,255,255,0.92); backdrop-filter:blur(4px); border-radius:8px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #cbd5e1;">
+                                    <div>
+                                        <div style="font-size:0.58rem; color:#64748b; font-weight:700;">CURRENT LOCATION</div>
+                                        <div style="font-size:0.70rem; font-weight:800; color:#0f172a;">📍 Poblacion I &bull; Piat Public Market</div>
+                                    </div>
+                                    <span class="ui-badge-pill badge-green">8 ACTIVE TRIKES</span>
+                                </div>
+                            </div>
+
+                            <div style="border:1.5px solid #2454e0; background:#f0f4ff; border-radius:12px; padding:10px; box-shadow:0 4px 10px rgba(36,84,224,0.1);">
+                                <div style="font-weight:800; font-size:0.75rem; color:#0d47a1; margin-bottom:4px;">Where would you like to ride?</div>
+                                <div style="font-size:0.62rem; color:#334155; margin-bottom:8px;">Fast municipal dispatch across all Piat barangays.</div>
+                                <div class="ui-btn-primary" style="padding:7px 12px; font-size:0.72rem;">
+                                    <span>🔍</span> Select Destination Landmark
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:space-between; gap:6px;">
+                                <div style="flex:1; border:1px solid #e2e8f0; border-radius:8px; padding:6px; background:#ffffff; text-align:center;">
+                                    <div style="font-size:0.58rem; color:#64748b; font-weight:700;">BASILICA TODA</div>
+                                    <div style="font-size:0.80rem; font-weight:800; color:#1565c0;">12 Trikes</div>
+                                </div>
+                                <div style="flex:1; border:1px solid #e2e8f0; border-radius:8px; padding:6px; background:#ffffff; text-align:center;">
+                                    <div style="font-size:0.58rem; color:#64748b; font-weight:700;">MARKET TODA</div>
+                                    <div style="font-size:0.80rem; font-weight:800; color:#12b76a;">6 Trikes</div>
+                                </div>
+                                <div style="flex:1; border:1px solid #e2e8f0; border-radius:8px; padding:6px; background:#ffffff; text-align:center;">
+                                    <div style="font-size:0.58rem; color:#64748b; font-weight:700;">MAGUILLING</div>
+                                    <div style="font-size:0.80rem; font-weight:800; color:#f59e0b;">4 Trikes</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <div class="nav-item-icon">🏠</div>
+            <span>Home</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">📋</div>
+            <span>My Trips</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">🔔</div>
+            <span>Alerts</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">👤</div>
+            <span>Profile</span>
+        </div>
+    </div>
+    <div class="home-indicator"></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 2: LANDMARK BOOKING &amp; FARE (BookRideActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:12px 16px; gap:8px;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                                <div style="width:28px; height:28px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; font-weight:800;">&larr;</div>
+                                <div style="font-size:0.95rem; font-weight:800; color:#0f172a;">Confirm Trip Details</div>
+                            </div>
+
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:10px; background:#f8fafc;">
+                                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                                    <span style="font-size:0.8rem; color:#12b76a;">🟢</span>
+                                    <div style="flex:1;">
+                                        <div style="font-size:0.58rem; color:#64748b; font-weight:700;">PICKUP LANDMARK</div>
+                                        <div style="font-size:0.72rem; font-weight:800; color:#0f172a;">Piat Public Market (Front Gate)</div>
+                                    </div>
+                                </div>
+                                <div style="height:12px; border-left:2px dashed #cbd5e1; margin-left:6px;"></div>
+                                <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+                                    <span style="font-size:0.8rem; color:#ef4444;">🔴</span>
+                                    <div style="flex:1;">
+                                        <div style="font-size:0.58rem; color:#64748b; font-weight:700;">DROP-OFF LANDMARK</div>
+                                        <div style="font-size:0.72rem; font-weight:800; color:#0f172a;">Basilica Minore of Our Lady of Piat</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="map-bg" style="height:90px;">
+                                <div class="map-road-1"></div>
+                                <div class="route-polyline"></div>
+                                <div class="map-pin" style="top:58%; left:22%; width:20px; height:20px; background:#12b76a; color:#fff; font-size:0.6rem;">📍</div>
+                                <div class="map-pin" style="top:42%; left:75%; width:20px; height:20px; background:#ef4444; color:#fff; font-size:0.6rem;">🎯</div>
+                                <div style="position:absolute; top:6px; right:8px; background:rgba(15,23,42,0.8); color:#fff; font-size:0.58rem; padding:2px 6px; border-radius:4px; font-weight:700;">1.8 km &bull; ~5 mins</div>
+                            </div>
+
+                            <div style="border:1.5px solid #2454e0; background:#f0f4ff; border-radius:10px; padding:10px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                    <span style="font-weight:800; font-size:0.70rem; color:#0d47a1;">FARE COMPUTATION</span>
+                                    <span class="ui-badge-pill badge-green">RA 11314 DISCOUNTED</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:#334155; margin-bottom:3px;">
+                                    <span>Regular Municipal Base Fare:</span>
+                                    <span style="font-family:'JetBrains Mono';">&#8369;20.00</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:#047857; font-weight:700; margin-bottom:4px;">
+                                    <span>Student 20% Statutory Discount:</span>
+                                    <span style="font-family:'JetBrains Mono';">-&#8369;4.00</span>
+                                </div>
+                                <div style="border-top:1px dashed #90caf9; padding-top:6px; display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-weight:800; font-size:0.78rem; color:#0d47a1;">Total Cash to Pay:</span>
+                                    <span style="font-size:1.15rem; font-weight:800; color:#2454e0; font-family:'JetBrains Mono';">&#8369;16.00</span>
+                                </div>
+                            </div>
+
+                            <div style="font-size:0.58rem; color:#64748b; text-align:center;">
+                                💡 Payment Method: <strong>Exact Cash to Tricycle Driver</strong>
+                            </div>
+
+                            <div class="ui-btn-primary" style="margin-top:auto; font-size:0.75rem; padding:9px;">
+                                🛵 Request Tricycle Dispatch Now
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Landmark Engine:</strong> <code>PiatPlaceAdapter.kt</code></span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Fare Logic:</strong> <code>Base: ₱20</code> &bull; <code>Discount: -₱4</code> &bull; <code>Total: ₱16</code></span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 3 of 12 &bull; Passenger Route Booking &amp; Fare Matrix</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p4">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>📱 Passenger App &mdash; Live Ride Tracking &amp; Driver Feedback</h1>
+                <p>Native Mobile Visual Layout &bull; Real-time Driver Telemetry, Route Tracking, and 5-Star Rating Dialog</p>
+            </div>
+            <div class="header-tag-pill">Page 4 of 12 &bull; Passenger App</div>
+        </div>
+
+        <div class="dual-phone-grid">
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 1: LIVE DRIVER TRACKING (RideStatusActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content">
+                            <!-- Fullscreen Map with Floating Cards -->
+                            <div class="map-bg" style="height:270px; border-radius:0;">
+                                <div class="map-road-1"></div>
+                                <div class="map-road-2"></div>
+                                <div class="route-polyline"></div>
+
+                                <!-- Pickup Pin -->
+                                <div class="map-pin" style="top:58%; left:22%; width:24px; height:24px; background:#12b76a; color:#fff; font-size:0.75rem;">📍</div>
+                                <!-- Tricycle Moving Marker -->
+                                <div class="map-pin" style="top:48%; left:52%; width:30px; height:30px; background:#2454e0; color:#fff; font-size:0.95rem; border:2px solid #ffffff;">🛵</div>
+
+                                <!-- Floating Status Pill -->
+                                <div style="position:absolute; top:10px; left:12px; right:12px; background:#ffffff; border-radius:20px; padding:6px 12px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid #90caf9;">
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="font-size:0.8rem; animation:pulse 1s infinite;">🔵</span>
+                                        <span style="font-size:0.65rem; font-weight:800; color:#1e40af;">DRIVER EN ROUTE TO PICKUP</span>
+                                    </div>
+                                    <span style="font-size:0.62rem; font-weight:800; color:#2454e0; font-family:'JetBrains Mono';">ETA: 3 MINS</span>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Floating BottomSheet Card -->
+                            <div style="flex:1; background:#ffffff; border-top-left-radius:20px; border-top-right-radius:20px; padding:12px 16px; box-shadow:0 -6px 16px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:8px;">
+                                <!-- Driver Profile -->
+                                <div style="display:flex; gap:10px; align-items:center; padding-bottom:8px; border-bottom:1px solid #f1f5f9;">
+                                    <div style="width:44px; height:44px; border-radius:50%; background:#e3f2fd; border:2px solid #2454e0; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">👨‍✈️</div>
+                                    <div style="flex:1;">
+                                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                                            <div style="font-weight:800; font-size:0.80rem; color:#0f172a;">Mario Agcaoili</div>
+                                            <span style="font-size:0.68rem; color:#f59e0b; font-weight:800;">★ 4.9 (124)</span>
+                                        </div>
+                                        <div style="font-size:0.62rem; color:#2454e0; font-weight:700;">Poblacion-Basilica TODA &bull; Body #042</div>
+                                        <div style="font-size:0.58rem; color:#64748b;">Skygo 150 &bull; Plate: 9821-TG (Blue)</div>
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <div style="font-size:0.56rem; color:#64748b; font-weight:700;">PAYABLE CASH FARE</div>
+                                        <div style="font-size:1rem; font-weight:800; color:#2454e0; font-family:'JetBrains Mono';">&#8369;16.00</div>
+                                    </div>
+                                    <div style="display:flex; gap:6px;">
+                                        <div class="ui-btn-outline" style="padding:4px 10px; font-size:0.65rem;">📞 Call</div>
+                                        <div class="ui-btn-outline" style="padding:4px 10px; font-size:0.65rem;">💬 SMS</div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top:auto;">
+                                    <div style="background:#fee2e2; border:1px solid #fca5a5; color:#991b1b; text-align:center; padding:6px; border-radius:8px; font-size:0.62rem; font-weight:700; cursor:pointer;">
+                                        Cancel Ride Request
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 2: DRIVER RATING DIALOG (dialog_rate_driver.xml)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:16px; justify-content:center; background:#f8fafc;">
+                            <!-- Modal Card -->
+                            <div style="background:#ffffff; border-radius:18px; padding:18px 16px; box-shadow:0 12px 24px rgba(0,0,0,0.1); border:1px solid #cbd5e1; text-align:center;">
+                                <div style="width:48px; height:48px; background:#ecfdf3; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#12b76a;">
+                                    ✓
+                                </div>
+
+                                <div style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:2px;">Trip Completed!</div>
+                                <div style="font-size:0.64rem; color:#64748b; margin-bottom:12px;">You arrived at Basilica Minore of Our Lady of Piat.</div>
+
+                                <div style="background:#f0f4ff; border:1px solid #90caf9; border-radius:8px; padding:8px; margin-bottom:14px;">
+                                    <div style="font-size:0.58rem; color:#64748b; font-weight:700;">FARE SETTLED (CASH)</div>
+                                    <div style="font-size:1.2rem; font-weight:800; color:#2454e0; font-family:'JetBrains Mono';">&#8369;16.00</div>
+                                    <div style="font-size:0.56rem; color:#047857; font-weight:700;">Student 20% Discount Applied</div>
+                                </div>
+
+                                <div style="font-size:0.68rem; font-weight:700; color:#334155; margin-bottom:4px;">How was Kuya Mario's driving?</div>
+                                <div style="font-size:1.6rem; color:#f59e0b; letter-spacing:6px; margin-bottom:12px; cursor:pointer;">
+                                    ★ ★ ★ ★ ★
+                                </div>
+
+                                <div style="display:flex; gap:4px; justify-content:center; flex-wrap:wrap; margin-bottom:12px;">
+                                    <span class="ui-badge-pill badge-blue">✓ Safe Driving</span>
+                                    <span class="ui-badge-pill badge-blue">✓ Polite &amp; Courteous</span>
+                                    <span class="ui-badge-pill badge-blue">✓ Clean Tricycle</span>
+                                </div>
+
+                                <div class="ui-input-group" style="text-align:left; margin-bottom:14px;">
+                                    <div class="ui-input" style="height:36px;">
+                                        <span style="font-size:0.62rem; color:#334155;">Napakabilis at ligtas ang biyahe! Maraming salamat po.</span>
+                                    </div>
+                                </div>
+
+                                <div class="ui-btn-primary" style="margin-bottom:8px;">
+                                    Submit Rating &amp; Finish
+                                </div>
+                                <div style="font-size:0.62rem; color:#64748b; cursor:pointer;">Skip for now</div>
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Rating Schema:</strong> <code>bookings.rating (1-5)</code> &amp; <code>bookings.rating_comment</code></span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Status Lifecycle:</strong> <code>accepted &rarr; started &rarr; completed</code></span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 4 of 12 &bull; Passenger Tracking &amp; Driver Rating</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p5">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>📱 Passenger App &mdash; Trip History &amp; Identity Verification</h1>
+                <p>Native Mobile Visual Layout &bull; Commuter Trip Ledger, Digital Receipt Records, and Student ID Verification Hub</p>
+            </div>
+            <div class="header-tag-pill">Page 5 of 12 &bull; Passenger App</div>
+        </div>
+
+        <div class="dual-phone-grid">
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 1: COMMUTER RIDE HISTORY (RideHistoryFragment.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:12px 14px; gap:8px;">
+                            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:2px;">Ride History</div>
+                            <div style="font-size:0.62rem; color:#64748b; margin-bottom:6px;">Your recent municipal tricycle commutes in Piat.</div>
+
+                            <!-- Trip Item 1 -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:9px 10px; background:#ffffff; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <span style="font-family:'JetBrains Mono'; font-weight:700; font-size:0.68rem; color:#1565c0;">#BK-1092</span>
+                                    <span class="ui-badge-pill badge-green">COMPLETED</span>
+                                </div>
+                                <div style="font-weight:700; font-size:0.72rem; color:#0f172a;">Market &rarr; Basilica Minore</div>
+                                <div style="font-size:0.58rem; color:#64748b; margin-bottom:4px;">Today, 09:14 AM &bull; Mario Agcaoili (042)</div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #e2e8f0; padding-top:4px;">
+                                    <span style="font-size:0.58rem; color:#047857; font-weight:700;">🎓 Student Fare</span>
+                                    <span style="font-family:'JetBrains Mono'; font-weight:800; color:#2454e0;">&#8369;16.00</span>
+                                </div>
+                            </div>
+
+                            <!-- Trip Item 2 -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:9px 10px; background:#ffffff; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <span style="font-family:'JetBrains Mono'; font-weight:700; font-size:0.68rem; color:#1565c0;">#BK-1088</span>
+                                    <span class="ui-badge-pill badge-green">COMPLETED</span>
+                                </div>
+                                <div style="font-weight:700; font-size:0.72rem; color:#0f172a;">CSU Piat &rarr; Centro Poblacion</div>
+                                <div style="font-size:0.58rem; color:#64748b; margin-bottom:4px;">Yesterday, 04:30 PM &bull; Danilo Pascual (019)</div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #e2e8f0; padding-top:4px;">
+                                    <span style="font-size:0.58rem; color:#047857; font-weight:700;">🎓 Student Fare</span>
+                                    <span style="font-family:'JetBrains Mono'; font-weight:800; color:#2454e0;">&#8369;16.00</span>
+                                </div>
+                            </div>
+
+                            <!-- Trip Item 3 -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:9px 10px; background:#ffffff; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <span style="font-family:'JetBrains Mono'; font-weight:700; font-size:0.68rem; color:#1565c0;">#BK-1075</span>
+                                    <span class="ui-badge-pill badge-green">COMPLETED</span>
+                                </div>
+                                <div style="font-weight:700; font-size:0.72rem; color:#0f172a;">Piat Municipal Hall &rarr; Baung</div>
+                                <div style="font-size:0.58rem; color:#64748b; margin-bottom:4px;">Sep 21, 11:20 AM &bull; Efren Rivera (035)</div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #e2e8f0; padding-top:4px;">
+                                    <span style="font-size:0.58rem; color:#047857; font-weight:700;">🎓 Student Fare</span>
+                                    <span style="font-family:'JetBrains Mono'; font-weight:800; color:#2454e0;">&#8369;16.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+    <div class="bottom-nav">
+        <div class="nav-item ">
+            <div class="nav-item-icon">🏠</div>
+            <span>Home</span>
+        </div>
+        <div class="nav-item active">
+            <div class="nav-item-icon">📋</div>
+            <span>My Trips</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">🔔</div>
+            <span>Alerts</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">👤</div>
+            <span>Profile</span>
+        </div>
+    </div>
+    <div class="home-indicator"></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 2: COMMUTER PROFILE &amp; HOTLINES (ProfileFragment.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:14px 16px; gap:8px;">
+                            <!-- Profile Header -->
+                            <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+                                <div style="width:50px; height:50px; border-radius:50%; background:#2454e0; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:800;">
+                                    MS
+                                </div>
+                                <div>
+                                    <div style="font-weight:800; font-size:0.95rem; color:#0f172a;">Maria Cristina Santos</div>
+                                    <div style="font-size:0.62rem; color:#64748b;">+63 998 765 4321</div>
+                                </div>
+                            </div>
+
+                            <!-- Verified ID Badge Card -->
+                            <div style="border:1.5px solid #10b981; background:#ecfdf3; border-radius:10px; padding:10px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                                    <span style="font-weight:800; font-size:0.70rem; color:#065f46;">VERIFIED DISCOUNT BENEFICIARY</span>
+                                    <span class="ui-badge-pill badge-green">RA 11314 ACTIVE</span>
+                                </div>
+                                <div style="font-size:0.64rem; color:#047857;">🎓 CSU Piat Campus &bull; Student ID #2024-1049</div>
+                                <div style="font-size:0.56rem; color:#065f46; margin-top:2px;">Lifetime Statutory Commute Savings: <strong>&#8369;136.00</strong></div>
+                            </div>
+
+                            <!-- Emergency Hotline Section -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:10px; background:#ffffff;">
+                                <div style="font-weight:800; font-size:0.68rem; color:#0f172a; margin-bottom:6px;">MUNICIPAL EMERGENCY HOTLINES</div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:0.64rem;">
+                                    <span>🚓 Piat PNP Police Station</span>
+                                    <div class="ui-btn-outline" style="padding:2px 8px; font-size:0.58rem;">0917-555-PNP</div>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.64rem;">
+                                    <span>🚑 Piat MDRRMO Rescue</span>
+                                    <div class="ui-btn-outline" style="padding:2px 8px; font-size:0.58rem;">0920-111-RESC</div>
+                                </div>
+                            </div>
+
+                            <div style="border:1px solid #e2e8f0; border-radius:10px; padding:6px 10px; background:#ffffff;">
+                                <div style="padding:6px 0; border-bottom:1px solid #f1f5f9; font-size:0.66rem; font-weight:600; display:flex; justify-content:space-between;">
+                                    <span>📘 System User Manual</span>
+                                    <span>&rarr;</span>
+                                </div>
+                                <div style="padding:6px 0; border-bottom:1px solid #f1f5f9; font-size:0.66rem; font-weight:600; display:flex; justify-content:space-between;">
+                                    <span>🛡️ Privacy &amp; Data Protection</span>
+                                    <span>&rarr;</span>
+                                </div>
+                                <div style="padding:6px 0; font-size:0.66rem; font-weight:600; color:#ef4444; display:flex; justify-content:space-between; cursor:pointer;">
+                                    <span>Sign Out Account</span>
+                                    <span>🚪</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+    <div class="bottom-nav">
+        <div class="nav-item ">
+            <div class="nav-item-icon">🏠</div>
+            <span>Home</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">📋</div>
+            <span>My Trips</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">🔔</div>
+            <span>Alerts</span>
+        </div>
+        <div class="nav-item active">
+            <div class="nav-item-icon">👤</div>
+            <span>Profile</span>
+        </div>
+    </div>
+    <div class="home-indicator"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Data Privacy:</strong> Strict compliance with Republic Act No. 10173</span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Fragment UI:</strong> <code>RideHistoryFragment.kt</code> &amp; <code>ProfileFragment.kt</code></span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 5 of 12 &bull; Passenger History &amp; Identity Hub</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p6">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>🛵 Driver Partner App &mdash; Sign-In &amp; TODA KYC Accreditation</h1>
+                <p>Native Mobile Visual Layout &bull; Driver Shift Access, Vehicle Profile, and Municipal Document Dossier</p>
+            </div>
+            <div class="header-tag-pill">Page 6 of 12 &bull; Driver Partner App</div>
+        </div>
+
+        <div class="dual-phone-grid">
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 1: DRIVER SIGN-IN (LoginActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar white-text">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <!-- Curved Blue Hero Header Matching Asset -->
+                        <div class="ui-header-card" style="padding-bottom:24px; border-bottom-left-radius:28px; border-bottom-right-radius:28px;">
+                            <div style="width:40px; height:40px; background:rgba(255,255,255,0.2); border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
+                                <span style="font-size:1.2rem; color:#fff;">🛵</span>
+                            </div>
+                            <span class="ui-badge-pill" style="background:rgba(255,255,255,0.2); color:#ffffff; font-size:0.56rem; margin-bottom:6px;">🪪 DRIVER PORTAL</span>
+                            <div style="font-size:1.3rem; font-weight:800; color:#ffffff; margin-bottom:2px;">Driver Sign In</div>
+                            <div style="font-size:0.64rem; color:#bfdbfe;">Municipal Transport Office &bull; Piat, Cagayan</div>
+                        </div>
+
+                        <div class="screen-content" style="padding:16px 18px; justify-content:center;">
+                            <div class="ui-input-group">
+                                <label class="ui-label">Employee / Driver ID</label>
+                                <div class="ui-input">
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="font-size:0.85rem;">👤</span>
+                                        <span style="font-weight:700; font-family:'JetBrains Mono';">DRV-0142</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ui-input-group">
+                                <label class="ui-label">Password</label>
+                                <div class="ui-input">
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="font-size:0.85rem;">🔒</span>
+                                        <span style="font-family:'JetBrains Mono';">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span>
+                                    </div>
+                                    <span style="color:#94a3b8; font-size:0.8rem;">👁️</span>
+                                </div>
+                            </div>
+
+                            <div class="ui-btn-primary" style="margin-top:8px; margin-bottom:18px;">
+                                Log In
+                            </div>
+
+                            <div style="text-align:center; font-size:0.60rem; color:#94a3b8; display:flex; align-items:center; justify-content:center; gap:4px;">
+                                <span>🛡️</span>
+                                <span>Authorized municipal drivers only</span>
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 2: TODA KYC ACCREDITATION (RegisterActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:12px 16px; gap:8px;">
+                            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:2px;">Driver Accreditation</div>
+                            <div style="font-size:0.62rem; color:#64748b; margin-bottom:8px;">Submit your tricycle franchise details for municipal approval.</div>
+
+                            <div class="ui-input-group">
+                                <label class="ui-label">Driver Legal Name</label>
+                                <div class="ui-input"><span style="font-weight:600;">Mario Agcaoili y Corpuz</span></div>
+                            </div>
+
+                            <div class="ui-input-group">
+                                <label class="ui-label">TODA Station &bull; Body Number</label>
+                                <div class="ui-input"><span style="font-weight:700; color:#1565c0;">Poblacion-Basilica TODA &bull; Body #042</span></div>
+                            </div>
+
+                            <div class="ui-input-group">
+                                <label class="ui-label">LTO Motorcycle Plate</label>
+                                <div class="ui-input"><span style="font-family:'JetBrains Mono'; font-weight:700;">9821-TG (Skygo 150)</span></div>
+                            </div>
+
+                            <!-- Uploaded Documents Preview -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:8px; background:#f8fafc;">
+                                <div style="font-size:0.62rem; font-weight:700; color:#0f172a; margin-bottom:4px;">MUNICIPAL KYC DOCUMENTS:</div>
+                                
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; font-size:0.60rem;">
+                                    <span>1. LTO Professional Driver's License:</span>
+                                    <span class="ui-badge-pill badge-green">✓ UPLOADED</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; font-size:0.60rem;">
+                                    <span>2. Piat Tricycle Franchise Permit:</span>
+                                    <span class="ui-badge-pill badge-green">✓ UPLOADED</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.60rem;">
+                                    <span>3. Barangay Clearance:</span>
+                                    <span class="ui-badge-pill badge-green">✓ UPLOADED</span>
+                                </div>
+                            </div>
+
+                            <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:6px; font-size:0.58rem; color:#92400e;">
+                                ⏳ <strong>Accreditation Status:</strong> Dossier submitted. The Municipal Transport Office will verify permits within 24 hours.
+                            </div>
+
+                            <div class="ui-btn-primary" style="margin-top:auto; font-size:0.72rem; padding:8px;">
+                                Submit Dossier for Review
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Upload Path:</strong> <code>public_html/admin/uploads/drivers/</code></span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Approval Lock:</strong> Driver cannot accept rides until accredited by Admin</span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 6 of 12 &bull; Driver Partner Authentication &amp; KYC</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p7">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>🛵 Driver Partner App &mdash; Duty Console &amp; Booking Radar</h1>
+                <p>Native Mobile Visual Layout &bull; Availability Switch, Shift Performance, and Real-time Incoming Dispatch Radar</p>
+            </div>
+            <div class="header-tag-pill">Page 7 of 12 &bull; Driver Partner App</div>
+        </div>
+
+        <div class="dual-phone-grid">
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 1: DRIVER DUTY CONSOLE (DriverDashboardFragment.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:12px 14px; gap:8px;">
+                            <!-- Duty Switch Card -->
+                            <div style="background:#ecfdf3; border:1.5px solid #10b981; border-radius:12px; padding:10px 12px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 10px rgba(16,185,129,0.15);">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div style="width:12px; height:12px; border-radius:50%; background:#10b981; animation:pulse 1s infinite;"></div>
+                                    <div>
+                                        <div style="font-weight:800; font-size:0.75rem; color:#065f46;">YOU ARE ONLINE</div>
+                                        <div style="font-size:0.58rem; color:#047857;">Ready to accept commuter requests</div>
+                                    </div>
+                                </div>
+                                <div style="background:#ffffff; border:1px solid #10b981; border-radius:20px; padding:4px 10px; font-size:0.62rem; font-weight:700; color:#ef4444; cursor:pointer;">
+                                    Go Offline
+                                </div>
+                            </div>
+
+                            <!-- Shift Metrics 4-Grid -->
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                                <div style="background:#f0f4ff; border:1px solid #90caf9; border-radius:8px; padding:8px;">
+                                    <div style="font-size:0.56rem; color:#64748b; font-weight:700;">TODAY'S CASH EARNINGS</div>
+                                    <div style="font-size:1.15rem; font-weight:800; color:#2454e0; font-family:'JetBrains Mono';">&#8369;384.00</div>
+                                    <div style="font-size:0.54rem; color:#12b76a; font-weight:700;">100% Retained</div>
+                                </div>
+                                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:8px;">
+                                    <div style="font-size:0.56rem; color:#64748b; font-weight:700;">COMPLETED TRIPS</div>
+                                    <div style="font-size:1.15rem; font-weight:800; color:#0f172a; font-family:'JetBrains Mono';">24 Rides</div>
+                                    <div style="font-size:0.54rem; color:#64748b;">Shift: 5.5 Hours</div>
+                                </div>
+                                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:8px;">
+                                    <div style="font-size:0.56rem; color:#64748b; font-weight:700;">COMMUTER RATING</div>
+                                    <div style="font-size:1.15rem; font-weight:800; color:#f59e0b; font-family:'JetBrains Mono';">★ 4.95</div>
+                                    <div style="font-size:0.54rem; color:#64748b;">Top rated driver</div>
+                                </div>
+                                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:8px;">
+                                    <div style="font-size:0.56rem; color:#64748b; font-weight:700;">TODA STATION</div>
+                                    <div style="font-size:0.80rem; font-weight:800; color:#0f172a;">Market TODA</div>
+                                    <div style="font-size:0.54rem; color:#12b76a; font-weight:700;">Body #042</div>
+                                </div>
+                            </div>
+
+                            <!-- Live Radar Pulse Map -->
+                            <div class="map-bg" style="height:190px;">
+                                <div class="map-road-1"></div>
+                                <div class="map-road-2"></div>
+                                <div class="map-pin" style="top:45%; left:45%; width:32px; height:32px; background:#10b981; color:#fff; font-size:1rem; border:2px solid #fff;">🛵</div>
+                                <div style="position:absolute; top:8px; left:8px; background:rgba(15,23,42,0.85); color:#ffffff; font-size:0.58rem; padding:3px 8px; border-radius:12px; font-weight:700;">
+                                    GPS RADAR ACTIVE &bull; PIAT CENTRO
+                                </div>
+                            </div>
+                        </div>
+
+                        
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <div class="nav-item-icon">📡</div>
+            <span>Radar</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">🛵</div>
+            <span>Rides</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">💰</div>
+            <span>Income</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">⚙️</div>
+            <span>Account</span>
+        </div>
+    </div>
+    <div class="home-indicator"></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 2: INCOMING REQUEST ALERT (RideRequestActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:14px; justify-content:center; background:rgba(15,23,42,0.65);">
+                            <!-- Incoming Alert Pop-up Modal -->
+                            <div style="background:#ffffff; border-radius:16px; padding:14px; box-shadow:0 16px 32px rgba(0,0,0,0.3); border:2px solid #2454e0;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                    <span class="ui-badge-pill badge-red" style="font-size:0.62rem;">🚨 NEW RIDE DISPATCH</span>
+                                    <span style="font-weight:800; font-size:0.75rem; color:#ef4444; font-family:'JetBrains Mono';">24s REMAINING</span>
+                                </div>
+
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                    <div>
+                                        <div style="font-size:0.90rem; font-weight:800; color:#0f172a;">Maria Cristina Santos</div>
+                                        <span class="ui-badge-pill badge-green" style="font-size:0.56rem;">🎓 STUDENT (20% OFF)</span>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div style="font-size:0.56rem; color:#64748b; font-weight:700;">TOTAL CASH FARE</div>
+                                        <div style="font-size:1.15rem; font-weight:800; color:#2454e0; font-family:'JetBrains Mono';">&#8369;16.00</div>
+                                    </div>
+                                </div>
+
+                                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; margin-bottom:12px;">
+                                    <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                                        <span style="font-size:0.75rem;">🟢</span>
+                                        <div>
+                                            <div style="font-size:0.54rem; color:#64748b; font-weight:700;">PICKUP LOCATION</div>
+                                            <div style="font-size:0.68rem; font-weight:800; color:#0f172a;">Piat Public Market (Front Gate) &bull; <strong>350m away</strong></div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="font-size:0.75rem;">🔴</span>
+                                        <div>
+                                            <div style="font-size:0.54rem; color:#64748b; font-weight:700;">DESTINATION</div>
+                                            <div style="font-size:0.68rem; font-weight:800; color:#0f172a;">Basilica Minore of Our Lady of Piat</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr 1.6fr; gap:8px;">
+                                    <div style="background:#f1f5f9; color:#475569; border-radius:20px; padding:9px; font-size:0.68rem; font-weight:700; text-align:center; cursor:pointer;">
+                                        Decline
+                                    </div>
+                                    <div class="ui-btn-success" style="font-size:0.75rem; padding:9px; cursor:pointer;">
+                                        ✓ ACCEPT RIDE
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Location Engine:</strong> Android Foreground Service with GPS tracking</span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Dispatch Window:</strong> 30-second priority countdown before fallback</span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 7 of 12 &bull; Driver Partner Duty Console &amp; Booking Radar</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p8">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>🛵 Driver Partner App &mdash; Turn Navigation &amp; Fare Settlement</h1>
+                <p>Native Mobile Visual Layout &bull; Active Trip Routing, Arrival Triggers, and In-Transit Cash Collection</p>
+            </div>
+            <div class="header-tag-pill">Page 8 of 12 &bull; Driver Partner App</div>
+        </div>
+
+        <div class="dual-phone-grid">
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 1: NAVIGATION TO PICKUP (ActiveRideActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content">
+                            <!-- Turn Navigation Header Bar -->
+                            <div style="background:#0f172a; color:#ffffff; padding:10px 14px; display:flex; align-items:center; gap:10px;">
+                                <div style="font-size:1.4rem;">↱</div>
+                                <div>
+                                    <div style="font-size:0.75rem; font-weight:800;">Turn Right in 100 meters</div>
+                                    <div style="font-size:0.58rem; color:#94a3b8;">Towards Piat Public Market Gate</div>
+                                </div>
+                            </div>
+
+                            <!-- Map Navigation Surface -->
+                            <div class="map-bg" style="flex:1; border-radius:0;">
+                                <div class="map-road-1"></div>
+                                <div class="map-road-2"></div>
+                                <div class="route-polyline" style="width:180px; transform:rotate(-45deg); top:40%; left:20%;"></div>
+                                <div class="map-pin" style="top:32%; left:58%; width:28px; height:28px; background:#12b76a; color:#fff; font-size:0.8rem;">📍</div>
+                                <div class="map-pin" style="top:58%; left:30%; width:32px; height:32px; background:#2454e0; color:#fff; font-size:1rem; border:2px solid #fff;">🛵</div>
+                            </div>
+
+                            <!-- Passenger Pickup Confirmation Drawer -->
+                            <div style="background:#ffffff; border-top:1px solid #cbd5e1; padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <div style="font-weight:800; font-size:0.80rem; color:#0f172a;">Maria Cristina Santos</div>
+                                        <div style="font-size:0.60rem; color:#64748b;">Pickup: Market Front Gate &bull; 0998-765-4321</div>
+                                    </div>
+                                    <div style="display:flex; gap:6px;">
+                                        <div class="ui-btn-outline" style="padding:4px 8px; font-size:0.62rem;">📞 Call</div>
+                                        <div class="ui-btn-outline" style="padding:4px 8px; font-size:0.62rem;">💬 SMS</div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-btn-primary" style="background:#12b76a; font-size:0.72rem; padding:8px;">
+                                    📍 I Have Arrived at Pickup Spot
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 2: CASH FARE SETTLEMENT (ActiveRideActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:14px; justify-content:flex-start; gap:8px;">
+                            <span class="ui-badge-pill badge-purple" style="align-self:flex-start;">DESTINATION ARRIVED</span>
+                            <div style="font-size:1.1rem; font-weight:800; color:#0f172a;">Trip Complete &bull; Collect Fare</div>
+                            <div style="font-size:0.64rem; color:#64748b; margin-bottom:4px;">Basilica Minore of Our Lady of Piat</div>
+
+                            <!-- Fare Settlement Panel -->
+                            <div style="border:1.5px solid #2454e0; background:#f0f4ff; border-radius:12px; padding:12px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                    <span style="font-weight:800; font-size:0.70rem; color:#0d47a1;">MUNICIPAL FARE AUDIT</span>
+                                    <span class="ui-badge-pill badge-green">RA 11314 20% DISCOUNT</span>
+                                </div>
+
+                                <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:#334155; margin-bottom:3px;">
+                                    <span>Standard Base Commute:</span>
+                                    <span style="font-family:'JetBrains Mono';">&#8369;20.00</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:#047857; font-weight:700; margin-bottom:6px;">
+                                    <span>Student 20% Discount Deduction:</span>
+                                    <span style="font-family:'JetBrains Mono';">-&#8369;4.00</span>
+                                </div>
+
+                                <div style="border-top:1px dashed #90caf9; padding-top:6px; display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-weight:800; font-size:0.78rem; color:#0d47a1;">Total Cash to Collect:</span>
+                                    <span style="font-size:1.35rem; font-weight:800; color:#2454e0; font-family:'JetBrains Mono';">&#8369;16.00</span>
+                                </div>
+                            </div>
+
+                            <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px; font-size:0.60rem; color:#92400e; line-height:1.3;">
+                                ⚠️ <strong>Verification Check:</strong> Please ensure you have visually verified the commuter's valid student ID prior to completing fare transaction.
+                            </div>
+
+                            <div class="ui-btn-primary" style="background:#12b76a; font-size:0.76rem; padding:10px; margin-top:auto;">
+                                ✓ Confirm &#8369;16.00 Received &amp; Finish Trip
+                            </div>
+                        </div>
+
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Driver Retention:</strong> 100% of the ₱16 cash fare is retained by the driver partner</span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>State Update:</strong> Triggers instant API sync to Passenger app</span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 8 of 12 &bull; Driver Partner Active Trip &amp; Fare Collection</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p9">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>🛵 Driver Partner App &mdash; Shift Activity &amp; Income Analytics</h1>
+                <p>Native Mobile Visual Layout &bull; Completed Rides Ledger, Daily Cash Breakdown, and Zero-Platform-Fee Accounting</p>
+            </div>
+            <div class="header-tag-pill">Page 9 of 12 &bull; Driver Partner App</div>
+        </div>
+
+        <div class="dual-phone-grid">
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 1: COMPLETED TRIPS LOG (DriverActivityFragment.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:12px 14px; gap:8px;">
+                            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:2px;">Today's Completed Trips</div>
+                            <div style="font-size:0.62rem; color:#64748b; margin-bottom:6px;">Showing 24 rides completed on today's shift.</div>
+
+                            <!-- Trip Item 1 -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:9px 10px; background:#ffffff;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                                    <span style="font-family:'JetBrains Mono'; font-weight:700; font-size:0.68rem; color:#1565c0;">#BK-1092</span>
+                                    <span class="ui-badge-pill badge-green">&#8369;16.00 CASH</span>
+                                </div>
+                                <div style="font-weight:700; font-size:0.72rem; color:#0f172a;">Market &rarr; Basilica Minore</div>
+                                <div style="font-size:0.58rem; color:#64748b;">09:14 AM &bull; Maria Santos (Student &bull; ★ 5.0)</div>
+                            </div>
+
+                            <!-- Trip Item 2 -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:9px 10px; background:#ffffff;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                                    <span style="font-family:'JetBrains Mono'; font-weight:700; font-size:0.68rem; color:#1565c0;">#BK-1090</span>
+                                    <span class="ui-badge-pill badge-blue">&#8369;20.00 CASH</span>
+                                </div>
+                                <div style="font-weight:700; font-size:0.72rem; color:#0f172a;">Basilica &rarr; Minanga Bridge</div>
+                                <div style="font-size:0.58rem; color:#64748b;">08:48 AM &bull; Roberto Garcia (Regular &bull; ★ 5.0)</div>
+                            </div>
+
+                            <!-- Trip Item 3 -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:9px 10px; background:#ffffff;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                                    <span style="font-family:'JetBrains Mono'; font-weight:700; font-size:0.68rem; color:#1565c0;">#BK-1087</span>
+                                    <span class="ui-badge-pill badge-green">&#8369;16.00 CASH</span>
+                                </div>
+                                <div style="font-weight:700; font-size:0.72rem; color:#0f172a;">Centro &rarr; CSU Piat Campus</div>
+                                <div style="font-size:0.58rem; color:#64748b;">08:22 AM &bull; Mark Dela Cruz (Student &bull; ★ 4.8)</div>
+                            </div>
+                        </div>
+
+                        
+    <div class="bottom-nav">
+        <div class="nav-item ">
+            <div class="nav-item-icon">📡</div>
+            <span>Radar</span>
+        </div>
+        <div class="nav-item active">
+            <div class="nav-item-icon">🛵</div>
+            <span>Rides</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">💰</div>
+            <span>Income</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">⚙️</div>
+            <span>Account</span>
+        </div>
+    </div>
+    <div class="home-indicator"></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="phone-column">
+                <div class="phone-title-badge">SCREEN 2: INCOME ANALYTICS (DriverIncomeReportActivity.kt)</div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        
+    <div class="status-bar ">
+        <span>09:41</span>
+        <div class="dynamic-island">
+            <div class="notch-sensor"></div>
+            <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>100% 🔋</span>
+        </div>
+    </div>
+
+
+                        <div class="screen-content" style="padding:14px 16px; gap:8px;">
+                            <div style="font-size:1.05rem; font-weight:800; color:#0f172a; margin-bottom:2px;">Daily Income Report</div>
+                            <div style="font-size:0.62rem; color:#64748b; margin-bottom:6px;">Shift: Thursday, Sep 24, 2026</div>
+
+                            <div style="background:#ecfdf3; border:1.5px solid #10b981; border-radius:12px; padding:12px; text-align:center;">
+                                <div style="font-size:0.60rem; color:#065f46; font-weight:700;">TOTAL NET SHIFT TAKE-HOME</div>
+                                <div style="font-size:1.5rem; font-weight:800; color:#047857; font-family:'JetBrains Mono';">&#8369;384.00</div>
+                                <div style="font-size:0.58rem; color:#065f46; font-weight:600;">100% Cash in hand &bull; 0% Platform Deduction</div>
+                            </div>
+
+                            <!-- Income Distribution -->
+                            <div style="border:1px solid #cbd5e1; border-radius:10px; padding:10px; background:#ffffff;">
+                                <div style="font-weight:800; font-size:0.68rem; color:#0f172a; margin-bottom:6px;">SHIFT FARE TALLY:</div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.64rem; margin-bottom:4px;">
+                                    <span>Regular Rides (12 @ &#8369;20.00):</span>
+                                    <span style="font-family:'JetBrains Mono'; font-weight:700;">&#8369;240.00</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.64rem; margin-bottom:4px; color:#1565c0;">
+                                    <span>Discounted Rides (9 @ &#8369;16.00):</span>
+                                    <span style="font-family:'JetBrains Mono'; font-weight:700;">&#8369;144.00</span>
+                                </div>
+                                <div style="border-top:1px dashed #cbd5e1; padding-top:6px; display:flex; justify-content:space-between; font-weight:800; font-size:0.72rem; color:#0f172a;">
+                                    <span>Gross Cash Total:</span>
+                                    <span style="font-family:'JetBrains Mono';">&#8369;384.00</span>
+                                </div>
+                            </div>
+
+                            <div class="ui-btn-primary" style="margin-top:auto; font-size:0.72rem; padding:8px;">
+                                📄 Export Shift Receipt (PDF)
+                            </div>
+                        </div>
+
+                        
+    <div class="bottom-nav">
+        <div class="nav-item ">
+            <div class="nav-item-icon">📡</div>
+            <span>Radar</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">🛵</div>
+            <span>Rides</span>
+        </div>
+        <div class="nav-item active">
+            <div class="nav-item-icon">💰</div>
+            <span>Income</span>
+        </div>
+        <div class="nav-item ">
+            <div class="nav-item-icon">⚙️</div>
+            <span>Account</span>
+        </div>
+    </div>
+    <div class="home-indicator"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Income Algorithm:</strong> <code>(regular_count * 20) + (discounted_count * 16)</code></span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Driver Take-home:</strong> 100% remitted directly in cash</span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 9 of 12 &bull; Driver Partner Activity &amp; Shift Income</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p10">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>💻 Municipal Admin Web Portal &mdash; Command Center &amp; Live Dispatch</h1>
+                <p>Desktop Browser Mockup &bull; Operational Dispatch Radar, Fleet Availability, and Real-time Booking Queue (dashboard.php)</p>
+            </div>
+            <div class="header-tag-pill">Page 10 of 12 &bull; Municipal Admin Portal</div>
+        </div>
+
+        <!-- Desktop Browser Window Mockup -->
+        <div class="browser-window">
+            <div class="browser-chrome">
+                <div class="chrome-dots">
+                    <div class="chrome-dot dot-red"></div>
+                    <div class="chrome-dot dot-yellow"></div>
+                    <div class="chrome-dot dot-green"></div>
+                </div>
+                <div class="chrome-url-bar">
+                    <span>🔒</span>
+                    <span>https://piatmoveadmin.online/admin/dashboard.php</span>
+                </div>
+            </div>
+
+            <div class="browser-body">
+                <!-- Sidebar -->
+                <div class="admin-sidebar">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px; padding:4px 6px; margin-bottom:14px;">
+                            <span style="font-size:1.3rem;">🛵</span>
+                            <div>
+                                <div style="font-weight:800; font-size:0.80rem; letter-spacing:0.5px;">PiatMove</div>
+                                <div style="font-size:0.54rem; color:#94a3b8;">Municipal Admin</div>
+                            </div>
+                        </div>
+
+                        <div class="admin-nav-item active">📊 Dashboard</div>
+                        <div class="admin-nav-item">🛵 Drivers (54)</div>
+                        <div class="admin-nav-item">📋 Bookings (1,482)</div>
+                        <div class="admin-nav-item">👥 Commuters (2,940)</div>
+                        <div class="admin-nav-item">📈 Reports &amp; Subsidy</div>
+                        <div class="admin-nav-item">⚙️ Fare Matrix</div>
+                    </div>
+
+                    <div style="border-top:1px solid #1e293b; padding-top:8px;">
+                        <div style="font-size:0.62rem; color:#94a3b8;">Logged in as:</div>
+                        <div style="font-size:0.70rem; font-weight:700; color:#fff;">Admin Office</div>
+                        <div style="font-size:0.56rem; color:#10b981; margin-top:2px;">🟢 Hostinger Production</div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="admin-content-area">
+                    <div class="admin-top-bar">
+                        <div style="font-weight:800; font-size:0.85rem; color:#0f172a;">Executive Dispatch Command Center</div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="ui-badge-pill badge-green">LIVE FLEET SYNC (5s)</span>
+                            <div class="ui-btn-primary" style="padding:4px 10px; font-size:0.65rem;">Broadcast Alert</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-main-scroll">
+                        <!-- KPI Metric Cards -->
+                        <div class="admin-kpi-grid">
+                            <div class="admin-kpi-card">
+                                <span style="font-size:0.58rem; color:#64748b; font-weight:700;">TOTAL COMMUTES TODAY</span>
+                                <span style="font-size:1.15rem; font-weight:800; color:#0f172a; font-family:'JetBrains Mono';">1,482</span>
+                                <span style="font-size:0.54rem; color:#12b76a; font-weight:700;">&uarr; +14% vs yesterday</span>
+                            </div>
+                            <div class="admin-kpi-card" style="border-left-color:#12b76a;">
+                                <span style="font-size:0.58rem; color:#64748b; font-weight:700;">ACTIVE ON-DUTY TRIKES</span>
+                                <span style="font-size:1.15rem; font-weight:800; color:#12b76a; font-family:'JetBrains Mono';">38 Units</span>
+                                <span style="font-size:0.54rem; color:#64748b;">4 TODA Terminals</span>
+                            </div>
+                            <div class="admin-kpi-card" style="border-left-color:#f59e0b;">
+                                <span style="font-size:0.58rem; color:#64748b; font-weight:700;">REGISTERED COMMUTERS</span>
+                                <span style="font-size:1.15rem; font-weight:800; color:#0f172a; font-family:'JetBrains Mono';">2,940</span>
+                                <span style="font-size:0.54rem; color:#64748b;">Piat residents</span>
+                            </div>
+                            <div class="admin-kpi-card" style="border-left-color:#7c3aed;">
+                                <span style="font-size:0.58rem; color:#64748b; font-weight:700;">MUNICIPAL FARE TURNOVER</span>
+                                <span style="font-size:1.15rem; font-weight:800; color:#2454e0; font-family:'JetBrains Mono';">&#8369;26,480.00</span>
+                                <span style="font-size:0.54rem; color:#64748b;">Daily economy</span>
+                            </div>
+                        </div>
+
+                        <!-- TODA Terminal Status Strip -->
+                        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
+                            <div style="font-size:0.62rem; font-weight:800; color:#0d47a1;">TERMINAL STATUS:</div>
+                            <div style="font-size:0.62rem;">📍 <strong>Market TODA:</strong> 14 Online / 2 On-Trip</div>
+                            <div style="font-size:0.62rem;">📍 <strong>Basilica TODA:</strong> 12 Online / 4 On-Trip</div>
+                            <div style="font-size:0.62rem;">📍 <strong>Maguilling TODA:</strong> 8 Online / 1 On-Trip</div>
+                            <div style="font-size:0.62rem;">📍 <strong>Minanga TODA:</strong> 4 Online / 0 On-Trip</div>
+                        </div>
+
+                        <!-- Real-time Live Dispatch Table -->
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Ref #</th>
+                                    <th>Commuter</th>
+                                    <th>Pickup &rarr; Destination</th>
+                                    <th>Driver / Unit</th>
+                                    <th>Fare Type</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-family:'JetBrains Mono'; font-weight:700;">#BK-1092</td>
+                                    <td>Maria Cristina Santos</td>
+                                    <td>Market &rarr; Basilica Minore</td>
+                                    <td>Mario Agcaoili (042)</td>
+                                    <td><span class="ui-badge-pill badge-green">STUDENT (20%)</span></td>
+                                    <td style="font-family:'JetBrains Mono'; font-weight:700; color:#1565c0;">&#8369;16.00</td>
+                                    <td><span class="ui-badge-pill badge-blue">ACCEPTED</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family:'JetBrains Mono'; font-weight:700;">#BK-1091</td>
+                                    <td>Roberto D. Garcia</td>
+                                    <td>CSU Piat &rarr; Poblacion Centro</td>
+                                    <td>Searching Dispatch...</td>
+                                    <td><span class="ui-badge-pill badge-blue">REGULAR</span></td>
+                                    <td style="font-family:'JetBrains Mono'; font-weight:700; color:#1565c0;">&#8369;20.00</td>
+                                    <td><span class="ui-badge-pill badge-amber">PENDING</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family:'JetBrains Mono'; font-weight:700;">#BK-1090</td>
+                                    <td>Elena Fernandez</td>
+                                    <td>Basilica &rarr; Minanga Bridge</td>
+                                    <td>Danilo Pascual (019)</td>
+                                    <td><span class="ui-badge-pill badge-amber">SENIOR (20%)</span></td>
+                                    <td style="font-family:'JetBrains Mono'; font-weight:700; color:#1565c0;">&#8369;16.00</td>
+                                    <td><span class="ui-badge-pill badge-purple">IN-TRANSIT</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family:'JetBrains Mono'; font-weight:700;">#BK-1089</td>
+                                    <td>Eduardo Ramos</td>
+                                    <td>Municipal Hall &rarr; Baung</td>
+                                    <td>Efren Rivera (035)</td>
+                                    <td><span class="ui-badge-pill badge-blue">REGULAR</span></td>
+                                    <td style="font-family:'JetBrains Mono'; font-weight:700; color:#1565c0;">&#8369;20.00</td>
+                                    <td><span class="ui-badge-pill badge-green">COMPLETED</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Admin File:</strong> <code>C:/xampp/htdocs/PiatMoveAdmin/dashboard.php</code></span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Production URL:</strong> <code>https://piatmoveadmin.online/admin/</code></span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 10 of 12 &bull; Municipal Admin Command Center</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p11">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>💻 Municipal Admin Web Portal &mdash; Driver Franchise &amp; KYC Audit</h1>
+                <p>Desktop Browser Mockup &bull; Operator Verification Hub, LTO License Audit, and Franchise Certification (drivers.php)</p>
+            </div>
+            <div class="header-tag-pill">Page 11 of 12 &bull; Municipal Admin Portal</div>
+        </div>
+
+        <div class="browser-window">
+            <div class="browser-chrome">
+                <div class="chrome-dots">
+                    <div class="chrome-dot dot-red"></div>
+                    <div class="chrome-dot dot-yellow"></div>
+                    <div class="chrome-dot dot-green"></div>
+                </div>
+                <div class="chrome-url-bar">
+                    <span>🔒</span>
+                    <span>https://piatmoveadmin.online/admin/drivers.php</span>
+                </div>
+            </div>
+
+            <div class="browser-body">
+                <div class="admin-sidebar">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px; padding:4px 6px; margin-bottom:14px;">
+                            <span style="font-size:1.3rem;">🛵</span>
+                            <div>
+                                <div style="font-weight:800; font-size:0.80rem; letter-spacing:0.5px;">PiatMove</div>
+                                <div style="font-size:0.54rem; color:#94a3b8;">Municipal Admin</div>
+                            </div>
+                        </div>
+
+                        <div class="admin-nav-item">📊 Dashboard</div>
+                        <div class="admin-nav-item active">🛵 Drivers (54)</div>
+                        <div class="admin-nav-item">📋 Bookings (1,482)</div>
+                        <div class="admin-nav-item">👥 Commuters (2,940)</div>
+                        <div class="admin-nav-item">📈 Reports &amp; Subsidy</div>
+                        <div class="admin-nav-item">⚙️ Fare Matrix</div>
+                    </div>
+                </div>
+
+                <div class="admin-content-area">
+                    <div class="admin-top-bar">
+                        <div style="font-weight:800; font-size:0.85rem; color:#0f172a;">Driver Franchise &amp; KYC Accreditation Registry</div>
+                        <span class="ui-badge-pill badge-amber">3 PENDING MUNICIPAL AUDIT</span>
+                    </div>
+
+                    <div class="admin-main-scroll">
+                        <!-- Drivers Table -->
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Driver Name</th>
+                                    <th>Contact</th>
+                                    <th>TODA</th>
+                                    <th>Body #</th>
+                                    <th>Plate #</th>
+                                    <th>KYC Status</th>
+                                    <th>Accreditation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background:#eff6ff;">
+                                    <td><strong>Mario Agcaoili</strong></td>
+                                    <td>0915-889-4412</td>
+                                    <td>Poblacion</td>
+                                    <td style="font-family:'JetBrains Mono'; font-weight:700;">#042</td>
+                                    <td>9821-TG</td>
+                                    <td><span class="ui-badge-pill badge-green">3/3 UPLOADED</span></td>
+                                    <td><span class="ui-badge-pill badge-amber">AUDIT ACTIVE</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Rodrigo Dela Cruz</td>
+                                    <td>0920-112-9988</td>
+                                    <td>Maguilling</td>
+                                    <td style="font-family:'JetBrains Mono';">#018</td>
+                                    <td>7742-BG</td>
+                                    <td><span class="ui-badge-pill badge-amber">2/3 UPLOADED</span></td>
+                                    <td><span class="ui-badge-pill badge-amber">PENDING DOCS</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Arnel Manalo</td>
+                                    <td>0917-334-5566</td>
+                                    <td>Minanga</td>
+                                    <td style="font-family:'JetBrains Mono';">#029</td>
+                                    <td>5519-TG</td>
+                                    <td><span class="ui-badge-pill badge-green">3/3 UPLOADED</span></td>
+                                    <td><span class="ui-badge-pill badge-green">ACCREDITED</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Visual Modal Inspection Overlay Inside Admin View -->
+                        <div style="background:#ffffff; border:1.5px solid #2454e0; border-radius:10px; padding:12px; box-shadow:0 8px 20px rgba(0,0,0,0.08);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <div style="font-weight:800; font-size:0.75rem; color:#0d47a1;">INSPECTING DOSSIER: MARIO AGCAOILI (BODY #042 &bull; 9821-TG)</div>
+                                <span class="ui-badge-pill badge-blue">TODA VERIFIED</span>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px;">
+                                <div style="border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center; background:#f8fafc;">
+                                    <div style="font-size:0.60rem; font-weight:700; color:#1565c0; margin-bottom:4px;">LTO DRIVER'S LICENSE</div>
+                                    <div style="height:55px; background:#e2e8f0; border:1px dashed #94a3b8; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.58rem; color:#475569;">
+                                        📄 license_042.jpg<br>(Valid: 2028)
+                                    </div>
+                                    <span class="ui-badge-pill badge-green" style="margin-top:4px;">✓ VALID PRO</span>
+                                </div>
+                                <div style="border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center; background:#f8fafc;">
+                                    <div style="font-size:0.60rem; font-weight:700; color:#1565c0; margin-bottom:4px;">MUNICIPAL FRANCHISE</div>
+                                    <div style="height:55px; background:#e2e8f0; border:1px dashed #94a3b8; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.58rem; color:#475569;">
+                                        📄 franchise_042.pdf<br>(Permit #2026-TODA-042)
+                                    </div>
+                                    <span class="ui-badge-pill badge-green" style="margin-top:4px;">✓ LGU ACTIVE</span>
+                                </div>
+                                <div style="border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center; background:#f8fafc;">
+                                    <div style="font-size:0.60rem; font-weight:700; color:#1565c0; margin-bottom:4px;">BARANGAY CLEARANCE</div>
+                                    <div style="height:55px; background:#e2e8f0; border:1px dashed #94a3b8; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.58rem; color:#475569;">
+                                        📄 brgy_042.jpg<br>(Brgy. Poblacion I)
+                                    </div>
+                                    <span class="ui-badge-pill badge-green" style="margin-top:4px;">✓ CLEARED</span>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="font-size:0.60rem; color:#64748b;">Verification triggers automated SMS notification to driver.</div>
+                                <div style="display:flex; gap:8px;">
+                                    <div class="ui-btn-outline" style="border-color:#ef4444; color:#ef4444; padding:4px 12px; font-size:0.65rem;">Reject Dossier</div>
+                                    <div class="ui-btn-success" style="padding:4px 16px; font-size:0.65rem;">✓ Approve &amp; Accredit Driver</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Admin File:</strong> <code>C:/xampp/htdocs/PiatMoveAdmin/drivers.php</code></span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Approval Action:</strong> Updates <code>driver_info.approval_status = 'approved'</code></span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 11 of 12 &bull; Municipal Driver Accreditation &amp; KYC Audit</span>
+        </div>
+    </section>
+
+    <section class="prototype-page" id="p12">
+        <div class="page-header-row">
+            <div class="header-title-box">
+                <h1>💻 Municipal Admin Web Portal &mdash; Fare Matrix &amp; Subsidy Analytics</h1>
+                <p>Desktop Browser Mockup &bull; Master Booking Audit Ledger, Statutory Commuter Social Subsidy Analytics (report.php)</p>
+            </div>
+            <div class="header-tag-pill">Page 12 of 12 &bull; Municipal Admin Portal</div>
+        </div>
+
+        <div class="browser-window">
+            <div class="browser-chrome">
+                <div class="chrome-dots">
+                    <div class="chrome-dot dot-red"></div>
+                    <div class="chrome-dot dot-yellow"></div>
+                    <div class="chrome-dot dot-green"></div>
+                </div>
+                <div class="chrome-url-bar">
+                    <span>🔒</span>
+                    <span>https://piatmoveadmin.online/admin/report.php</span>
+                </div>
+            </div>
+
+            <div class="browser-body">
+                <div class="admin-sidebar">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px; padding:4px 6px; margin-bottom:14px;">
+                            <span style="font-size:1.3rem;">🛵</span>
+                            <div>
+                                <div style="font-weight:800; font-size:0.80rem; letter-spacing:0.5px;">PiatMove</div>
+                                <div style="font-size:0.54rem; color:#94a3b8;">Municipal Admin</div>
+                            </div>
+                        </div>
+
+                        <div class="admin-nav-item">📊 Dashboard</div>
+                        <div class="admin-nav-item">🛵 Drivers (54)</div>
+                        <div class="admin-nav-item">📋 Bookings (1,482)</div>
+                        <div class="admin-nav-item">👥 Commuters (2,940)</div>
+                        <div class="admin-nav-item active">📈 Reports &amp; Subsidy</div>
+                        <div class="admin-nav-item">⚙️ Fare Matrix</div>
+                    </div>
+                </div>
+
+                <div class="admin-content-area">
+                    <div class="admin-top-bar">
+                        <div style="font-weight:800; font-size:0.85rem; color:#0f172a;">Statutory Commuter Fare Subsidy &amp; Trip Analytics</div>
+                        <div style="display:flex; gap:6px;">
+                            <div class="ui-btn-outline" style="padding:3px 10px; font-size:0.62rem;">Export CSV</div>
+                            <div class="ui-btn-primary" style="padding:3px 12px; font-size:0.62rem;">Export Official PDF</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-main-scroll">
+                        <!-- Summary 3-Grid -->
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+                            <div class="admin-kpi-card" style="border-left-color:#2454e0;">
+                                <span style="font-size:0.58rem; color:#64748b; font-weight:700;">DAILY PASSENGERS TRANSPORTED</span>
+                                <span style="font-size:1.2rem; font-weight:800; color:#2454e0; font-family:'JetBrains Mono';">1,482 Commuters</span>
+                                <span style="font-size:0.54rem; color:#64748b;">Peak: 07:00 - 09:00 AM</span>
+                            </div>
+                            <div class="admin-kpi-card" style="border-left-color:#12b76a;">
+                                <span style="font-size:0.58rem; color:#64748b; font-weight:700;">TOTAL SOCIAL FARE SAVINGS</span>
+                                <span style="font-size:1.2rem; font-weight:800; color:#12b76a; font-family:'JetBrains Mono';">&#8369;4,184.00</span>
+                                <span style="font-size:0.54rem; color:#047857;">Mandated by Republic Acts</span>
+                            </div>
+                            <div class="admin-kpi-card" style="border-left-color:#f59e0b;">
+                                <span style="font-size:0.58rem; color:#64748b; font-weight:700;">DRIVER REVENUE RETENTION</span>
+                                <span style="font-size:1.2rem; font-weight:800; color:#f59e0b; font-family:'JetBrains Mono';">100%</span>
+                                <span style="font-size:0.54rem; color:#64748b;">&#8369;0.00 municipal deductions</span>
+                            </div>
+                        </div>
+
+                        <!-- Beneficiary Distribution Bar Visualization -->
+                        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px;">
+                            <div style="font-weight:800; font-size:0.72rem; color:#0d47a1; margin-bottom:6px;">STATUTORY COMMUTE BENEFICIARY DISTRIBUTION (SEPTEMBER 2026):</div>
+                            
+                            <div style="margin-bottom:6px;">
+                                <div style="display:flex; justify-content:space-between; font-size:0.62rem; margin-bottom:2px;">
+                                    <span>🎓 Students (CSU Piat, High Schools) &bull; 20% Discount</span>
+                                    <span style="font-weight:700; color:#2454e0;">48.2% (714 trips &bull; &#8369;11,424.00)</span>
+                                </div>
+                                <div style="width:100%; height:8px; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+                                    <div style="width:48.2%; height:100%; background:#2454e0;"></div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom:6px;">
+                                <div style="display:flex; justify-content:space-between; font-size:0.62rem; margin-bottom:2px;">
+                                    <span>👴 Senior Citizens (Piat OSCA) &bull; 20% Discount</span>
+                                    <span style="font-weight:700; color:#f59e0b;">24.6% (365 trips &bull; &#8369;5,840.00)</span>
+                                </div>
+                                <div style="width:100%; height:8px; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+                                    <div style="width:24.6%; height:100%; background:#f59e0b;"></div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom:6px;">
+                                <div style="display:flex; justify-content:space-between; font-size:0.62rem; margin-bottom:2px;">
+                                    <span>♿ PWDs &amp; Expectant Mothers &bull; 20% Discount</span>
+                                    <span style="font-weight:700; color:#7c3aed;">11.8% (175 trips &bull; &#8369;2,800.00)</span>
+                                </div>
+                                <div style="width:100%; height:8px; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+                                    <div style="width:11.8%; height:100%; background:#7c3aed;"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.62rem; margin-bottom:2px;">
+                                    <span>👤 Regular Commuters &bull; Standard &#8369;20 Base Tariff</span>
+                                    <span style="font-weight:700; color:#0f172a;">15.4% (228 trips &bull; &#8369;4,560.00)</span>
+                                </div>
+                                <div style="width:100%; height:8px; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+                                    <div style="width:15.4%; height:100%; background:#0f172a;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Regulatory Tariff Compliance Notice -->
+                        <div style="background:#f0f4ff; border:1px solid #90caf9; border-radius:8px; padding:8px 12px; font-size:0.62rem; color:#0d47a1; line-height:1.4;">
+                            🏛️ <strong>Regulatory Compliance:</strong> Sangguniang Bayan of Piat Municipal Ordinance No. 2026-04 strictly fixes base fares at <strong>&#8369;20.00</strong> and mandated discounts at <strong>&#8369;16.00</strong>. Overcharging is subject to TODA franchise suspension.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-annotations">
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Report File:</strong> <code>C:/xampp/htdocs/PiatMoveAdmin/report.php</code></span></div>
+            <div class="anno-item"><div class="anno-dot"></div><span><strong>Tariff Policy:</strong> Aligns with Municipal Ordinance No. 2026-04</span></div>
+        </div>
+
+        <div class="proto-footer">
+            <span class="proto-footer-brand">PiatMove Mobility System Visual Specification</span>
+            <span>Page 12 of 12 &bull; Fare Matrix &amp; Regulatory Subsidy Analytics</span>
+        </div>
+    </section>
+
+    </main>
+
+    <script>
+        function jumpToPage(pageId) {
+            const el = document.getElementById(pageId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>

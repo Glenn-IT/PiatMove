@@ -1,0 +1,781 @@
+const fs = require('fs');
+const path = require('path');
+
+const targetHtml = path.resolve(__dirname, '..', 'prototype_piatmove.html');
+console.log('Generating 12-page High-Fidelity Visual UI Prototype at:', targetHtml);
+
+let html = [];
+
+// ==========================================
+// CSS STYLES & HEAD TEMPLATE
+// ==========================================
+html.push(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PiatMove - Visual UI/UX Prototype Specification (Blue Theme)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1565c0;
+            --primary-dark: #0d47a1;
+            --primary-light: #e3f2fd;
+            --electric-blue: #2454e0;
+            --accent-green: #12b76a;
+            --accent-green-bg: #ecfdf3;
+            --accent-amber: #f59e0b;
+            --accent-amber-bg: #fffbeb;
+            --accent-red: #ef4444;
+            --accent-red-bg: #fef2f2;
+            --accent-purple: #7c3aed;
+            --accent-purple-bg: #f5f3ff;
+            --slate-900: #0f172a;
+            --slate-700: #334155;
+            --slate-500: #64748b;
+            --slate-300: #cbd5e1;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --border-color: #90caf9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: #1e293b;
+            color: #0f172a;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Top Navigation Bar for Web Preview */
+        .no-print-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            background: #0a192f;
+            color: #ffffff;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border-bottom: 2px solid var(--electric-blue);
+        }
+
+        .toolbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .toolbar-badge {
+            background: var(--electric-blue);
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toolbar-btn {
+            background: #1565c0;
+            color: #fff;
+            border: 1px solid #90caf9;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.80rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            background: #1976d2;
+        }
+
+        .toolbar-btn-print {
+            background: #12b76a;
+            border-color: #86efac;
+            font-weight: 700;
+        }
+        .toolbar-btn-print:hover {
+            background: #0e9355;
+        }
+
+        .toolbar-select {
+            background: #040d1a;
+            color: #fff;
+            border: 1px solid #1976d2;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.80rem;
+        }
+
+        /* Printable Canvas */
+        .prototype-canvas {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 60px;
+            gap: 30px;
+        }
+
+        .prototype-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 10mm 12mm 9mm 12mm;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            page-break-after: always;
+            break-after: page;
+        }
+
+        /* Page Header */
+        .page-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+        }
+
+        .header-title-box h1 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-title-box p {
+            font-size: 0.68rem;
+            color: var(--slate-500);
+            font-weight: 600;
+            margin-top: 1px;
+        }
+
+        .header-tag-pill {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border: 1px solid var(--border-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.64rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* Dual Phone Mockup Layout */
+        .dual-phone-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            justify-items: center;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .phone-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .phone-title-badge {
+            background: #f0f4ff;
+            border: 1px solid #90caf9;
+            color: #1565c0;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+
+        /* Realistic Smartphone Device Mockup */
+        .phone-mockup {
+            width: 320px;
+            height: 610px;
+            background: #0f172a;
+            border-radius: 40px;
+            padding: 9px;
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22), 0 0 0 2px #334155;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            font-size: 0.72rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Dynamic Island & Status Bar */
+        .status-bar {
+            height: 32px;
+            padding: 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #0f172a;
+            position: relative;
+            z-index: 20;
+            flex-shrink: 0;
+            background: transparent;
+        }
+
+        .status-bar.white-text {
+            color: #ffffff;
+        }
+
+        .dynamic-island {
+            width: 78px;
+            height: 18px;
+            background: #000000;
+            border-radius: 12px;
+            position: absolute;
+            left: 50%;
+            top: 6px;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7px;
+        }
+
+        .notch-camera {
+            width: 7px;
+            height: 7px;
+            background: #111e38;
+            border-radius: 50%;
+            border: 1px solid #1e293b;
+        }
+
+        .notch-sensor {
+            width: 5px;
+            height: 5px;
+            background: #082f49;
+            border-radius: 50%;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.65rem;
+        }
+
+        /* Screen Content Body */
+        .screen-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #ffffff;
+            position: relative;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            height: 48px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 8px;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: var(--slate-500);
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--electric-blue);
+            font-weight: 700;
+        }
+
+        .nav-item-icon {
+            font-size: 0.95rem;
+        }
+
+        .home-indicator {
+            width: 110px;
+            height: 4px;
+            background: #0f172a;
+            border-radius: 3px;
+            margin: 4px auto 3px;
+            opacity: 0.7;
+        }
+
+        /* UI Component Primitives */
+        .ui-header-card {
+            background: linear-gradient(135deg, #1565c0, #2454e0);
+            color: #ffffff;
+            padding: 16px 14px 14px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-top: -32px;
+            padding-top: 40px;
+        }
+
+        .ui-input-group {
+            margin-bottom: 9px;
+        }
+
+        .ui-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--slate-700);
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        .ui-input {
+            width: 100%;
+            height: 32px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 0 10px;
+            font-size: 0.68rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .ui-btn-primary {
+            background: #2454e0;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(36, 84, 224, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .ui-btn-success {
+            background: #12b76a;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(18, 183, 106, 0.3);
+        }
+
+        .ui-btn-outline {
+            background: #ffffff;
+            color: #1565c0;
+            border: 1.5px solid #1565c0;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .ui-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-size: 0.58rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .badge-green { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+        .badge-blue { background: #dbeafe; color: #1e40af; border: 1px solid #3b82f6; }
+        .badge-amber { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+        .badge-red { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; border: 1px solid #8b5cf6; }
+
+        /* Map Simulation Container */
+        .map-bg {
+            background: #e5e9f0;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            border-radius: 12px;
+            background-image: 
+                radial-gradient(#cbd5e1 1.5px, transparent 1.5px),
+                linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+                linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px, 40px 40px, 40px 40px;
+        }
+
+        .map-road-1 {
+            position: absolute;
+            width: 160%;
+            height: 12px;
+            background: #ffffff;
+            border-top: 1px solid #cbd5e1;
+            border-bottom: 1px solid #cbd5e1;
+            transform: rotate(-25deg);
+            top: 45%;
+            left: -30%;
+        }
+
+        .map-road-2 {
+            position: absolute;
+            height: 160%;
+            width: 10px;
+            background: #ffffff;
+            border-left: 1px solid #cbd5e1;
+            border-right: 1px solid #cbd5e1;
+            transform: rotate(35deg);
+            top: -30%;
+            left: 55%;
+        }
+
+        .route-polyline {
+            position: absolute;
+            width: 130px;
+            height: 3px;
+            background: #2454e0;
+            box-shadow: 0 0 6px rgba(36, 84, 224, 0.8);
+            transform: rotate(-15deg);
+            top: 50%;
+            left: 28%;
+            z-index: 5;
+        }
+
+        .map-pin {
+            position: absolute;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+        }
+
+        /* Desktop Browser Window Mockup */
+        .browser-window {
+            width: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.15);
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 6px;
+        }
+
+        .browser-chrome {
+            height: 34px;
+            background: #0d2847;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+            border-bottom: 1px solid #1e3a8a;
+        }
+
+        .chrome-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .chrome-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+
+        .chrome-url-bar {
+            flex: 1;
+            height: 22px;
+            background: #081a30;
+            border-radius: 4px;
+            border: 1px solid #1e3a8a;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 0.65rem;
+            color: #93c5fd;
+            font-family: 'JetBrains Mono', monospace;
+            gap: 6px;
+        }
+
+        .browser-body {
+            height: 615px;
+            display: flex;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+
+        /* Admin Layout Structure */
+        .admin-sidebar {
+            width: 165px;
+            background: #0a192f;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 12px 8px;
+            flex-shrink: 0;
+            border-right: 1px solid #1e293b;
+        }
+
+        .admin-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 2px;
+            cursor: pointer;
+        }
+
+        .admin-nav-item.active {
+            background: #1565c0;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .admin-content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #f1f5f9;
+        }
+
+        .admin-top-bar {
+            height: 42px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            flex-shrink: 0;
+        }
+
+        .admin-main-scroll {
+            flex: 1;
+            padding: 12px 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Admin Cards & Data Tables */
+        .admin-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .admin-kpi-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 9px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border-left: 3px solid #1565c0;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.66rem;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .admin-table th {
+            background: #e3f2fd;
+            color: #0d47a1;
+            padding: 6px 10px;
+            text-align: left;
+            font-weight: 700;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .admin-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #1e293b;
+        }
+
+        .admin-table tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Annotation Bar at Bottom of Page */
+        .page-annotations {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 0.65rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            color: #334155;
+        }
+
+        .anno-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .anno-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #1565c0;
+        }
+
+        /* Footer */
+        .proto-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid #cbd5e1;
+            padding-top: 5px;
+            margin-top: 6px;
+            font-size: 0.65rem;
+            color: var(--slate-500);
+            font-weight: 600;
+        }
+
+        .proto-footer-brand {
+            font-weight: 800;
+            color: #1565c0;
+        }
+
+        @media print {
+            body { background: #ffffff; margin: 0; padding: 0; }
+            .no-print-toolbar { display: none !important; }
+            .prototype-canvas { padding: 0; gap: 0; }
+            .prototype-page {
+                box-shadow: none;
+                margin: 0;
+                width: 100% !important;
+                min-height: 100vh !important;
+                padding: 10mm 12mm !important;
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+            @page { size: A4 portrait; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="no-print-toolbar">
+        <div class="toolbar-brand">
+            <span>🛵 PiatMove Mobility Platform</span>
+            <span class="toolbar-badge">Visual UI/UX Blueprint &bull; Blue Theme</span>
+        </div>
+        <div class="toolbar-actions">
+            <select class="toolbar-select" onchange="jumpToPage(this.value)">
+                <option value="p1">Page 1: Visual Design System &amp; Portal Topology</option>
+                <option value="p2">Page 2: Passenger &mdash; Splash &amp; Login Visual</option>
+                <option value="p3">Page 3: Passenger &mdash; Landmark Route &amp; Booking</option>
+                <option value="p4">Page 4: Passenger &mdash; Live Tracking &amp; Driver Rating</option>
+                <option value="p5">Page 5: Passenger &mdash; Trip History &amp; Profile Hub</option>
+                <option value="p6">Page 6: Driver &mdash; Partner Sign-In &amp; TODA KYC</option>
+                <option value="p7">Page 7: Driver &mdash; Duty Console &amp; Incoming Radar</option>
+                <option value="p8">Page 8: Driver &mdash; Turn Navigation &amp; Cash Fare</option>
+                <option value="p9">Page 9: Driver &mdash; Shift Trips &amp; Income Analytics</option>
+                <option value="p10">Page 10: Admin &mdash; Live Dispatch Command Center</option>
+                <option value="p11">Page 11: Admin &mdash; Driver Franchise &amp; KYC Audit</option>
+                <option value="p12">Page 12: Admin &mdash; Fare Matrix &amp; Subsidy Analytics</option>
+            </select>
+            <button class="toolbar-btn toolbar-btn-print" onclick="window.print()">
+                <span>🖨️ Export / Print PDF (A4)</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="prototype-canvas">
+`);
+
+console.log('Appended Header & CSS');
+fs.writeFileSync(path.resolve(__dirname, 'temp_head.txt'), html.join(''));
