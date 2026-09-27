@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PiatMove - Academic System Prototype Specification</title>
+    <style>
+
+@page {
+    size: A4 portrait;
+    margin: 10mm 15mm 10mm 15mm;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    color: #000000;
+    background: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.prototype-page {
+    width: 100%;
+    height: 275mm;
+    max-height: 275mm;
+    margin: 0 auto;
+    page-break-after: always;
+    break-after: page;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 6mm 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 5mm;
+}
+
+.page-header .proto-tag {
+    font-size: 13pt;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 2px;
+}
+
+.page-header .module-tag {
+    font-size: 10.5pt;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #111111;
+}
+
+.screen-frame {
+    border: 1.5px solid #000000;
+    background: #ffffff;
+    padding: 10px 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.screen-title-banner {
+    border: 1px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10pt;
+    padding: 5px 8px;
+    margin-bottom: 10px;
+    background: #ffffff;
+}
+
+.flow-arrow {
+    text-align: center;
+    font-size: 18pt;
+    line-height: 1;
+    margin: 4mm 0;
+    font-weight: bold;
+}
+
+.tabs-row {
+    display: flex;
+    border: 1px solid #000000;
+    margin-bottom: 10px;
+}
+
+.tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 5px 6px;
+    font-size: 9pt;
+    font-weight: bold;
+    border-right: 1px solid #000000;
+    background: #ffffff;
+}
+
+.tab-btn:last-child {
+    border-right: none;
+}
+
+.tab-btn.active {
+    background: #000000;
+    color: #ffffff;
+}
+
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 10px;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    font-size: 9pt;
+}
+
+.form-label {
+    width: 190px;
+    flex-shrink: 0;
+    font-weight: 500;
+}
+
+.form-input-box {
+    flex: 1;
+    border: 1px solid #000000;
+    height: 25px;
+    padding: 0 8px;
+    font-size: 8.5pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+}
+
+.form-textarea-box {
+    flex: 1;
+    border: 1px solid #000000;
+    height: 44px;
+    padding: 4px 8px;
+    font-size: 8.5pt;
+    background: #ffffff;
+}
+
+.btn-inline {
+    border: 1px solid #000000;
+    background: #ffffff;
+    padding: 4px 10px;
+    font-size: 8.5pt;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-left: 8px;
+}
+
+.btn-box {
+    border: 1px solid #000000;
+    background: #ffffff;
+    padding: 4px 14px;
+    font-size: 9pt;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+}
+
+.bottom-action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 8.5pt;
+}
+
+.notice-box {
+    border: 1px dashed #000000;
+    padding: 6px 10px;
+    font-size: 8pt;
+    margin: 6px 0;
+    background: #ffffff;
+    line-height: 1.3;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 8px;
+    font-size: 8.5pt;
+}
+
+.radio-item {
+    border: 1px solid #000000;
+    padding: 5px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.proto-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.proto-table th, .proto-table td {
+    border: 1px solid #000000;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.proto-table th {
+    font-weight: bold;
+    background: #ffffff;
+}
+
+.dashboard-split {
+    display: flex;
+    gap: 10px;
+}
+
+.sidebar-menu {
+    width: 160px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebar-btn {
+    border: 1px solid #000000;
+    padding: 4px 6px;
+    font-size: 8pt;
+    font-weight: bold;
+    text-align: center;
+    background: #ffffff;
+}
+
+.sidebar-btn.active {
+    background: #000000;
+    color: #ffffff;
+}
+
+.dash-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.metric-cards-row {
+    display: flex;
+    gap: 8px;
+}
+
+.metric-box {
+    flex: 1;
+    border: 1px solid #000000;
+    padding: 6px 8px;
+    text-align: center;
+}
+
+.metric-box .label {
+    font-size: 7.5pt;
+    font-weight: 500;
+}
+
+.metric-box .val {
+    font-size: 11pt;
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+.summary-strip {
+    border: 1px solid #000000;
+    padding: 5px 8px;
+    font-size: 8pt;
+    display: flex;
+    justify-content: space-between;
+}
+
+.page-num {
+    text-align: right;
+    font-size: 8pt;
+    color: #555555;
+    margin-top: auto;
+    padding-top: 2mm;
+}
+
+    </style>
+</head>
+<body>
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">AUTHENTICATION MODULE</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">PiatMove: Municipal Tricycle Booking &amp; Mobility Dispatch System</div>
+        
+        <div class="tabs-row">
+            <div class="tab-btn active">Passenger Login</div>
+            <div class="tab-btn">Driver Partner Login</div>
+            <div class="tab-btn">Administrator Login</div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Username / Mobile No:</div>
+                <div class="form-input-box">
+                    <span>0917 555 0142</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Password:</div>
+                <div class="form-input-box">
+                    <span>••••••••••••</span>
+                    <span>👁</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Access Portal:</div>
+                <div class="form-input-box">
+                    <span>Commuter Mobile Android App</span>
+                    <span>▼</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div>
+                <a href="#" style="color:#000; text-decoration:underline;">Forgot Password?</a>
+            </div>
+            <div class="btn-box">Login</div>
+        </div>
+        
+        <div style="margin-top: 8px; font-size: 8pt; text-align: left;">
+            New to PiatMove? <a href="#" style="color:#000; text-decoration:underline;">Register as Commuter Passenger</a> or <a href="#" style="color:#000; text-decoration:underline;">Apply as Driver Partner</a>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Forgot Password &amp; Credential Verification Page</div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Registered Mobile / Email:</div>
+                <div class="form-input-box">
+                    <span>0917 555 0142</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Verification OTP Code:</div>
+                <div class="form-input-box">
+                    <span>8 4 9 2 0 1</span>
+                </div>
+                <div class="btn-inline">SEND OTP</div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">New Password:</div>
+                <div class="form-input-box">
+                    <span>••••••••••••</span>
+                    <span>👁</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Confirm Password:</div>
+                <div class="form-input-box">
+                    <span>••••••••••••</span>
+                    <span>👁</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div>
+                <a href="#" style="color:#000; text-decoration:underline;">Go Back to Login Page...</a>
+            </div>
+            <div class="btn-box">Confirm Password Reset</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 1 of 14 • Shared Authentication</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">PASSENGER ONBOARDING &amp; STATUTORY DISCOUNT DECLARATION</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Passenger Commuter Registration</div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Full Commuter Name:</div>
+                <div class="form-input-box"><span>Maria Cristina Santos</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Mobile Contact (+63):</div>
+                <div class="form-input-box"><span>+63 998 765 4321</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Residential Address / Brgy:</div>
+                <div class="form-input-box"><span>Poblacion I, Piat, Cagayan</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Account Password:</div>
+                <div class="form-input-box"><span>••••••••••••</span><span>👁</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Profile Photo (JPG/PNG):</div>
+                <div class="form-input-box"><span>santos_photo.jpg</span></div>
+                <div class="btn-inline">UPLOAD FILE</div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div>Already registered? <a href="#" style="color:#000; text-decoration:underline;">Login</a></div>
+            <div class="btn-box">Next: Discount Declaration</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Statutory 20% Discount Category &amp; ID Declaration (RA 11314 / OSCA)</div>
+
+        <div class="radio-group">
+            <div class="radio-item" style="font-weight:bold; background:#f0f0f0;">
+                <span>(•) Student (CSU Piat / High School) — Mandated Fare: ₱16.00 (Save ₱4.00 Statutory)</span>
+            </div>
+            <div class="radio-item">
+                <span>( ) Senior Citizen (OSCA Piat) — Mandated Fare: ₱16.00 (Save ₱4.00 Statutory)</span>
+            </div>
+            <div class="radio-item">
+                <span>( ) Person with Disability (PWD) / Expectant Mother — Mandated Fare: ₱16.00</span>
+            </div>
+            <div class="radio-item">
+                <span>( ) Regular Commuter — Standard Municipal Base Tariff: ₱20.00</span>
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Student / OSCA / PWD ID No:</div>
+                <div class="form-input-box"><span>CSU-2024-1049</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Attach Valid ID Photo:</div>
+                <div class="form-input-box"><span>csu_id_front.jpg</span></div>
+                <div class="btn-inline">UPLOAD ID</div>
+            </div>
+        </div>
+
+        <div class="notice-box">
+            <strong>⚠️ Mandatory ID Requirement Notice:</strong> In accordance with Municipal Ordinance No. 2026-04, passenger must present physical Student/Senior ID card upon tricycle boarding for driver visual verification.
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Back</div>
+            <div class="btn-box">Complete Registration</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 2 of 14 • Passenger Onboarding</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">PASSENGER MODULE — DASHBOARD &amp; DESTINATION EXPLORER</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Passenger Commuter Dashboard</div>
+
+        <div class="dashboard-split">
+            <div class="sidebar-menu">
+                <div class="sidebar-btn active">Book a Tricycle</div>
+                <div class="sidebar-btn">Landmark Directory</div>
+                <div class="sidebar-btn">My Ride History</div>
+                <div class="sidebar-btn">Commuter Profile</div>
+                <div class="sidebar-btn">Emergency Hotlines</div>
+                <div class="sidebar-btn">Log out</div>
+            </div>
+
+            <div class="dash-main">
+                <div class="metric-cards-row">
+                    <div class="metric-box">
+                        <div class="label">Total Commutes</div>
+                        <div class="val">18 Rides</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="label">Lifetime Savings</div>
+                        <div class="val">₱72.00</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="label">Nearby Trikes</div>
+                        <div class="val">14 Units</div>
+                    </div>
+                </div>
+
+                <div class="summary-strip">
+                    <span><strong>Current Location:</strong> 📍 Poblacion I • Piat Public Market Gate</span>
+                    <span><strong>Commuter:</strong> Maria C. Santos (Student 20%)</span>
+                </div>
+
+                <div class="notice-box">
+                    <strong>Active TODA Terminals:</strong> Market TODA (6 Available) • Basilica TODA (5 Available) • Maguilling (3 Available)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Piat Municipal Landmark Directory &amp; Terminal Explorer</div>
+
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+            <div class="form-input-box" style="flex:1;">
+                <span>Search Destination Landmark, School, or Barangay...</span>
+            </div>
+            <div class="btn-box">Search</div>
+            <div class="btn-box">Reset</div>
+        </div>
+
+        <table class="proto-table">
+            <thead>
+                <tr>
+                    <th>Landmark / Destination</th>
+                    <th>Barangay Zone</th>
+                    <th>Assigned TODA Terminal</th>
+                    <th>Est. Travel</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Piat Public Market</td>
+                    <td>Poblacion I</td>
+                    <td>Market TODA Terminal</td>
+                    <td>0.0 km (Origin)</td>
+                    <td><div class="btn-box" style="padding:2px 8px; font-size:7.5pt;">Set Pickup</div></td>
+                </tr>
+                <tr>
+                    <td>Basilica Minore of Our Lady of Piat</td>
+                    <td>Poblacion II</td>
+                    <td>Basilica TODA Terminal</td>
+                    <td>1.8 km (~5 mins)</td>
+                    <td><div class="btn-box" style="padding:2px 8px; font-size:7.5pt;">Set Dropoff</div></td>
+                </tr>
+                <tr>
+                    <td>CSU Piat Campus (Main Gate)</td>
+                    <td>Baung</td>
+                    <td>Centro-CSU TODA Terminal</td>
+                    <td>3.2 km (~8 mins)</td>
+                    <td><div class="btn-box" style="padding:2px 8px; font-size:7.5pt;">Set Dropoff</div></td>
+                </tr>
+                <tr>
+                    <td>Piat Municipal Hall &amp; Plaza</td>
+                    <td>Poblacion I</td>
+                    <td>Municipal TODA Terminal</td>
+                    <td>0.6 km (~2 mins)</td>
+                    <td><div class="btn-box" style="padding:2px 8px; font-size:7.5pt;">Set Dropoff</div></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="bottom-action-row">
+            <div>Showing 4 of 24 Designated Municipal Landmarks in Piat</div>
+            <div class="btn-box">Proceed to Route Booking</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 3 of 14 • Passenger Discovery</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">PASSENGER MODULE — RIDE BOOKING &amp; FARE MATRIX</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">New Ride Booking — Step 1: Route &amp; Landmark Selection</div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Pickup Landmark:</div>
+                <div class="form-input-box">
+                    <span>Piat Public Market (Front Entrance)</span>
+                    <span>▼</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Drop-off Destination:</div>
+                <div class="form-input-box">
+                    <span>Basilica Minore of Our Lady of Piat</span>
+                    <span>▼</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Pickup Landmark Tip / Shed:</div>
+                <div class="form-input-box"><span>Near the municipal tricycle waiting shed</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Distance &amp; Estimated Time:</div>
+                <div class="form-input-box"><span>1.8 Kilometers • Approx. 5 - 7 Minutes</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Commuter Fare Category:</div>
+                <div class="form-input-box"><span>🎓 Student (RA 11314 Verified — 20% Discount)</span></div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Cancel Booking</div>
+            <div class="btn-box">Next: Compute Municipal Tariff</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">New Ride Booking — Step 2: Tariff Breakdown &amp; Cash Payment</div>
+
+        <div style="border: 1px solid #000; padding: 10px; margin-bottom: 8px;">
+            <div style="display:flex; justify-content:space-between; font-size:9pt; margin-bottom:4px;">
+                <span>Regular Base Fare (Municipal Ordinance No. 2026-04):</span>
+                <span>₱20.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:9pt; margin-bottom:4px;">
+                <span>Statutory 20% Commuter Discount (RA 11314 Student):</span>
+                <span>-₱4.00</span>
+            </div>
+            <div style="border-top:1px solid #000; margin:6px 0;"></div>
+            <div style="display:flex; justify-content:space-between; font-size:11pt; font-weight:bold;">
+                <span>TOTAL PAYABLE CASH FARE TO DRIVER:</span>
+                <span>₱16.00</span>
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Payment Mode:</div>
+                <div class="form-input-box">
+                    <span>Exact Cash on Hand (Pay directly upon arrival)</span>
+                    <span>▼</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">ID Verification Acknowledgment:</div>
+                <div class="form-input-box">
+                    <span>[✓] I agree to present my physical Student ID upon tricycle boarding</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="notice-box">
+            <strong>Zero LGU Commission:</strong> 100% of the ₱16.00 cash fare is remitted directly to the accredited tricycle driver partner.
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Back to Route</div>
+            <div class="btn-box">Request Tricycle Dispatch</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 4 of 14 • Passenger Fare Calculation</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">PASSENGER MODULE — LIVE DISPATCH &amp; DRIVER TELEMETRY</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Tricycle Dispatch Radar — Searching Accredited Drivers</div>
+
+        <div style="text-align:center; padding:12px 0;">
+            <div style="font-size:10pt; font-weight:bold; margin-bottom:4px;">Broadcasting ride request to nearest available tricycle units...</div>
+            <div style="font-size:8.5pt; color:#333;">Target Terminals: Market TODA Terminal &amp; Centro Zone</div>
+        </div>
+
+        <div class="metric-cards-row" style="margin-bottom:10px;">
+            <div class="metric-box">
+                <div class="label">Priority Countdown</div>
+                <div class="val">24s Remaining</div>
+            </div>
+            <div class="metric-box">
+                <div class="label">Search Radius</div>
+                <div class="val">1.2 km Active</div>
+            </div>
+            <div class="metric-box">
+                <div class="label">Estimated Pickup</div>
+                <div class="val">2 - 4 Minutes</div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div>Waiting for nearest accredited driver acceptance...</div>
+            <div class="btn-box">Cancel Request</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Live Driver Telemetry &amp; Commuter Route Tracker (Ride Accepted)</div>
+
+        <div class="summary-strip" style="margin-bottom:8px;">
+            <span><strong>Booking Ref:</strong> #BK-1092</span>
+            <span><strong>Status:</strong> DRIVER EN ROUTE TO PICKUP (ETA: 3 MINS)</span>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Assigned Driver Partner:</div>
+                <div class="form-input-box"><span>Mario Agcaoili y Corpuz ★ 4.9 (124 Rides)</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">TODA Station &amp; Body No:</div>
+                <div class="form-input-box"><span>Poblacion-Basilica TODA • Body #042</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Vehicle Particulars:</div>
+                <div class="form-input-box"><span>Skygo 150 (Blue Tricycle) • Plate: 9821-TG</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Driver GPS Distance:</div>
+                <div class="form-input-box"><span>350 meters away • Approaching Market Front Gate</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Fare Payable upon Dropoff:</div>
+                <div class="form-input-box"><span>₱16.00 Cash (Student 20% Discount Applied)</span></div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div style="display:flex; gap:6px;">
+                <div class="btn-box">📞 Call Driver</div>
+                <div class="btn-box">💬 SMS Driver</div>
+            </div>
+            <div class="btn-box">Cancel Ride</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 5 of 14 • Passenger Telemetry</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">PASSENGER MODULE — TRIP COMPLETION &amp; COMMUTER LEDGER</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Trip Completed — Destination Arrived &amp; Driver 5-Star Rating</div>
+
+        <div style="border: 1px solid #000; padding: 8px 10px; margin-bottom: 8px;">
+            <div style="display:flex; justify-content:space-between; font-size:9pt; margin-bottom:4px;">
+                <span><strong>Drop-off Location:</strong> Basilica Minore of Our Lady of Piat</span>
+                <span><strong>Arrival Time:</strong> 09:25 AM</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10pt; font-weight:bold;">
+                <span>TOTAL FARE SETTLED (CASH):</span>
+                <span>₱16.00</span>
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Driver 5-Star Rating:</div>
+                <div class="form-input-box"><span>★ ★ ★ ★ ★ (5.0 / Excellent Service)</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Feedback Badges:</div>
+                <div class="form-input-box"><span>[✓ Safe Driving]  [✓ Polite &amp; Courteous]  [✓ Clean Trike]</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Commuter Comment:</div>
+                <div class="form-textarea-box">Napakabilis at ligtas ang biyahe! Maraming salamat po Kuya Mario.</div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div><a href="#" style="color:#000; text-decoration:underline;">Skip Rating</a></div>
+            <div class="btn-box">Submit Rating &amp; Finish</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Commuter Ride History &amp; Official Trip Ledger</div>
+
+        <div class="tabs-row">
+            <div class="tab-btn active">All Bookings</div>
+            <div class="tab-btn">Completed Rides</div>
+            <div class="tab-btn">Cancelled Trips</div>
+        </div>
+
+        <table class="proto-table">
+            <thead>
+                <tr>
+                    <th>Ref #</th>
+                    <th>Date &amp; Time</th>
+                    <th>Route Itinerary</th>
+                    <th>Driver &amp; Body</th>
+                    <th>Fare</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#BK-1092</td>
+                    <td>09-24 09:14 AM</td>
+                    <td>Market → Basilica Minore</td>
+                    <td>M. Agcaoili (#042)</td>
+                    <td>₱16.00</td>
+                    <td>Completed</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">View Slip</div></td>
+                </tr>
+                <tr>
+                    <td>#BK-1088</td>
+                    <td>09-23 04:30 PM</td>
+                    <td>CSU Piat → Centro Poblacion</td>
+                    <td>D. Pascual (#019)</td>
+                    <td>₱16.00</td>
+                    <td>Completed</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">View Slip</div></td>
+                </tr>
+                <tr>
+                    <td>#BK-1075</td>
+                    <td>09-21 11:20 AM</td>
+                    <td>Municipal Hall → Baung</td>
+                    <td>E. Rivera (#035)</td>
+                    <td>₱20.00</td>
+                    <td>Completed</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">View Slip</div></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="bottom-action-row">
+            <div>Commuter Lifetime Statutory Savings: ₱72.00 under RA 11314</div>
+            <div class="btn-box">Export Trip History (PDF)</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 6 of 14 • Passenger Trip Completion</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">DRIVER PARTNER MODULE — REGISTRATION &amp; TODA ACCREDITATION</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Driver Partner Registration &amp; Vehicle Particulars</div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Full Legal Name:</div>
+                <div class="form-input-box"><span>Mario Agcaoili y Corpuz</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Mobile Contact (+63):</div>
+                <div class="form-input-box"><span>+63 915 889 4412</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">TODA Station Affiliation:</div>
+                <div class="form-input-box"><span>Poblacion-Basilica TODA Terminal</span><span>▼</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Municipal Body Number:</div>
+                <div class="form-input-box"><span>Body #042</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">LTO Motorcycle Plate:</div>
+                <div class="form-input-box"><span>9821-TG</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Motorcycle Make &amp; Model:</div>
+                <div class="form-input-box"><span>Skygo 150 cc (Blue Tricycle)</span></div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div>Already accredited? <a href="#" style="color:#000; text-decoration:underline;">Driver Login</a></div>
+            <div class="btn-box">Next: Upload TODA KYC Dossier</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Municipal TODA Franchise &amp; KYC Document Dossier Submission</div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">1. LTO Professional Driver's License:</div>
+                <div class="form-input-box"><span>license_042.jpg (Valid until 2028)</span></div>
+                <div class="btn-inline">UPLOAD FILE</div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">2. Piat Tricycle Franchise / Permit:</div>
+                <div class="form-input-box"><span>franchise_permit_042.pdf (Permit #2026-042)</span></div>
+                <div class="btn-inline">UPLOAD FILE</div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">3. Barangay Residency Clearance:</div>
+                <div class="form-input-box"><span>clearance_poblacion_042.jpg</span></div>
+                <div class="btn-inline">UPLOAD FILE</div>
+            </div>
+        </div>
+
+        <div class="notice-box">
+            <strong>Accreditation Lock Notice:</strong> Submitted documents undergo strict verification by the Piat Municipal Transport Office. Drivers cannot switch to ONLINE duty status until fully verified by the Administrator.
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Back to Info</div>
+            <div class="btn-box">Submit Dossier for LGU Review</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 7 of 14 • Driver Partner Accreditation</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">DRIVER PARTNER MODULE — DUTY CONSOLE &amp; DISPATCH RADAR</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Driver Duty Console &amp; Shift KPI Dashboard</div>
+
+        <div class="summary-strip" style="margin-bottom:8px;">
+            <span><strong>Driver:</strong> Mario Agcaoili (Body #042) • Market TODA</span>
+            <span><strong>Duty Availability:</strong> <span style="background:#000; color:#fff; padding:2px 6px; font-weight:bold;">ONLINE</span></span>
+        </div>
+
+        <div class="metric-cards-row" style="margin-bottom:8px;">
+            <div class="metric-box">
+                <div class="label">Today's Cash Take-Home</div>
+                <div class="val">₱384.00</div>
+            </div>
+            <div class="metric-box">
+                <div class="label">Completed Trips</div>
+                <div class="val">24 Rides (5.5h)</div>
+            </div>
+            <div class="metric-box">
+                <div class="label">Commuter Rating</div>
+                <div class="val">★ 4.95</div>
+            </div>
+        </div>
+
+        <div class="notice-box">
+            <strong>GPS Radar Active:</strong> Currently positioned at Piat Public Market Terminal. Broadcasting live telemetry to nearby commuters.
+        </div>
+
+        <div class="bottom-action-row">
+            <div style="display:flex; gap:6px;">
+                <div class="btn-box">Shift Trips Log</div>
+                <div class="btn-box">Daily Income Report</div>
+            </div>
+            <div class="btn-box" style="background:#000; color:#fff;">GO OFFLINE</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">🚨 Incoming Ride Dispatch Alert — 24s Countdown Remaining</div>
+
+        <div style="border: 1px solid #000; padding: 8px 10px; margin-bottom: 8px;">
+            <div style="display:flex; justify-content:space-between; font-size:9pt; margin-bottom:4px;">
+                <span><strong>Passenger:</strong> Maria Cristina Santos</span>
+                <span><strong>Fare Category:</strong> 🎓 Student (RA 11314 20% Discount)</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10pt; font-weight:bold;">
+                <span>TOTAL CASH FARE TO COLLECT:</span>
+                <span>₱16.00 (100% Retained)</span>
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Pickup Landmark:</div>
+                <div class="form-input-box"><span>Piat Public Market (Front Gate) — 350m away</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Drop-off Destination:</div>
+                <div class="form-input-box"><span>Basilica Minore of Our Lady of Piat (~1.8 km)</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Passenger Route Note:</div>
+                <div class="form-input-box"><span>"Waiting near the market shed front gate"</span></div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Decline Request</div>
+            <div class="btn-box" style="padding:6px 18px; font-size:10pt; background:#000; color:#fff;">✓ ACCEPT RIDE DISPATCH</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 8 of 14 • Driver Duty &amp; Dispatch</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">DRIVER PARTNER MODULE — NAVIGATION &amp; FARE SETTLEMENT</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Active Ride — Turn Navigation &amp; Commuter Pickup</div>
+
+        <div style="border: 1px solid #000; padding: 8px 10px; margin-bottom: 8px;">
+            <div style="font-size:10pt; font-weight:bold; margin-bottom:2px;">↱ Turn Right in 100 meters</div>
+            <div style="font-size:8.5pt;">Towards Piat Public Market Main Entrance Gate</div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Passenger Name:</div>
+                <div class="form-input-box"><span>Maria Cristina Santos (Contact: 0998-765-4321)</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Direct Contact:</div>
+                <div class="form-input-box"><span>[ 📞 Call Passenger ]  [ 💬 Send SMS ]</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Trip Status:</div>
+                <div class="form-input-box"><span>En Route to Pickup Spot</span></div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div>Live GPS route synchronization active with passenger</div>
+            <div class="btn-box">I Have Arrived at Pickup Spot</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Trip Destination Arrival &amp; Cash Fare Settlement</div>
+
+        <div style="border: 1px solid #000; padding: 8px 10px; margin-bottom: 8px;">
+            <div style="font-size:9.5pt; font-weight:bold; margin-bottom:4px;">Destination Arrived: Basilica Minore of Our Lady of Piat</div>
+            <div style="display:flex; justify-content:space-between; font-size:8.5pt; margin-bottom:2px;">
+                <span>Standard Municipal Base Fare:</span>
+                <span>₱20.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:8.5pt; margin-bottom:2px;">
+                <span>Student Statutory 20% Discount Deduction:</span>
+                <span>-₱4.00</span>
+            </div>
+            <div style="border-top:1px solid #000; margin:4px 0;"></div>
+            <div style="display:flex; justify-content:space-between; font-size:10.5pt; font-weight:bold;">
+                <span>TOTAL CASH TO COLLECT FROM PASSENGER:</span>
+                <span>₱16.00</span>
+            </div>
+        </div>
+
+        <div class="notice-box">
+            <strong>⚠️ Mandatory ID Compliance Check:</strong> Please visually inspect the commuter's valid physical Student/Senior ID card before completing transaction. 100% of this fare is retained by the driver.
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Report Issue</div>
+            <div class="btn-box">Confirm ₱16.00 Cash &amp; Complete Trip</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 9 of 14 • Driver Navigation &amp; Fare</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">DRIVER PARTNER MODULE — SHIFT ACTIVITY &amp; INCOME REPORT</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Driver Shift Activity — Today's Completed Commutes Log</div>
+
+        <table class="proto-table">
+            <thead>
+                <tr>
+                    <th>Trip Ref</th>
+                    <th>Time</th>
+                    <th>Commuter Name</th>
+                    <th>Route Journey</th>
+                    <th>Category</th>
+                    <th>Cash Collected</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#BK-1092</td>
+                    <td>09:14 AM</td>
+                    <td>Maria Cristina Santos</td>
+                    <td>Market → Basilica</td>
+                    <td>Student (20%)</td>
+                    <td>₱16.00 Cash</td>
+                </tr>
+                <tr>
+                    <td>#BK-1090</td>
+                    <td>08:48 AM</td>
+                    <td>Roberto Garcia</td>
+                    <td>Basilica → Minanga</td>
+                    <td>Regular</td>
+                    <td>₱20.00 Cash</td>
+                </tr>
+                <tr>
+                    <td>#BK-1087</td>
+                    <td>08:22 AM</td>
+                    <td>Mark Dela Cruz</td>
+                    <td>Centro → CSU Campus</td>
+                    <td>Student (20%)</td>
+                    <td>₱16.00 Cash</td>
+                </tr>
+                <tr>
+                    <td>#BK-1084</td>
+                    <td>07:55 AM</td>
+                    <td>Aling Teresa Ramos</td>
+                    <td>Poblacion → Market</td>
+                    <td>Senior (20%)</td>
+                    <td>₱16.00 Cash</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="bottom-action-row">
+            <div>Showing 4 of 24 Completed Commutes on Today's Shift</div>
+            <div class="btn-box">View Full Shift Log</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Daily Shift Income Analytics &amp; Zero-Platform-Fee Accounting</div>
+
+        <div class="summary-strip" style="margin-bottom:8px;">
+            <span><strong>Shift Date:</strong> Thursday, Sep 24, 2026</span>
+            <span><strong>Operating Hours:</strong> 06:30 AM - 11:30 AM (5.0 Hours Online)</span>
+        </div>
+
+        <div style="border: 1px solid #000; padding: 8px 10px; margin-bottom: 8px;">
+            <div style="display:flex; justify-content:space-between; font-size:8.5pt; margin-bottom:3px;">
+                <span>Regular Commutes (12 Trips @ ₱20.00):</span>
+                <span>₱240.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:8.5pt; margin-bottom:3px;">
+                <span>Statutory Discounted Commutes (12 Trips @ ₱16.00):</span>
+                <span>₱192.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:8.5pt; margin-bottom:3px;">
+                <span>Gross Cash Collected in Hand:</span>
+                <span>₱432.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:8.5pt; margin-bottom:3px;">
+                <span>Municipal / LGU Platform Fee Deduction:</span>
+                <span>₱0.00 (0% Platform Fee)</span>
+            </div>
+            <div style="border-top:1px solid #000; margin:4px 0;"></div>
+            <div style="display:flex; justify-content:space-between; font-size:10.5pt; font-weight:bold;">
+                <span>NET SHIFT TAKE-HOME CASH:</span>
+                <span>₱432.00 (100% Retained)</span>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Back to Console</div>
+            <div class="btn-box">Export Shift Receipt (PDF)</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 10 of 14 • Driver Shift Income</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">ADMINISTRATOR MODULE — COMMAND CENTER &amp; FLEET DISPATCH</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Municipal Administrator Command Center (dashboard.php)</div>
+
+        <div class="dashboard-split">
+            <div class="sidebar-menu">
+                <div class="sidebar-btn active">Dashboard Overview</div>
+                <div class="sidebar-btn">Driver Accreditation</div>
+                <div class="sidebar-btn">Commuter Accounts</div>
+                <div class="sidebar-btn">Master Bookings</div>
+                <div class="sidebar-btn">Subsidy Reports</div>
+                <div class="sidebar-btn">Tariff Settings</div>
+                <div class="sidebar-btn">Admin Logout</div>
+            </div>
+
+            <div class="dash-main">
+                <div class="metric-cards-row">
+                    <div class="metric-box">
+                        <div class="label">Total Commutes Today</div>
+                        <div class="val">1,482 (+14%)</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="label">Active On-Duty Trikes</div>
+                        <div class="val">38 Units</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="label">Registered Commuters</div>
+                        <div class="val">2,940</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="label">Daily Fare Turnover</div>
+                        <div class="val">₱26,480.00</div>
+                    </div>
+                </div>
+
+                <div class="summary-strip">
+                    <span><strong>TODA Status:</strong> Market: 14 Online | Basilica: 12 Online | Maguilling: 8 | Minanga: 4</span>
+                </div>
+
+                <div class="notice-box">
+                    <strong>Hostinger Production Status:</strong> System live at <code>https://piatmoveadmin.online</code>. REST API sync operational.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Real-Time Municipal Dispatch Queue &amp; Fleet Monitor</div>
+
+        <table class="proto-table">
+            <thead>
+                <tr>
+                    <th>Ref #</th>
+                    <th>Commuter Name</th>
+                    <th>Route Journey</th>
+                    <th>Assigned Driver / Unit</th>
+                    <th>Tariff</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#BK-1092</td>
+                    <td>Maria Cristina Santos</td>
+                    <td>Market → Basilica Minore</td>
+                    <td>Mario Agcaoili (#042)</td>
+                    <td>Student (20%)</td>
+                    <td>₱16.00</td>
+                    <td>Accepted</td>
+                </tr>
+                <tr>
+                    <td>#BK-1091</td>
+                    <td>Roberto Garcia</td>
+                    <td>CSU Piat → Poblacion</td>
+                    <td>Searching Dispatch...</td>
+                    <td>Regular</td>
+                    <td>₱20.00</td>
+                    <td>Pending</td>
+                </tr>
+                <tr>
+                    <td>#BK-1090</td>
+                    <td>Elena Fernandez</td>
+                    <td>Basilica → Minanga Bridge</td>
+                    <td>Danilo Pascual (#019)</td>
+                    <td>Senior (20%)</td>
+                    <td>₱16.00</td>
+                    <td>In-Transit</td>
+                </tr>
+                <tr>
+                    <td>#BK-1089</td>
+                    <td>Eduardo Ramos</td>
+                    <td>Municipal Hall → Baung</td>
+                    <td>Efren Rivera (#035)</td>
+                    <td>Regular</td>
+                    <td>₱20.00</td>
+                    <td>Completed</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="bottom-action-row">
+            <div><span style="font-weight:bold;">Live Fleet Sync:</span> Refreshing every 5 seconds</div>
+            <div style="display:flex; gap:6px;">
+                <div class="btn-box">Refresh Queue</div>
+                <div class="btn-box">Broadcast Alert</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 11 of 14 • Admin Command Center</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">ADMINISTRATOR MODULE — DRIVER FRANCHISE &amp; KYC AUDIT</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Driver Franchise &amp; TODA KYC Accreditation Registry (drivers.php)</div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div class="form-input-box" style="flex:1; margin-right:8px;">
+                <span>Search by driver name, body #, or plate number...</span>
+            </div>
+            <div class="btn-box">Search</div>
+            <div class="btn-box" style="margin-left:6px;">Filter: Pending Audit (3) ▼</div>
+        </div>
+
+        <table class="proto-table">
+            <thead>
+                <tr>
+                    <th>Driver Legal Name</th>
+                    <th>Contact</th>
+                    <th>TODA Station</th>
+                    <th>Body #</th>
+                    <th>Plate #</th>
+                    <th>KYC Dossier</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Mario Agcaoili</td>
+                    <td>0915-889-4412</td>
+                    <td>Market TODA</td>
+                    <td>#042</td>
+                    <td>9821-TG</td>
+                    <td>3/3 Docs</td>
+                    <td>Pending Audit</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">Audit KYC</div></td>
+                </tr>
+                <tr>
+                    <td>Rodrigo Dela Cruz</td>
+                    <td>0920-112-9988</td>
+                    <td>Minanga TODA</td>
+                    <td>#018</td>
+                    <td>7742-BG</td>
+                    <td>2/3 Docs</td>
+                    <td>Pending Docs</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">Request Doc</div></td>
+                </tr>
+                <tr>
+                    <td>Danilo Pascual</td>
+                    <td>0917-882-3311</td>
+                    <td>Basilica TODA</td>
+                    <td>#019</td>
+                    <td>4421-TG</td>
+                    <td>3/3 Docs</td>
+                    <td>Accredited</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">Edit Details</div></td>
+                </tr>
+                <tr>
+                    <td>Efren Rivera</td>
+                    <td>0918-445-6677</td>
+                    <td>Maguilling TODA</td>
+                    <td>#035</td>
+                    <td>8812-BG</td>
+                    <td>3/3 Docs</td>
+                    <td>Accredited</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">Edit Details</div></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="bottom-action-row">
+            <div>3 Driver dossiers awaiting municipal accreditation audit</div>
+            <div class="btn-box">Export Driver Registry</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Driver KYC Document Dossier Inspection &amp; Municipal Verification</div>
+
+        <div class="summary-strip" style="margin-bottom:8px;">
+            <span><strong>Inspecting Driver:</strong> Mario Agcaoili y Corpuz (Body #042 • Plate: 9821-TG)</span>
+            <span><strong>TODA:</strong> Poblacion-Basilica TODA</span>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">1. LTO Driver's License:</div>
+                <div class="form-input-box"><span>license_042.jpg — Valid Professional Driver's License (Exp: 2028)</span></div>
+                <div class="btn-inline">VIEW RECEIPT</div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">2. Piat Franchise Permit:</div>
+                <div class="form-input-box"><span>permit_042.pdf — Active Municipal Permit #2026-TODA-042</span></div>
+                <div class="btn-inline">VIEW RECEIPT</div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">3. Barangay Clearance:</div>
+                <div class="form-input-box"><span>clearance_042.jpg — Certified Resident of Poblacion I, Piat</span></div>
+                <div class="btn-inline">VIEW RECEIPT</div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Audit Remarks / Notes:</div>
+                <div class="form-input-box"><span>All franchise documents valid and compliant with Ordinance No. 2026-04</span></div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Reject Dossier</div>
+            <div class="btn-box" style="background:#000; color:#fff;">✓ Approve &amp; Accredit Driver Partner</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 12 of 14 • Driver Accreditation Audit</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">ADMINISTRATOR MODULE — COMMUTER ACCOUNTS &amp; DISCOUNTS</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Registered Commuters Directory &amp; Category Filter (users.php)</div>
+
+        <div class="tabs-row">
+            <div class="tab-btn active">All Commuters (2,940)</div>
+            <div class="tab-btn">Students (1,418)</div>
+            <div class="tab-btn">Senior Citizens (724)</div>
+            <div class="tab-btn">PWD / Pregnant (348)</div>
+            <div class="tab-btn">Regular (450)</div>
+        </div>
+
+        <table class="proto-table">
+            <thead>
+                <tr>
+                    <th>Commuter Name</th>
+                    <th>Contact No.</th>
+                    <th>Category</th>
+                    <th>ID Card #</th>
+                    <th>Reg. Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Maria Cristina Santos</td>
+                    <td>0998-765-4321</td>
+                    <td>Student (RA 11314)</td>
+                    <td>CSU-2024-1049</td>
+                    <td>2026-08-15</td>
+                    <td>Active</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">Audit ID</div></td>
+                </tr>
+                <tr>
+                    <td>Aling Teresa Ramos</td>
+                    <td>0917-223-4455</td>
+                    <td>Senior (OSCA)</td>
+                    <td>OSCA-PIAT-312</td>
+                    <td>2026-08-18</td>
+                    <td>Active</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">Audit ID</div></td>
+                </tr>
+                <tr>
+                    <td>Arnel Manalo</td>
+                    <td>0915-443-8899</td>
+                    <td>PWD / Expectant</td>
+                    <td>PWD-PIAT-094</td>
+                    <td>2026-08-22</td>
+                    <td>Active</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">Audit ID</div></td>
+                </tr>
+                <tr>
+                    <td>Roberto Garcia</td>
+                    <td>0920-554-1122</td>
+                    <td>Regular Commuter</td>
+                    <td>N/A</td>
+                    <td>2026-08-20</td>
+                    <td>Active</td>
+                    <td><div class="btn-box" style="padding:2px 6px; font-size:7pt;">Manage</div></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="bottom-action-row">
+            <div>Showing registered resident commuter records</div>
+            <div class="btn-box">Export Commuter Registry</div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Commuter Statutory Discount Eligibility Audit &amp; ID Proof Modal</div>
+
+        <div class="summary-strip" style="margin-bottom:8px;">
+            <span><strong>Commuter:</strong> Maria Cristina Santos (0998-765-4321)</span>
+            <span><strong>Address:</strong> Poblacion I, Piat, Cagayan</span>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Claimed Fare Category:</div>
+                <div class="form-input-box"><span>Statutory Student 20% Discount (Republic Act No. 11314)</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Educational Institution:</div>
+                <div class="form-input-box"><span>Cagayan State University — Piat Campus</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Attached ID Document Proof:</div>
+                <div class="form-input-box"><span>csu_student_id_santos.jpg (AY 2026-2027)</span></div>
+                <div class="btn-inline">VIEW RECEIPT</div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Compliance Checklist:</div>
+                <div class="form-input-box"><span>[✓ Valid School ID]  [✓ Currently Enrolled]  [✓ Photo Matches Profile]</span></div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div style="display:flex; gap:6px;">
+                <div class="btn-box">Suspend Account</div>
+                <div class="btn-box">Reset Password</div>
+            </div>
+            <div class="btn-box" style="background:#000; color:#fff;">Confirm &amp; Verify Discount Eligibility</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 13 of 14 • Commuter Discount Audit</div>
+</div>
+
+
+<div class="prototype-page">
+    <div class="page-header">
+        <div class="proto-tag">PROTOTYPE</div>
+        <div class="module-tag">ADMINISTRATOR MODULE — REPORTS &amp; TARIFF CONFIGURATION</div>
+    </div>
+
+    <!-- Screen 1 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Generate Municipal Transport &amp; Social Subsidy Reports (report.php)</div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Select Report Type:</div>
+                <div class="form-input-box">
+                    <span>Statutory Social Subsidy Summary (RA 11314 &amp; OSCA)</span>
+                    <span>▼</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Date Filter (From — To):</div>
+                <div class="form-input-box"><span>2026-09-01                       To: 2026-09-24</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Designated Signatory:</div>
+                <div class="form-input-box"><span>Engr. Juan Dela Cruz, Municipal Transport Officer</span></div>
+            </div>
+        </div>
+
+        <div style="border: 1px solid #000; padding: 6px 10px; margin-bottom: 6px; font-size: 8pt;">
+            <div><strong>Executive Report Summary:</strong></div>
+            <div>• Total Commuters Transported: 1,482 Passengers</div>
+            <div>• Statutory Social Fare Subsidies Granted: ₱4,184.00 (Mandated by Ordinance No. 2026-04)</div>
+            <div>• Beneficiary Distribution: Students: 48.2% (714 rides) • Seniors: 24.6% (365 rides) • PWDs: 11.8% (175 rides)</div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Preview Report</div>
+            <div style="display:flex; gap:6px;">
+                <div class="btn-box">Print Official Report</div>
+                <div class="btn-box" style="background:#000; color:#fff;">Export PDF / CSV</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flow-arrow">↓</div>
+
+    <!-- Screen 2 -->
+    <div class="screen-frame">
+        <div class="screen-title-banner">Municipal Tariff Configuration &amp; Administrator Account (profile.php)</div>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <div class="form-label">Municipal Base Fare:</div>
+                <div class="form-input-box"><span>₱20.00 (Fixed by Ordinance No. 2026-04)</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Mandated Statutory Discount:</div>
+                <div class="form-input-box"><span>20% (₱16.00 Discounted Commute Fare)</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Admin Username / Email:</div>
+                <div class="form-input-box"><span>admin@piatmoveadmin.online</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Update Admin Password:</div>
+                <div class="form-input-box"><span>••••••••••••••••</span><span>👁</span></div>
+            </div>
+            <div class="form-row">
+                <div class="form-label">Production Live Host:</div>
+                <div class="form-input-box"><span>https://piatmoveadmin.online (Hostinger Production Cloud)</span></div>
+            </div>
+        </div>
+
+        <div class="bottom-action-row">
+            <div class="btn-box">Logout of System</div>
+            <div class="btn-box">Save Configuration Changes</div>
+        </div>
+    </div>
+
+    <div class="page-num">Page 14 of 14 • Reports &amp; Tariff Management</div>
+</div>
+
+</body>
+</html>
