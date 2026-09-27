@@ -37,7 +37,7 @@ class DriverDashboardFragment : Fragment() {
         binding.tvGreeting.text = "Hello, $name!"
 
         viewModel.checkDriverStatus()
-        viewModel.fetchDailyReport()
+        loadTodayIncome()
 
         binding.switchOnline.setOnClickListener {
             val isApproved = viewModel.approvalStatus.value == "approved"
@@ -51,7 +51,12 @@ class DriverDashboardFragment : Fragment() {
 
         // Daily report navigation
         val openReportAction = View.OnClickListener {
-            startActivity(Intent(requireContext(), DriverIncomeReportActivity::class.java))
+            val intent = Intent(requireContext(), DriverIncomeReportActivity::class.java)
+            val currentData = (viewModel.dailyReport.value as? Resource.Success)?.data
+            if (currentData != null && currentData.date.isNotEmpty()) {
+                intent.putExtra("extra_report_date", currentData.date)
+            }
+            startActivity(intent)
         }
         binding.cardTodayIncome.setOnClickListener(openReportAction)
         binding.btnDailyReport.setOnClickListener(openReportAction)
@@ -111,10 +116,16 @@ class DriverDashboardFragment : Fragment() {
         }
     }
 
+    private fun loadTodayIncome() {
+        val apiDateFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+        val todayStr = apiDateFormat.format(java.util.Calendar.getInstance().time)
+        viewModel.fetchDailyReport(todayStr)
+    }
+
     override fun onResume() {
         super.onResume()
         viewModel.checkDriverStatus()
-        viewModel.fetchDailyReport()
+        loadTodayIncome()
     }
 
     override fun onDestroyView() {

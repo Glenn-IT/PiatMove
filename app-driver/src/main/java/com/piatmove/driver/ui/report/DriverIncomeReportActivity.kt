@@ -43,6 +43,15 @@ class DriverIncomeReportActivity : AppCompatActivity() {
         binding.rvDailyTransactions.layoutManager = LinearLayoutManager(this)
         binding.rvDailyTransactions.adapter       = adapter
 
+        val extraDate = intent.getStringExtra("extra_report_date")
+        if (!extraDate.isNullOrEmpty()) {
+            try {
+                apiDateFormat.parse(extraDate)?.let {
+                    calendar.time = it
+                }
+            } catch (_: Exception) {}
+        }
+
         setupDateControls()
         setupShareReport()
         observeViewModel()
