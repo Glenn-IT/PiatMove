@@ -38,6 +38,12 @@ interface ApiService {
 
     // ── Auth ──────────────────────────────────────────────────────────────────
 
+    @POST("auth/send-registration-otp")
+    suspend fun sendRegistrationOtp(@Body body: com.piatmove.core.data.models.SendOtpRequest): ApiResponse<Map<String, Any>>
+
+    @POST("auth/verify-registration-otp")
+    suspend fun verifyRegistrationOtp(@Body body: com.piatmove.core.data.models.VerifyOtpRequest): ApiResponse<Map<String, Any>>
+
     @POST("auth/register")
     suspend fun register(@Body body: RegisterRequest): ApiResponse<RegisterResponse>
 
@@ -49,6 +55,7 @@ interface ApiService {
         @Part("password") password: RequestBody,
         @Part("phone") phone: RequestBody,
         @Part("role") role: RequestBody,
+        @Part("otp") otp: RequestBody,
         @Part("license_no") licenseNo: RequestBody,
         @Part("vehicle_no") vehicleNo: RequestBody,
         @Part("vehicle_type") vehicleType: RequestBody,

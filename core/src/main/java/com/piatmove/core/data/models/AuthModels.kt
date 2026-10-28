@@ -6,10 +6,22 @@ data class RegisterRequest(
     val password: String,
     val phone: String,
     val role: String,                   // "passenger" or "driver"
+    val otp: String           = "",     // 6-digit verification code
     val license_no: String?   = null,   // required if role == "driver"
     val vehicle_no: String?   = null,   // required if role == "driver"
     val vehicle_type: String? = null,   // required if role == "driver"
     val barangay: String?     = null    // required if role == "driver"
+)
+
+data class SendOtpRequest(
+    val email: String,
+    val name: String = "",
+    val role: String = "passenger"
+)
+
+data class VerifyOtpRequest(
+    val email: String,
+    val otp: String
 )
 
 data class LoginRequest(

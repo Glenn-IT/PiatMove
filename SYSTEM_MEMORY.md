@@ -76,6 +76,18 @@ Instead, run targeted SQL migrations found in `C:\xampp\htdocs\piatmove-deploy\d
    ADD COLUMN `rating_comment` VARCHAR(255) DEFAULT NULL AFTER `rating`,
    ADD COLUMN `rated_at` TIMESTAMP NULL DEFAULT NULL AFTER `rating_comment`;
    ```
+   - *Registration OTP Verification Table Migration (`2026_10_28_add_registration_otps.sql`):*
+   ```sql
+   CREATE TABLE IF NOT EXISTS `registration_otps` (
+       `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+       `email` VARCHAR(150) NOT NULL,
+       `otp` VARCHAR(10) NOT NULL,
+       `role` VARCHAR(20) DEFAULT 'passenger',
+       `expires_at` DATETIME NOT NULL,
+       `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+       INDEX `idx_reg_email_otp` (`email`, `otp`)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+   ```
 5. Click **Go**.
 
 ---

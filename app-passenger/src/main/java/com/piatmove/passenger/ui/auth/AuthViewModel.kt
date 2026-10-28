@@ -57,10 +57,24 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _resetPasswordState.value = null
     }
 
-    private val _registerState = MutableLiveData<Resource<RegisterResponse>>()
-    val registerState: LiveData<Resource<RegisterResponse>> = _registerState
+    private val _sendRegistrationOtpState = MutableLiveData<Resource<String>?>()
+    val sendRegistrationOtpState: LiveData<Resource<String>?> = _sendRegistrationOtpState
 
-    fun register(name: String, email: String, password: String, phone: String) {
+    fun sendRegistrationOtp(email: String, name: String = "") {
+        _sendRegistrationOtpState.value = Resource.Loading
+        viewModelScope.launch {
+            _sendRegistrationOtpState.value = repo.sendRegistrationOtp(email, name, "passenger")
+        }
+    }
+
+    fun clearRegistrationOtpState() {
+        _sendRegistrationOtpState.value = null
+    }
+
+    private val _registerState = MutableLiveData<Resource<RegisterResponse>?>()
+    val registerState: LiveData<Resource<RegisterResponse>?> = _registerState
+
+    fun register(name: String, email: String, password: String, phone: String, otp: String) {
         _registerState.value = Resource.Loading
         viewModelScope.launch {
             _registerState.value = repo.register(
@@ -69,10 +83,15 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     email    = email,
                     password = password,
                     phone    = phone,
-                    role     = "passenger"
+                    role     = "passenger",
+                    otp      = otp
                 )
             )
         }
+    }
+
+    fun clearRegisterState() {
+        _registerState.value = null
     }
 
     private val _profileState = MutableLiveData<Resource<UserProfile>>()

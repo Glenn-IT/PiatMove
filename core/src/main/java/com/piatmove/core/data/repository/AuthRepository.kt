@@ -28,6 +28,32 @@ class AuthRepository(
         get() = apiOverride ?: com.piatmove.core.data.api.ApiClient.instance
 
 
+    suspend fun sendRegistrationOtp(email: String, name: String = "", role: String = "passenger"): Resource<String> {
+        return try {
+            val response = api.sendRegistrationOtp(com.piatmove.core.data.models.SendOtpRequest(email, name, role))
+            if (response.success) {
+                Resource.Success(response.message)
+            } else {
+                Resource.Error(response.message)
+            }
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
+    suspend fun verifyRegistrationOtp(email: String, otp: String): Resource<String> {
+        return try {
+            val response = api.verifyRegistrationOtp(com.piatmove.core.data.models.VerifyOtpRequest(email, otp))
+            if (response.success) {
+                Resource.Success(response.message)
+            } else {
+                Resource.Error(response.message)
+            }
+        } catch (e: Exception) {
+            Resource.Error(parseApiError(e))
+        }
+    }
+
     suspend fun register(request: RegisterRequest): Resource<RegisterResponse> {
         return try {
             val response = api.register(request)
@@ -43,6 +69,7 @@ class AuthRepository(
 
     suspend fun registerDriver(
         name: String, email: String, password: String, phone: String,
+        otp: String = "",
         licenseNo: String, vehicleNo: String, vehicleType: String, barangay: String,
         plateProofFile: File? = null,
         licenseProofFile: File? = null,
@@ -69,6 +96,7 @@ class AuthRepository(
                 password       = password.toRequestBody(textMedia),
                 phone          = phone.toRequestBody(textMedia),
                 role           = "driver".toRequestBody(textMedia),
+                otp            = otp.toRequestBody(textMedia),
                 licenseNo      = licenseNo.toRequestBody(textMedia),
                 vehicleNo      = vehicleNo.toRequestBody(textMedia),
                 vehicleType    = vehicleType.toRequestBody(textMedia),

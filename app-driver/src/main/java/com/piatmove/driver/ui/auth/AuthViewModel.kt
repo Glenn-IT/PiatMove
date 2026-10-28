@@ -55,11 +55,26 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _resetPasswordState.value = null
     }
 
-    private val _registerState = MutableLiveData<Resource<RegisterResponse>>()
-    val registerState: LiveData<Resource<RegisterResponse>> = _registerState
+    private val _sendRegistrationOtpState = MutableLiveData<Resource<String>?>()
+    val sendRegistrationOtpState: LiveData<Resource<String>?> = _sendRegistrationOtpState
+
+    fun sendRegistrationOtp(email: String, name: String = "") {
+        _sendRegistrationOtpState.value = Resource.Loading
+        viewModelScope.launch {
+            _sendRegistrationOtpState.value = repo.sendRegistrationOtp(email, name, "driver")
+        }
+    }
+
+    fun clearRegistrationOtpState() {
+        _sendRegistrationOtpState.value = null
+    }
+
+    private val _registerState = MutableLiveData<Resource<RegisterResponse>?>()
+    val registerState: LiveData<Resource<RegisterResponse>?> = _registerState
 
     fun register(
         name: String, email: String, password: String, phone: String,
+        otp: String = "",
         licenseNo: String, vehicleNo: String, vehicleType: String, barangay: String,
         plateProofFile: File? = null,
         licenseProofFile: File? = null,
@@ -73,6 +88,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 email             = email,
                 password          = password,
                 phone             = phone,
+                otp               = otp,
                 licenseNo         = licenseNo,
                 vehicleNo         = vehicleNo,
                 vehicleType       = vehicleType,
@@ -83,6 +99,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 tricyclePhotoFile = tricyclePhotoFile
             )
         }
+    }
+
+    fun clearRegisterState() {
+        _registerState.value = null
     }
 
     fun logout() = repo.logout()
